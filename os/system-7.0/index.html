@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e5dfd0">
+<title>Macintosh System 7.0 — Web Clone</title>
+<meta name="description" content="A pixel-exact, 1-bit recreation of the May 1991 Macintosh System 7.0 desktop: the System 7 look, aliases, Balloon Help, About This Macintosh, the Application menu, labels and a 1.4 MB SuperDrive disk beside an 80 MB hard disk, rebuilt for the web with an original typeface and icons.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="../../css/system-7.0/mac.css">
+<link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/icons/favicon.svg">
+</head>
+<body>
+  <div id="stage">
+    <div id="screen" aria-label="Macintosh screen">
+      <div id="desk">
+        <div id="menubar" role="menubar"></div>
+        <div id="desktop"></div>
+        <div id="windows"></div>
+        <div id="marquee" hidden></div>
+        <div id="dragghost" hidden></div>
+        <div id="menus"></div>
+        <div id="dialogs"></div>
+      </div>
+
+      <div id="boot" class="boot">
+        <div class="boot-inner">
+          <canvas id="boot-face" class="boot-face" width="128" height="128"></canvas>
+          <div class="boot-msg" id="boot-msg">Click anywhere to start up.</div>
+          <div class="boot-exts" id="boot-exts"></div>
+          <div class="boot-sub">System 7.0 &middot; Finder 7.0 &middot; 1991</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="outside">
+    <span><b>Macintosh System 7.0</b> — web clone. Click the screen to start. <kbd>Esc</kbd> closes menus &middot; <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+key for shortcuts.</span>
+    <a class="back-to-launcher" href="../../">&#8592; All systems</a>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

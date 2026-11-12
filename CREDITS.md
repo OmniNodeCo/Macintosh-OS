@@ -180,3 +180,58 @@ Three things here are the clone's own and are labelled as such in the code:
 * **The three-volume disk set.** A real Plus booted from a single 800K floppy. The HD20
   and the 400K MacPaint disk exist so that per-volume free space, HFS nesting and ejecting
   all have somewhere to happen.
+
+## System 6.0 (April 1988)
+
+The fourth recreation, `os/system-6.0/`, is **System 6.0 / Finder 6.1** on a Macintosh SE.
+The feature set follows the documented release: **MultiFinder** and its **Special ▸ Set
+Startup…** dialog (Finder or MultiFinder, plus what opens at startup — the change took
+effect at the next restart, as here), the Apple menu's running-programs list under
+MultiFinder, the "Largest Unused Block" line appearing in the About box only when
+MultiFinder runs, **MacroMaker** (the tape-recorder desk accessory new in System 6.0), the
+**Control Panel as a strip of device icons** (cdevs: Keyboard, Mouse, Sound, Memory,
+Startup Disk), the **ImageWriter LQ** driver new in this release, the Trash emptying when
+the Finder terminates, and the locked system files (System, Finder, MultiFinder, DA
+Handler, Backgrounder, printer drivers).
+
+Sources for the 6.0 detail: Wikipedia's *System 6* (release date, MultiFinder, MacroMaker,
+ImageWriter LQ, Trash behaviour, 24-bit/8 MB limits, the not-a-menu application icon), the
+Apple Fandom *Set Startup* page (the dialog's exact options), the 68kmla forum thread on
+enabling MultiFinder (⌘-Option-double-click of the MultiFinder file; restart rule), the
+Higher Intellect Vintage Wiki *MultiFinder* page (DA Handler, Backgrounder, About box
+behaviour), and Version Museum's Classic Mac OS history.
+
+The clone's own, marked as such: **Insert Disk File…**, the **Credits** application, the
+**Desktop Pattern pane** (pattern pickers lived in the Control Panel family of this era;
+the exact cdev list varied by machine), and the two-volume disk set (a real SE booted from
+one floppy or one hard disk; both are mounted so free space and SCSI have somewhere to
+happen). MacroMaker's recorder is a faithful prop that records nothing.
+
+## System 7.0 (May 1991)
+
+The fifth recreation, `os/system-7.0/`, is **System 7.0** — "Big Bang", released 13 May
+1991 — on the same SE screen, in one bit per pixel (the SE genuinely ran System 7 in black
+and white). Recreated from the documented release: the **System 7 look** (beveled window
+frames, embossed rounded buttons with a ringed default button, ridged grow boxes, dithered
+scroll channels, the 50% grey linen desktop), **aliases** (File ▸ Make Alias, badge,
+double-click to the original), **Balloon Help** (Help menu, balloons over the icons),
+**labels** with the seven names of the Label menu (Essential … Project 2) drawn as
+patterned bands, **About This Macintosh** with per-application memory bars and the Largest
+Unused Block, the **Application menu** at the right end of the menu bar, **Control Panels**
+as separate panel files in their own folder (with **Virtual Memory** honestly unavailable
+on a 68000), the **Apple Menu Items folder** building the Apple menu, **Find…**, **Force
+Quit** on ⌘/Ctrl-Option-Escape, and a **Trash that persists** — a real folder since
+System 7. The **Blue Meanies** easter egg (Option-click the Macintosh in About) bows to
+the System 7 team's own nickname; no individual names are claimed.
+
+Sources for the 7.0 detail: Wikipedia's *System 7* (feature list, Blue Meanies, release
+date, mandatory MultiFinder, Trash-as-directory, Extensions and Control Panels folders,
+Apple menu relocation), *Alias (Mac OS)*, *Balloon Help* and *TrueType*; Version Museum's
+Classic Mac OS history.
+
+The clone's own, marked as such: **Insert Disk File…** (mounting a 1.4 MB disk), the
+**Credits** application, the exact bevel arithmetic (1-bit dithers stand in for System 7's
+shades), and the desktop's localStorage memory of window positions and labels. AppleScript,
+AppleEvents, Publish & Subscribe, personal file sharing and TrueType outline rendering are
+named and honoured but not simulated; the virtual-memory panel exists precisely to say why
+it cannot work here.
