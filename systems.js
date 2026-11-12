@@ -50,12 +50,13 @@ window.SYSTEMS = [
     date: 'January 1986',
     model: 'Macintosh Plus',
     bits: '1-bit, 512 × 342',
-    status: 'planned',
-    href: '',
+    status: 'ready',
+    href: 'os/system-3.0/',
     blurb:
-      'Hierarchical folders, the HFS file system and the Plus with its SCSI port ' +
-      'and 1 MB of memory. Bigger disks, deeper folders.',
-    highlights: ['HFS', 'Hierarchical folders', 'SCSI'],
+      'The Plus arrives, and with it HFS: real folders inside folders, 800K disks, ' +
+      'a 20 MB hard disk on a SCSI cable. The Chooser learns AppleTalk, every window ' +
+      'gets a zoom box, and About the Finder becomes a memory meter.',
+    highlights: ['HFS folders', 'Chooser', 'Zoom box', '800K disks', 'HD20'],
   },
   {
     id: 'system-6.0',

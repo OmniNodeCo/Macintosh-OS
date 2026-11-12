@@ -6,7 +6,7 @@ import { patternStyle } from '../core/patterns.js';
 
 const CLIPPINGS = [
   { name: 'Apple', icon: 'appleLarge', note: 'The classic six-colour apple, reduced to\none bit per pixel for the menu bar.' },
-  { name: 'System Disk', icon: 'floppy', note: 'A 3.5-inch, 512K floppy — the only\nstorage the original Macintosh had.' },
+  { name: 'System Disk', icon: 'floppy', note: 'A 3.5-inch, 400K floppy — 400K was the\nwhole disk; 128K was the memory.' },
   { name: 'Folder', icon: 'folder', note: 'Susan Kare’s folder: a tab, a body and\na dithered shadow.' },
   { name: 'Trash', icon: 'trash', note: 'A wire basket. Drag icons here to throw\nthem away.' },
   { name: 'MacWrite', icon: 'macwrite', note: 'Word processing with a ruler, tabs and\npinstripes.' },

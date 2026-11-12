@@ -148,3 +148,35 @@ icon, the shortened start-up and the 512K figure follow the 512K Macintosh.
 
 Nothing from Apple's disks is included: the Finder 4.1 behaviours were reimplemented from
 public descriptions, and the Choose Printer and MiniFinder screens are original drawings.
+
+## System 3.0 (January 1986)
+
+The third recreation, `os/system-3.0/`, is **System 3.0 / Finder 5.1** — sold as System
+Software 0.7 and shipped with the Macintosh Plus in January 1986. The feature set follows
+the release histories: HFS and 800K startup disks, SCSI and the Apple HD20, the zoom box,
+the redesigned Control Panel with its labelled controls and RAM cache, Trash "bulging",
+and the Chooser replacing Choose Printer with AppleTalk, zones and a live device list.
+The disappearance of MiniFinder and the mountain scene in About the Finder, and their
+replacement by a memory meter, are likewise documented changes of this release.
+
+Sources for the 3.0 detail: Wikipedia's *Classic Mac OS* / *System Software 4* release
+table, HandWiki's System 3 entry, the Apple Museum's early-Mac-OS page, Infinite Mac's
+1986 notes, Version Museum's screenshots (System 3 desktop, System Folder, Control Panel),
+MacTech's 1986 article on how the Chooser works with AppleTalk, and Low End Mac on what
+shipped in the box.
+
+Again, nothing from Apple's disks: Finder 5.1's behaviour was reimplemented from public
+descriptions, and every pixel of the Chooser, the test page, the HD20, the memory meter and
+the 400K disk is drawn for this clone.
+
+Three things here are the clone's own and are labelled as such in the code:
+
+* **The Launcher.** Apple's Launcher arrived with System 7. The icon-grid Launcher in this
+  museum is this project's, carried into each system so the desk accessories are always
+  reachable. MiniFinder — the authentic 2.0-era launcher — is still present in
+  `os/system-2.0/`, and gone from 3.0, where Apple retired it.
+* **The printer test page.** The Chooser in 3.0 chose a printer; it did not print a test
+  page. The one in the File menu is a convenience, drawn as a 1-bit sheet.
+* **The three-volume disk set.** A real Plus booted from a single 800K floppy. The HD20
+  and the 400K MacPaint disk exist so that per-volume free space, HFS nesting and ejecting
+  all have somewhere to happen.
