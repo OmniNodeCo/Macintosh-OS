@@ -7,8 +7,9 @@ starts with the **1984 Macintosh System 1.0 / Finder 1.0**, a working, from-scra
 recreation of the original desktop in 1-bit black and white: 512 × 342 pixels of menu bar,
 striped windows, dithered icons, desk accessories — written in plain HTML, CSS and
 JavaScript with **no frameworks, no image files and no Apple assets**. **System 2.0 /
-Finder 4.1** (April 1985) and **System 3.0 / Finder 5.1** (January 1986, the Macintosh
-Plus) are the second and third bootable disks.
+Finder 4.1** (April 1985), **System 3.0 / Finder 5.1** (January 1986, the Macintosh
+Plus), **System 6.0 / Finder 6.1** (April 1988, the Macintosh SE) and **System 7.0**
+(May 1991) are the second through fifth bootable disks.
 
 **Live site:** <https://omninodeco.github.io/Macintosh-OS/> (GitHub Pages, served from `main`).
 
@@ -18,6 +19,8 @@ python3 -m http.server 8000      # or: npx serve .
 #           http://localhost:8000/os/system-1.0/  → System 1.0
 #           http://localhost:8000/os/system-2.0/  → System 2.0
 #           http://localhost:8000/os/system-3.0/  → System 3.0
+#           http://localhost:8000/os/system-6.0/  → System 6.0
+#           http://localhost:8000/os/system-7.0/  → System 7.0
 ```
 
 The museum page is a pure static page, so it also works straight from `file://` —
@@ -37,8 +40,8 @@ server or GitHub Pages.
 | [System 1.0](os/system-1.0/) | 1984 | Macintosh 128K | **bootable** |
 | [System 2.0](os/system-2.0/) | 1985 | Macintosh 512K | **bootable** |
 | [System 3.0](os/system-3.0/) | 1986 | Macintosh Plus | **bootable** |
-| System 6.0 | 1988 | Macintosh II | planned |
-| System 7.0 | 1991 | Macintosh II fx | planned |
+| [System 6.0](os/system-6.0/) | 1988 | Macintosh SE | **bootable** |
+| [System 7.0](os/system-7.0/) | 1991 | Macintosh SE | **bootable** |
 | Mac OS 8 | 1997 | Power Macintosh 8600 | planned |
 | Mac OS 9 | 1999 | Power Mac G4 | planned |
 | Mac OS X | 2001 | Power Mac G4 Cube | planned |
@@ -80,14 +83,18 @@ os/system-1.0/          one self-contained system: index.html + js/ (+ its own t
 os/system-1.0/tools/    the typeface builder for that system
 os/system-2.0/          System 2.0 / Finder 4.1 — its own js/, no imports from 1.0
 os/system-3.0/          System 3.0 / Finder 5.1 — HFS, the Chooser, zoom boxes, 800K disks
+os/system-6.0/          System 6.0 / Finder 6.1 — MultiFinder, Set Startup, MacroMaker
+os/system-7.0/          System 7.0 — the System 7 look, aliases, Balloon Help, labels
 css/system-1.0/mac.css  that system's chrome; systems do not share CSS
 css/system-2.0/mac.css  System 2.0's chrome (Choose Printer, MiniFinder, Print Catalog)
 css/system-3.0/mac.css  System 3.0's chrome (Chooser, status strip, test page, memory meter)
+css/system-6.0/mac.css  System 6.0's chrome (cdev strip, MacroMaker)
+css/system-7.0/mac.css  System 7.0's chrome (bevels, balloons, label bands, app menu)
 assets/fonts/           shared typefaces (MacPixel Chicago)
 assets/icons/           shared icon art (favicon)
 systems.js              the registry the launcher reads
 index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
-changelog.js            release history; the newest entry feeds "What's new" (v0.6.0 = System 3.0)
+changelog.js            release history; the newest entry feeds "What's new" (v0.7.0 = System 6.0 + 7.0)
 launcher.css, launcher.js
 ```
 
@@ -203,6 +210,52 @@ The machine is a **Macintosh Plus**: 1 MB of memory, the 800K drive, SCSI, and t
 
 ---
 
+## System 6.0 — what the update changed
+
+April 1988, and the museum machine becomes a **Macintosh SE**: 2 MB of memory,
+an 800K startup floppy and a **30 MB Apple Hard Disk 30SC** on the SCSI bus.
+
+* **MultiFinder.** Special ▸ **Set Startup…** is the real dialog: choose whether
+  the machine starts with the plain Finder or MultiFinder, and what opens at
+  startup. With MultiFinder running the Apple menu lists the running programs,
+  and About the Finder grows its "Largest Unused Block" line — exactly as the
+  System 6 manuals describe.
+* **MacroMaker** joins the Apple menu: the System 6 desk accessory that looks
+  like a tape recorder. The clone plays the part and says honestly that it
+  records nothing.
+* **The Control Panel becomes the strip-of-icons kind** — Keyboard, Mouse,
+  Sound, Memory, Startup Disk and Desktop Pattern, one cdev pane at a time.
+* **ImageWriter LQ** joins the Chooser; system files ship locked (System,
+  Finder, MultiFinder, DA Handler, Backgrounder, the printer drivers).
+* **The Trash empties when the Finder terminates** — System 6 behaviour, wired
+  into restart and shut down. System 7 will fix it.
+
+## System 7.0 — what the update changed
+
+13 May 1991: "Big Bang". The museum machine keeps the SE's 512 × 342 one-bit
+screen (the SE really ran System 7 in black and white) and gains a
+**1.4 MB SuperDrive disk** and an **80 MB SCSI hard disk**.
+
+* **The System 7 look.** Beveled window frames, embossed rounded buttons with a
+  ringed default, ridged grow boxes, dithered scroll channels and the 50% grey
+  linen desktop.
+* **About This Macintosh** replaces About the Finder: a memory bar for every
+  running application and the Largest Unused Block. Option-click the little
+  Macintosh for a bow to the Blue Meanies.
+* **Aliases** — File ▸ Make Alias. The alias wears a little arrow badge and
+  double-clicks its way to the original; Get Info shows the original's name.
+* **Balloon Help** — the new Help menu turns on speech balloons over the icons.
+* **Labels** — the Label menu paints patterned bands (Essential, Hot,
+  In Progress, Cool, Personal, Project 1, Project 2) under icon names.
+* **The Application menu** at the right end of the menu bar switches between the
+  Finder and running applications.
+* **Control Panels** is a folder of separate little panels again — including
+  Virtual Memory, which is honestly unavailable on this machine's 68000.
+* **Apple Menu Items folder** builds the Apple menu; drop something in and it
+  appears. **Force Quit** is on ⌘/Ctrl-Option-Escape, Find… is in the File menu,
+  and the **Trash is a real folder**: throw something away, restart, and it is
+  still there.
+
 ## Keyboard
 
 | Keys | Action |
@@ -255,7 +308,7 @@ Where it knowingly differs:
 
 ```
 index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
-changelog.js            release history; the newest entry feeds "What's new" (v0.6.0 = System 3.0) for every system
+changelog.js            release history; the newest entry feeds "What's new" (v0.7.0 = System 6.0 + 7.0) for every system
 launcher.css            the lobby in four styles (Classic, Platinum, Aqua, dark), all token-driven
 launcher.js              builds the wall from systems.js, the changelog from changelog.js,
                         the style picker, and the arrow-key/Return navigation

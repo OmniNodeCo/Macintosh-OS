@@ -1,0 +1,1316 @@
+/* =============================================================================
+   Macintosh System 6.0 — web clone
+   1-bit (black & white) recreation of the 1988 Macintosh SE desktop.
+   All chrome is drawn with 1px hairlines, dither patterns and a hand-made
+   bitmap typeface.  See CREDITS.md for credits and licensing notes.
+   ========================================================================== */
+
+@font-face {
+  font-family: "MacPixel Chicago";
+  src: url("../../assets/fonts/MacPixelChicago.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  --ink: #000;
+  --paper: #fff;
+  --dither: #b9b9bd;
+  --ui-font: "MacPixel Chicago", "Chicago", "Monaco", monospace;
+  --bezel: #101012;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* one weight only: let the browser synthesise a heavier bold where the markup
+   asks for it (it is a little chunky at 12px, which suits the bitmap look) */
+
+html, body { height: 100%; }
+
+body {
+  background:
+    radial-gradient(120% 90% at 50% 0%, #2a2a2e 0%, #131315 55%, #0a0a0b 100%);
+  font-family: var(--ui-font);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  overflow: hidden;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  text-rendering: geometricPrecision;
+}
+
+/* ------------------------------------------------------------------ stage -- */
+/* The beige Macintosh case: CRT recess, floppy slot and wordmark are drawn in
+   CSS so the screen itself stays a clean 512x342 bitmap surface. */
+#stage {
+  display: grid;
+  place-items: center;
+  position: relative;
+  padding: 26px 30px 52px;
+  border-radius: 16px 16px 9px 9px;
+  background: linear-gradient(180deg, #f1ece0 0%, #e5dfd0 46%, #d4cdbc 100%);
+  box-shadow:
+    inset 0 1px 0 #fdfaf3,
+    inset 0 0 0 1px #bcb5a5,
+    0 2px 0 #aaa392,
+    0 30px 80px rgba(0, 0, 0, .62);
+}
+#stage::before { /* 3.5" floppy slot */
+  content: '';
+  position: absolute;
+  right: 34px;
+  bottom: 20px;
+  width: 118px;
+  height: 9px;
+  border-radius: 5px;
+  background: #221f1b;
+  box-shadow: inset 0 1px 0 #605a4e, 0 1px 0 #fbf7ee;
+}
+#stage::after { /* wordmark — 3.0 shipped on the wider Plus case */
+  content: 'Macintosh Plus';
+  position: absolute;
+  left: 30px;
+  bottom: 9px;
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 1.5px;
+  color: #7c7668;
+}
+
+#screen {
+  position: relative;
+  cursor: var(--cursor, default);
+  width: 512px;
+  height: 342px;
+  background: var(--paper);
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 2px #2b2721,
+    0 0 0 9px #171512,
+    0 0 0 11px #4a453b,
+    inset 0 0 22px rgba(0, 0, 0, .20);
+  /* zoom is set from JS so that 1 Mac pixel stays an integer number of
+     screen pixels (crisp 1-bit rendering). */
+}
+
+#outside {
+  max-width: 700px;
+  margin-top: 6px;
+  padding: 0 14px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 17px;
+  color: #b9b9bd;
+  letter-spacing: .2px;
+}
+#outside b { color: #f2f2f4; font-weight: normal; }
+#outside .back-to-launcher {
+  display: inline-block;
+  margin-left: 10px;
+  color: #e9dcb0;
+  text-decoration: none;
+  border-bottom: 1px dotted #6f6f74;
+}
+#outside .back-to-launcher:hover, #outside .back-to-launcher:focus-visible { color: #fff6d8; border-bottom-color: #fff6d8; }
+#outside kbd {
+  font-family: var(--ui-font);
+  border: 1px solid #55555a;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 0 4px;
+  color: #dddde1;
+}
+
+
+/* ====================================================== choose printer ==== */
+/* The Choose Printer desk accessory: a list of printers, a port pop-up and a
+   one-line status, in the same 1-bit clothes as everything else. */
+.chooser { padding: 9px 11px 10px; display: flex; flex-direction: column; gap: 6px; height: 100%; }
+.chooser-row { flex: 1; }
+.chooser-lede { font-size: 12px; line-height: 14px; }
+.chooser-list { display: flex; flex-direction: column; gap: 4px; }
+.chooser-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 5px 6px;
+  border: 1px solid transparent;
+  cursor: default;
+}
+.chooser-row:hover { border-color: var(--dither); }
+.chooser-row.on { border-color: var(--ink); background: var(--dither); }
+.chooser-row:focus-visible { outline: 1px dotted var(--ink); outline-offset: 1px; }
+.chooser-plate { width: 24px; height: 24px; flex: 0 0 24px; display: grid; place-items: center; }
+.chooser-printer {
+  display: block;
+  width: 22px; height: 16px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  position: relative;
+}
+.chooser-printer::before {
+  content: ""; position: absolute; left: 5px; top: -5px; width: 10px; height: 5px;
+  border: 1px solid var(--ink); border-bottom: 0;
+}
+.chooser-printer::after {
+  content: ""; position: absolute; left: 3px; bottom: 2px; right: 3px; height: 3px;
+  border-top: 1px solid var(--ink);
+}
+.chooser-copy { flex: 1; min-width: 0; }
+.chooser-name { font-size: 12px; }
+.chooser-kind { font-size: 11px; line-height: 12px; opacity: .75; }
+.chooser-blurb { font-size: 11px; line-height: 12px; margin-top: 1px; }
+.chooser-check { width: 12px; text-align: center; font-size: 12px; line-height: 16px; }
+.chooser-foot { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.chooser-port {
+  font-family: var(--ui-font);
+  font-size: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  padding: 1px 2px;
+}
+.chooser-status { margin-top: 2px; font-size: 11px; line-height: 13px; opacity: .8; }
+
+/* ========================================================= minifinder ==== */
+/* MiniFinder stands in for the Finder: the desktop is dithered behind it. */
+body.mini-mode #desktop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--ink) 1px, transparent 1px);
+  background-size: 2px 2px;
+  opacity: .35;
+  pointer-events: none;
+}
+.mini { padding: 8px 10px 6px; }
+.mini-lede { font-size: 12px; line-height: 14px; }
+.mini-list {
+  margin: 6px 10px 0;
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  outline: none;
+  min-height: 0;
+}
+.mini-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 5px;
+  cursor: default;
+}
+.mini-row + .mini-row { border-top: 1px dotted var(--dither); }
+.mini-row.sel { background: var(--ink); color: var(--paper); }
+.mini-row.sel img { filter: invert(1); }
+.mini-plate { width: 16px; height: 16px; flex: 0 0 16px; display: block; }
+.mini-plate img { width: 16px; height: 16px; display: block; image-rendering: pixelated; }
+.mini-name { font-size: 12px; line-height: 16px; }
+.mini-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px 8px;
+  font-size: 11px;
+}
+.mini-foot span { opacity: .7; }
+.win:has(.mini) .win-body { display: flex; flex-direction: column; padding: 0; gap: 0; height: 100%; }
+.win:has(.mini) .win-body > * { min-height: 0; }
+
+/* ====================================================== print catalog ==== */
+.dlg-detail {
+  margin-top: 8px;
+  max-height: 132px;
+  overflow: auto;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: 4px 6px;
+  font-family: var(--ui-font);
+  font-size: 11px;
+  line-height: 13px;
+  white-space: pre;
+}
+
+/* ------------------------------------------------------------------- boot -- */
+.boot {
+  position: absolute;
+  inset: 0;
+  z-index: 5000;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  cursor: default;
+  transition: opacity .18s linear;
+}
+.boot.gone { opacity: 0; pointer-events: none; }
+.boot-inner { text-align: center; }
+.boot-face { width: 128px; height: 128px; image-rendering: pixelated; display: block; margin: 0 auto 14px; }
+.boot-msg { font-size: 12px; line-height: 14px; }
+.boot-sub { font-size: 12px; line-height: 14px; margin-top: 8px; color: #000; opacity: .45; }
+.boot .blink { animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* -------------------------------------------------------------- menu bar -- */
+#desk { position: absolute; inset: 0; }
+
+#menubar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 20px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink);
+  display: flex;
+  align-items: stretch;
+  z-index: 3000;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.mb-item {
+  display: flex;
+  align-items: center;
+  padding: 0 9px;
+  font-size: 12px;
+  line-height: 20px;
+  cursor: default;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.mb-item.apple { padding: 0 10px 0 8px; }
+.mb-item.apple img { width: 15px; height: 16px; display: block; image-rendering: pixelated; }
+.mb-item.open { background: var(--ink); color: var(--paper); }
+.mb-item.open img { filter: invert(1); }
+.mb-item.disabled { opacity: .45; }
+
+/* -------------------------------------------------------------- pull-downs -- */
+#menus { position: absolute; inset: 0; z-index: 3200; pointer-events: none; }
+
+.menu {
+  position: absolute;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, .45);
+  padding: 2px 0;
+  min-width: 130px;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.mi {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 0 12px 0 20px;
+  white-space: nowrap;
+  cursor: default;
+}
+.mi .mi-check { position: absolute; left: 5px; top: 0; font-size: 12px; line-height: 16px; }
+.mi .mi-key { margin-left: auto; padding-left: 26px; opacity: .95; }
+.mi.hl { background: var(--ink); color: var(--paper); }
+.mi.dis { opacity: .35; }
+.mi.dis.hl { background: transparent; color: var(--ink); }
+.mi-sep { height: 1px; background: var(--ink); margin: 3px 9px; }
+
+/* --------------------------------------------------------------- desktop -- */
+#desktop {
+  position: absolute;
+  top: 20px; left: 0; right: 0; bottom: 0;
+  background-repeat: repeat;
+  background-position: 0 0;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+}
+
+.dicon {
+  position: absolute;
+  width: 78px;
+  text-align: center;
+  cursor: default;
+  padding-top: 2px;
+}
+.dicon .plate {
+  width: 32px; height: 32px;
+  margin: 0 auto;
+  background: transparent;
+}
+.dicon img { width: 32px; height: 32px; display: block; image-rendering: pixelated; }
+.dicon .lbl {
+  display: block;
+  max-width: 78px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 2px;
+  font-size: 12px;
+  line-height: 11px;
+  margin-top: 1px;
+  word-break: break-word;
+  color: var(--ink);
+}
+.dicon.sel .plate { background: var(--ink); }
+.dicon.sel img { filter: invert(1); }
+.dicon.sel .lbl { background: var(--ink); color: var(--paper); }
+
+/* ----------------------------------------------------------------- window -- */
+#windows { position: absolute; inset: 20px 0 0 0; z-index: 10; pointer-events: none; }
+
+.win {
+  position: absolute;
+  pointer-events: auto;
+  outline: none;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  min-height: 60px;
+  z-index: 10;
+}
+.win.active { box-shadow: 2px 2px 0 rgba(0, 0, 0, .38); }
+.win.busy { pointer-events: none; }
+
+.titlebar {
+  height: 19px;
+  flex: 0 0 19px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(to bottom, #000 0 1px, #fff 1px 3px);
+  border-bottom: 1px solid var(--ink);
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+.win.inactive .titlebar { background: var(--paper); }
+.title {
+  max-width: calc(100% - 60px);
+  padding: 0 8px;
+  background: var(--paper);
+  font-size: 12px;
+  line-height: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.win.inactive .title { color: var(--ink); }
+
+.closebox {
+  position: absolute;
+  left: 6px;
+  top: 3px;
+  width: 11px;
+  height: 11px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  cursor: default;
+}
+.win.inactive .closebox { border-color: var(--ink); opacity: .55; }
+.closebox:active { background: var(--ink); }
+
+.zoombox {
+  position: absolute;
+  right: 6px;
+  top: 3px;
+  width: 11px;
+  height: 11px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  cursor: default;
+}
+.zoombox::after {
+  content: "";
+  position: absolute;
+  left: 2px; top: 2px; right: 2px; bottom: 2px;
+  border: 1px solid var(--ink);
+}
+.win.inactive .zoombox { opacity: .55; }
+/* System 3.0's zoom box sits at the right end of the title bar */
+.titlebar .zoombox { margin-left: auto; }
+.zoombox:active { background: var(--ink); }
+
+[contenteditable="true"], input, textarea { cursor: text; }
+.win-body {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/* resize block in the lower-right corner (System 1.0 "size box") */
+.sizebox {
+  position: absolute;
+  right: 0; bottom: 0;
+  width: 16px; height: 16px;
+  background: var(--paper);
+  border-left: 1px solid var(--ink);
+  border-top: 1px solid var(--ink);
+  cursor: nwse-resize;
+  z-index: 6;
+  background-image:
+    repeating-linear-gradient(135deg, #000 0 1px, #fff 1px 3px);
+  touch-action: none;
+}
+
+/* ------------------------------------------------------------- scrollbars -- */
+.scrollv, .scrollh {
+  position: absolute;
+  background: var(--paper);
+  z-index: 5;
+  user-select: none;
+}
+.scrollv { top: 0; right: 0; bottom: 16px; width: 16px; border-left: 1px solid var(--ink); }
+.scrollh { left: 0; right: 16px; bottom: 0; height: 16px; border-top: 1px solid var(--ink); }
+.scrollv .arrow, .scrollh .arrow {
+  position: absolute;
+  width: 15px; height: 15px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink);
+}
+.scrollv .arrow.up { top: 0; left: 0; }
+.scrollv .arrow.down { bottom: 0; left: 0; top: auto; border-bottom: 0; border-top: 1px solid var(--ink); }
+.scrollh .arrow.left { left: 0; top: 0; width: 15px; height: 15px; border-bottom: 0; border-right: 1px solid var(--ink); }
+.scrollh .arrow.right { right: 0; top: 0; width: 15px; height: 15px; border-bottom: 0; border-left: 1px solid var(--ink); }
+.arrow i {
+  position: absolute;
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+.arrow.up i { border-bottom: 6px solid #000; left: 3px; top: 4px; }
+.arrow.down i { border-top: 6px solid #000; left: 3px; top: 4px; }
+.arrow.left i { border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-right: 6px solid #000; left: 4px; top: 3px; }
+.arrow.right i { border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 6px solid #000; left: 4px; top: 3px; }
+.arrow:active { background: var(--ink); }
+.arrow:active i { border-top-color: var(--paper); border-bottom-color: var(--paper); border-left-color: var(--paper); border-right-color: var(--paper); }
+
+.thumb {
+  position: absolute;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+}
+.scrollv .thumb { left: 2px; width: 11px; }
+.scrollh .thumb { top: 2px; height: 11px; }
+.track {
+  position: absolute;
+  background-image: repeating-linear-gradient(to bottom, #fff 0 3px, #000 3px 4px);
+  opacity: .0;
+}
+
+.scrollarea { position: absolute; inset: 0; overflow: hidden; }
+.scrollarea .view {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollarea .view::-webkit-scrollbar { width: 0; height: 0; }
+.scrollarea.v .view { right: 16px; }
+.scrollarea.h .view { bottom: 16px; }
+.scrollarea.vh .view { right: 16px; bottom: 16px; }
+
+/* -------------------------------------------------------------- finder win -- */
+.fgrid {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  padding: 6px 2px 4px 6px;
+  gap: 2px 0;
+  min-height: 100%;
+}
+.icon {
+  width: 88px;
+  height: 66px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  padding-top: 2px;
+}
+.icon .plate { width: 32px; height: 32px; }
+.icon img { width: 32px; height: 32px; display: block; image-rendering: pixelated; }
+.icon .lbl {
+  width: 100%;
+  max-width: 86px;
+  margin-top: 1px;
+  padding: 0 2px;
+  font-size: 12px;
+  line-height: 11px;
+  text-align: center;
+  word-break: break-word;
+}
+.icon.sel .plate { background: var(--ink); }
+.icon.sel img { filter: invert(1); }
+.icon.sel .lbl { background: var(--ink); color: var(--paper); }
+.icon.dragging { opacity: .35; }
+
+.icon.by-name { height: 20px; }
+.fgrid.list { display: block; padding: 2px 0; }
+.fgrid.list .icon {
+  width: 100%;
+  height: 18px;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px;
+}
+.fgrid.list .icon img { width: 16px; height: 16px; }
+.fgrid.list .icon .plate { width: 16px; height: 16px; }
+.fgrid.list .icon .lbl { text-align: left; max-width: none; flex: 1; line-height: 18px; margin: 0; }
+.fgrid.list .icon.sel { background: var(--ink); color: var(--paper); }
+.fgrid.list .icon.sel .lbl { background: transparent; }
+.fgrid.list .icon .col-size { width: 46px; flex: 0 0 46px; text-align: right; white-space: nowrap; overflow: hidden; }
+
+/* window body for finder windows: a status strip pinned to the bottom */
+.win:has(.fstatus) .scrollarea { bottom: 15px; }
+.win:has(.fstatus) .scrollv { bottom: 31px; }
+
+/* status strip under a finder window */
+.fstatus {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 15px;
+  border-top: 1px solid var(--ink);
+  font-size: 12px;
+  line-height: 14px;
+  padding: 0 5px;
+  background: var(--paper);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- buttons -- */
+.btn {
+  font-family: var(--ui-font);
+  font-size: 12px;
+  line-height: 15px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  min-width: 66px;
+  height: 19px;
+  padding: 0 10px;
+  cursor: default;
+  white-space: nowrap;
+}
+.btn:active { background: var(--ink); color: var(--paper); }
+.btn.default { box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 2px #000; }
+.btn:disabled { opacity: .4; }
+
+/* fields */
+.field {
+  font-family: var(--ui-font);
+  font-size: 12px;
+  line-height: 14px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  height: 18px;
+  padding: 0 3px;
+  outline: none;
+  min-width: 0;
+}
+.field:focus { box-shadow: inset 0 0 0 1px #000; }
+textarea.field { height: auto; resize: none; }
+
+/* --------------------------------------------------------------- messages -- */
+#dialogs { position: absolute; inset: 0; z-index: 3400; pointer-events: none; }
+
+.dialog {
+  position: absolute;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, .4);
+  pointer-events: auto;
+  z-index: 3401;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+}
+.dialog [contenteditable="true"], input, textarea { cursor: text; }
+.win-body { padding: 12px 14px 10px; display: flex; gap: 10px; align-items: flex-start; }
+.dialog .dlg-icon { width: 32px; height: 32px; flex: 0 0 32px; image-rendering: pixelated; }
+.dialog .dlg-text { flex: 1; font-size: 12px; line-height: 14px; padding-top: 2px; }
+.dialog .dlg-text p + p { margin-top: 7px; }
+.dialog .dlg-row { display: flex; align-items: center; gap: 6px; margin-top: 9px; }
+.dialog .btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 12px 11px;
+}
+.dialog .btns.center { justify-content: center; }
+
+.modal-shield {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .001);
+  pointer-events: auto;
+  z-index: 3400;
+}
+
+/* ------------------------------------------------------------------ misc -- */
+.hidden { display: none !important; }
+.mono { font-family: var(--ui-font); }
+.tiny { font-size: 12px; line-height: 12px; }
+.nowrap { white-space: nowrap; }
+.row { display: flex; align-items: center; }
+.between { justify-content: space-between; }
+.pad { padding: 10px 12px; }
+.grow { flex: 1; }
+.dither {
+  background-image: repeating-conic-gradient(#000 0 25%, #fff 0 50%);
+  background-size: 2px 2px;
+}
+.hr { height: 1px; background: var(--ink); margin: 8px 0; }
+
+/* drag ghost + marquee */
+#dragghost {
+  position: absolute;
+  z-index: 3300;
+  pointer-events: none;
+  opacity: .85;
+  width: 32px; height: 32px;
+}
+#dragghost img { width: 32px; height: 32px; image-rendering: pixelated; }
+#marquee {
+  position: absolute;
+  border: 1px solid var(--ink);
+  background: rgba(0, 0, 0, .06);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------- launcher -- */
+.launcher-body { padding: 0; }
+.launcher-head {
+  width: 100%;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--ink);
+  font-size: 12px;
+  height: 16px;
+  line-height: 15px;
+  padding: 0 6px;
+  background: var(--paper);
+  display: flex;
+  justify-content: space-between;
+}
+.launcher-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  padding: 6px 4px;
+  gap: 0;
+}
+.lapp {
+  width: 72px;
+  height: 66px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 3px;
+  cursor: default;
+}
+.lapp img { width: 32px; height: 32px; image-rendering: pixelated; }
+.lapp .lbl { font-size: 12px; line-height: 11px; text-align: center; width: 100%; max-width: 70px; margin-top: 2px; word-break: break-word; }
+.lapp.sel .plate { background: var(--ink); }
+.lapp.sel img { filter: invert(1); }
+.lapp.sel .lbl { background: var(--ink); color: var(--paper); }
+.lapp .plate { width: 32px; height: 32px; }
+
+/* ----------------------------------------------------------------- macwrite -- */
+.mwrite { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.mwrite .ruler {
+  height: 20px;
+  flex: 0 0 20px;
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+  background: var(--paper);
+  overflow: hidden;
+}
+.mwrite .ruler .tick {
+  position: absolute;
+  top: 14px;
+  width: 1px;
+  height: 4px;
+  background: var(--ink);
+}
+.mwrite .ruler .tick.major { top: 9px; height: 9px; }
+.mwrite .ruler .num {
+  position: absolute;
+  top: 0;
+  font-size: 12px;
+  line-height: 12px;
+  background: var(--paper);
+  padding: 0 1px;
+}
+.mwrite .ruler .marker {
+  position: absolute;
+  top: 2px;
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid #000;
+}
+.mwrite .page {
+  flex: 1;
+  overflow: auto;
+  padding: 8px 12px 30px;
+  font-size: 12px;
+  line-height: 15px;
+  outline: none;
+  scrollbar-width: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  caret-color: #000;
+}
+.mwrite .page::-webkit-scrollbar { width: 0; }
+.mwrite .page:focus { outline: none; }
+.mwrite .status {
+  flex: 0 0 15px;
+  border-top: 1px solid var(--ink);
+  font-size: 12px;
+  line-height: 14px;
+  padding: 0 5px;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------- macpaint -- */
+.mpaint { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.mpaint .pal-row { display: flex; align-items: center; gap: 4px; }
+.mpaint .pal-row + .pal-row { margin-top: 3px; }
+.mpaint .pal-sep { width: 1px; height: 18px; background: var(--ink); margin: 0 4px; }
+.mpaint .palette {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 3px 5px;
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+}
+.mpaint .tools {
+  display: grid;
+  grid-template-columns: repeat(8, 20px);
+  gap: 1px;
+}
+.mpaint .tool {
+  width: 20px; height: 20px;
+  border: 1px solid transparent;
+  display: grid;
+  place-items: center;
+  cursor: default;
+}
+.mpaint .tool img { width: 16px; height: 16px; image-rendering: pixelated; }
+.mpaint .tool.on { background: var(--ink); }
+.mpaint .tool.on img { filter: invert(1); }
+.mpaint .side-label { font-size: 12px; line-height: 12px; }
+.mpaint .patterns {
+  display: grid;
+  grid-template-columns: repeat(8, 17px);
+  gap: 1px;
+}
+.mpaint .swatch {
+  width: 17px;
+  height: 17px;
+  border: 1px solid var(--ink);
+  cursor: default;
+}
+.mpaint .swatch.on { outline: 1px solid #000; box-shadow: inset 0 0 0 1px #fff, inset 0 0 0 2px #000; }
+.mpaint canvas { border: 1px solid var(--ink); }
+.mpaint .canvas-wrap {
+  flex: 1;
+  overflow: auto;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  background: var(--paper);
+  scrollbar-width: none;
+}
+.mpaint .canvas-wrap::-webkit-scrollbar { width: 0; height: 0; }
+.mpaint canvas {
+  display: block;
+  image-rendering: pixelated;
+  cursor: crosshair;
+  touch-action: none;
+  background: #fff;
+}
+.mpaint .widths { display: grid; grid-template-columns: repeat(4, 18px); gap: 1px; }
+.mpaint .widths .w { width: 17px; height: 17px; border: 1px solid var(--ink); display: grid; place-items: center; cursor: default; }
+.mpaint .widths .w i { display: block; background: #000; }
+.mpaint .widths .w.on { background: #000; }
+.mpaint .widths .w.on i { background: #fff; }
+
+/* -------------------------------------------------------------- calculator -- */
+.calc { position: absolute; inset: 0; padding: 6px; display: flex; flex-direction: column; gap: 5px; }
+.calc .display {
+  border: 1px solid var(--ink);
+  height: 22px;
+  font-size: 12px;
+  line-height: 21px;
+  text-align: right;
+  padding: 0 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  background: var(--paper);
+}
+.calc .keys { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+.calc .key {
+  font-family: var(--ui-font);
+  font-size: 12px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  cursor: default;
+  display: grid;
+  place-items: center;
+  min-height: 18px;
+  padding: 0;
+  border-radius: 3px;
+}
+.calc .key:active, .calc .key.pressed { background: var(--ink); color: var(--paper); }
+.calc .key.op { }
+.calc .key.wide { grid-column: span 2; }
+
+/* ------------------------------------------------------------ control panel -- */
+.cpanel { position: absolute; inset: 0; overflow: auto; padding: 8px; scrollbar-width: none; }
+.cpanel::-webkit-scrollbar { width: 0; }
+.cpanel h4 {
+  font-size: 12px;
+  font-weight: normal;
+  margin: 0 0 4px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.cpanel section { margin-bottom: 9px; }
+.cpanel .pat-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; }
+.cpanel .swatch {
+  height: 22px;
+  border: 1px solid var(--ink);
+  cursor: default;
+  position: relative;
+}
+.cpanel .swatch.on::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  outline: 1px solid #000;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 1px #fff;
+}
+.cpanel .ctl-row { display: flex; align-items: center; gap: 8px; font-size: 12px; height: 18px; }
+.cpanel .ctl-row .lab { width: 92px; }
+.cpanel .slider {
+  position: relative;
+  flex: 1;
+  height: 12px;
+  border: 1px solid var(--ink);
+  background: repeating-linear-gradient(to bottom, #fff 0 3px, #000 3px 4px);
+  background-size: 100% 4px;
+  cursor: default;
+}
+.cpanel .slider .knob {
+  position: absolute;
+  top: -2px;
+  width: 9px;
+  height: 14px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  transform: translateX(-50%);
+}
+.cpanel .checkline { display: flex; align-items: center; gap: 6px; font-size: 12px; height: 18px; cursor: default; }
+.cpanel .box {
+  width: 11px; height: 11px;
+  border: 1px solid var(--ink);
+  display: grid; place-items: center;
+  font-size: 12px;
+  line-height: 11px;
+}
+
+/* ------------------------------------------------------------------- clock -- */
+.clockapp { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; padding: 6px; gap: 4px; }
+.clockapp canvas { image-rendering: pixelated; display: block; }
+.clockapp .digital { font-size: 12px; line-height: 13px; letter-spacing: 1px; }
+.clockapp .setrow { display: flex; align-items: center; gap: 4px; font-size: 12px; }
+
+/* ----------------------------------------------------------------- keycaps -- */
+.keycaps { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 6px; gap: 5px; }
+.keycaps .kc-field {
+  height: 20px;
+  border: 1px solid var(--ink);
+  padding: 0 4px;
+  font-size: 12px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.keycaps .kb { flex: 1; display: flex; flex-direction: column; gap: 3px; justify-content: flex-start; }
+.keycaps .kc-row { display: flex; gap: 3px; }
+.keycaps .kc-key {
+  height: 18px;
+  flex: 1 1 0;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  font-size: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  cursor: default;
+  user-select: none;
+}
+.keycaps .kc-key.wide { flex: 2.6 1 0; }
+.keycaps .kc-key.space { flex: 8 1 0; }
+.keycaps .kc-key.down { background: var(--ink); color: var(--paper); }
+.keycaps .kc-hint { font-size: 12px; line-height: 12px; opacity: .6; }
+
+/* ------------------------------------------------------------------ notepad -- */
+.notepad { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.notepad .np-page {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 13px;
+  outline: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  caret-color: #000;
+}
+.notepad .np-foot {
+  height: 16px;
+  flex: 0 0 16px;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 0 32px 0 5px;
+}
+.notepad .corner {
+  position: absolute;
+  bottom: 0;
+  width: 0; height: 0;
+  cursor: default;
+}
+.notepad .corner.next {
+  right: 6px;
+  bottom: 3px;
+  border-left: 9px solid #000;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+.notepad .corner.prev {
+  right: 22px;
+  bottom: 3px;
+  border-right: 9px solid #000;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+}
+
+/* ------------------------------------------------------------------ puzzle -- */
+.puzzle { position: absolute; inset: 0; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.puzzle .tiles {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 2px;
+  border: 1px solid var(--ink);
+  padding: 2px;
+}
+.puzzle .tile {
+  border: 1px solid var(--ink);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  background: var(--paper);
+  cursor: default;
+}
+.puzzle .tile.blank { border-color: transparent; background: transparent; }
+.puzzle .tile:active { background: #000; color: #fff; }
+.puzzle .foot { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+
+/* ---------------------------------------------------------------- credits -- */
+.credits { position: relative; padding: 10px 14px 16px; font-size: 12px; line-height: 14px; }
+.credits h1 { font-size: 12px; font-weight: normal; line-height: 16px; margin-bottom: 2px; }
+.credits h2 {
+  font-size: 12px;
+  font-weight: normal;
+  margin: 12px 0 4px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+}
+.credits p { margin-bottom: 5px; }
+.credits ul { list-style: none; }
+.credits li { margin-bottom: 3px; padding-left: 12px; position: relative; }
+.credits li::before { content: "•"; position: absolute; left: 2px; }
+.credits a { color: #000; text-decoration: underline; }
+.credits .fine { opacity: .7; }
+.credits .mark { background: #000; color: #fff; padding: 0 2px; }
+
+/* ------------------------------------------------------------------ about -- */
+.about { position: absolute; inset: 0; padding: 12px; display: flex; gap: 12px; font-size: 12px; line-height: 15px; }
+.about .face { width: 64px; height: 64px; image-rendering: pixelated; flex: 0 0 64px; }
+.about .mem { margin-top: 8px; }
+.about .membar { height: 8px; border: 1px solid var(--ink); margin: 3px 0 5px; display: flex; }
+.about .membar .fill { background: var(--ink); }
+
+/* -------------------------------------------------------------- scrapbook -- */
+.scrapbook { position: absolute; inset: 0; display: flex; }
+.scrapbook .sb-list {
+  width: 118px;
+  border-right: 1px solid var(--ink);
+  overflow: auto;
+  scrollbar-width: none;
+  padding: 2px;
+}
+.scrapbook .sb-list::-webkit-scrollbar { width: 0; }
+.scrapbook .sb-item { display: flex; align-items: center; gap: 4px; padding: 2px 3px; font-size: 12px; height: 20px; cursor: default; }
+.scrapbook .sb-item img { width: 16px; height: 16px; image-rendering: pixelated; }
+.scrapbook .sb-item.sel { background: #000; color: #fff; }
+.scrapbook .sb-item.sel img { filter: invert(1); }
+.scrapbook .sb-view {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  overflow: auto;
+  text-align: center;
+  font-size: 12px;
+  line-height: 14px;
+}
+.scrapbook .sb-view .big { width: 64px; height: 64px; image-rendering: pixelated; margin-bottom: 8px; }
+
+/* -------------------------------------------------------------- get info -- */
+.getinfo { position: absolute; inset: 0; padding: 10px 12px; font-size: 12px; line-height: 15px; display: flex; flex-direction: column; gap: 3px; }
+.getinfo .top { display: flex; gap: 10px; margin-bottom: 4px; }
+.getinfo .top img { width: 32px; height: 32px; image-rendering: pixelated; }
+.getinfo .kv { display: flex; gap: 6px; }
+.getinfo .kv .k { width: 64px; opacity: .8; }
+.getinfo .kv .v { flex: 1; word-break: break-word; }
+
+/* ------------------------------------------------------------- responsive -- */
+@media (max-width: 620px) {
+  #outside { display: none; }
+  body { gap: 0; }
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .boot .blink { animation: none; }
+  .boot { transition: none; }
+}
+
+
+/* ----------------------------------------------------------------- chooser -- */
+/* System 3.0's Chooser: printer icons across the top, AppleTalk underneath,
+   then the zones and devices lists side by side. */
+.chooser { padding: 9px 11px 8px; display: flex; flex-direction: column; gap: 5px; height: 100%; }
+.chooser-lede { font-size: 12px; line-height: 14px; }
+.chooser-icons { display: flex; gap: 14px; padding: 2px 0 4px; border-bottom: 1px solid var(--ink); }
+.chooser-icon {
+  width: 74px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 2px 2px;
+  border: 1px solid transparent;
+  cursor: default;
+}
+.chooser-icon.on { border-color: var(--ink); background: var(--dither); }
+.chooser-icon.off { opacity: .35; }
+.chooser-icon:focus-visible { outline: 1px dotted var(--ink); outline-offset: 1px; }
+.chooser-icon-name { font-size: 11px; line-height: 12px; text-align: center; }
+.chooser-printer {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 22px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+.chooser-printer::before { /* paper in the feed */
+  content: '';
+  position: absolute;
+  left: 7px; top: -6px;
+  width: 12px; height: 6px;
+  border: 1px solid var(--ink);
+  border-bottom: 0;
+  background: var(--paper);
+}
+.chooser-printer::after { /* output slot and light */
+  content: '';
+  position: absolute;
+  left: 4px; bottom: 4px;
+  width: 18px; height: 3px;
+  background: var(--ink);
+}
+.chooser-at { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.chooser-label { width: 68px; flex: 0 0 68px; }
+.chooser-radio {
+  font-family: var(--ui-font);
+  font-size: 11px;
+  line-height: 13px;
+  height: 17px;
+  padding: 0 7px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  cursor: default;
+}
+.chooser-radio.on { background: var(--ink); color: var(--paper); }
+.chooser-cols { display: flex; gap: 8px; flex: 1; min-height: 0; }
+.chooser-col { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.chooser-listbox {
+  flex: 1;
+  min-height: 44px;
+  border: 1px solid var(--ink);
+  overflow: auto;
+  scrollbar-width: none;
+  padding: 1px;
+}
+.chooser-listbox::-webkit-scrollbar { width: 0; }
+.chooser-row-s { font-size: 12px; line-height: 15px; padding: 0 4px; cursor: default; white-space: nowrap; overflow: hidden; }
+.chooser-row-s.on { background: var(--ink); color: var(--paper); }
+.chooser-empty { font-size: 11px; line-height: 15px; padding: 0 4px; opacity: .55; }
+.chooser-status { font-size: 11px; line-height: 13px; opacity: .8; min-height: 13px; }
+.win:has(.chooser) .win-body { padding: 0; height: 100%; display: flex; }
+.win:has(.chooser) .win-body > * { flex: 1; min-width: 0; }
+
+/* -------------------------------------------------------------- test page -- */
+.testpage { position: absolute; inset: 0; overflow: auto; padding: 10px 12px; font-size: 12px; scrollbar-width: none; }
+.testpage::-webkit-scrollbar { width: 0; }
+.testpage-art { font-size: 5px; line-height: 4px; letter-spacing: 0; margin: 0 0 8px; }
+.testpage-table { display: grid; grid-template-columns: 86px 1fr; gap: 2px 6px; }
+.testpage-k { opacity: .75; }
+.testpage-v { word-break: break-word; }
+.testpage-foot { margin-top: 8px; font-size: 11px; line-height: 13px; opacity: .7; }
+
+/* --------------------------------------------------------------- memory UI -- */
+.about .memlist { display: flex; gap: 10px; font-size: 11px; line-height: 13px; opacity: .8; margin-bottom: 3px; }
+.about .membar .fill.dither { background: repeating-conic-gradient(#000 0 25%, #fff 0 50%); background-size: 2px 2px; }
+
+/* ------------------------------------------------------------- control panel -- */
+.cpanel .hint { font-size: 11px; opacity: .6; }
+.cpanel .btn.on { background: var(--ink); color: var(--paper); }
+
+/* the Trash bulges once it holds anything, as it has since 3.0 */
+.dicon.bulge .plate { transform: translateY(-1px); }
+
+
+/* ============================== System 6.0: Control Panel cdev strip ====== */
+.cpanel6 { display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
+.cdev-strip {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-bottom: 1px solid var(--ink);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.cdev-strip::-webkit-scrollbar { height: 0; }
+.cdev-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 56px;
+  padding: 3px 4px 2px;
+  cursor: default;
+}
+.cdev-tile img { width: 32px; height: 32px; }
+.cdev-tile .cdev-lbl { font-size: 10px; line-height: 10px; max-width: 62px; text-align: center; }
+.cdev-tile.on img { filter: invert(1); }
+.cdev-tile.on .cdev-lbl {
+  background: var(--ink);
+  color: var(--paper);
+}
+.cdev-holder { flex: 1; overflow: auto; scrollbar-width: none; padding: 2px 6px 6px; }
+.cdev-holder::-webkit-scrollbar { width: 0; }
+.cpanel6 .pane h4 {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+  margin: 2px 0 8px;
+}
+.cpanel6 .hint {
+  font-size: 11px;
+  line-height: 13px;
+  opacity: .75;
+  margin: 8px 0 2px;
+}
+.cpanel6 .popup {
+  border: 1px solid var(--ink);
+  padding: 1px 10px 1px 6px;
+  font-size: 12px;
+  background:
+    linear-gradient(var(--ink), var(--ink)) right 4px center / 6px 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right 6px center / 6px 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) right 8px center / 6px 1px no-repeat,
+    var(--paper);
+  padding-right: 18px;
+}
+.cpanel6 .radiogroup { display: flex; flex-direction: column; gap: 3px; margin: 4px 0; }
+.cpanel6 .radioline { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.cpanel6 .radio {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  line-height: 8px;
+  overflow: hidden;
+}
+.cpanel6 .hr { height: 1px; background: var(--ink); margin: 10px 0; }
+
+/* ============================== System 6.0: MacroMaker =================== */
+.macromaker {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+}
+.macromaker .mm-deck {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--ink);
+  padding: 8px;
+}
+.macromaker .mm-deck img { width: 32px; height: 32px; }
+.macromaker .mm-label { font-size: 12px; }
+.macromaker .mm-status { font-size: 11px; opacity: .7; margin-left: auto; text-align: right; max-width: 130px; }
+.macromaker .mm-keys { display: flex; gap: 8px; }
+.macromaker .mm-key { flex: 1; }
+.macromaker .mm-foot { font-size: 11px; opacity: .6; line-height: 13px; }

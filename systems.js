@@ -64,15 +64,17 @@ window.SYSTEMS = [
     short: '6.0',
     finder: 'Finder 6.1',
     year: 1988,
-    date: 'March 1988',
-    model: 'Macintosh II',
-    bits: '1-bit to 8-bit colour',
-    status: 'planned',
-    href: '',
+    date: 'April 1988',
+    model: 'Macintosh SE',
+    bits: '1-bit, 512 × 342',
+    status: 'ready',
+    href: 'os/system-6.0/',
     blurb:
-      'MultiFinder, colour QuickDraw, the Control Panel as we remember it and the ' +
-      'first taste of running more than one application at a time.',
-    highlights: ['MultiFinder', 'Colour', 'DA suite'],
+      'MultiFinder at last: Special ▸ Set Startup… turns the machine into a ' +
+      'co-operative multitasker. MacroMaker records your clicks like a tape ' +
+      'recorder, the Control Panel becomes a strip of icons, and a 30 MB SCSI ' +
+      'hard disk moves in beside the 800K floppy.',
+    highlights: ['MultiFinder', 'Set Startup', 'MacroMaker', 'Icon Control Panel', '30SC disk'],
   },
   {
     id: 'system-7.0',
@@ -80,15 +82,16 @@ window.SYSTEMS = [
     short: '7.0',
     finder: 'Finder 7.0',
     year: 1991,
-    date: 'May 1991',
-    model: 'Macintosh IIfx',
-    bits: '8-bit colour',
-    status: 'planned',
-    href: '',
+    date: '13 May 1991',
+    model: 'Macintosh SE',
+    bits: '1-bit, 512 × 342',
+    status: 'ready',
+    href: 'os/system-7.0/',
     blurb:
-      'Aliases, Balloon Help, AppleScript, TrueType and a desktop that finally ' +
-      'looks like a place rather than a list of disks.',
-    highlights: ['Aliases', 'Balloon Help', 'AppleScript', 'TrueType'],
+      'Big Bang: beveled windows and grey linen, aliases with little arrow ' +
+      'badges, Balloon Help, labels, About This Macintosh with a memory bar for ' +
+      'every running application, and a Trash that survives a restart.',
+    highlights: ['System 7 look', 'Aliases', 'Balloon Help', 'Labels', 'Trash persists'],
   },
   {
     id: 'mac-os-8',

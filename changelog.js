@@ -4,6 +4,23 @@
 
 window.CHANGELOG = [
   {
+    version: '0.7.0',
+    date: '2026-11-11',
+    title: 'System 6.0 and System 7.0 boot',
+    summary: '1988 and 1991 in one leap: MultiFinder, MacroMaker, and the System 7 look with aliases and balloons.',
+    items: [
+      'New system: os/system-6.0/ — a Macintosh SE running System 6.0 and Finder 6.1',
+      'MultiFinder: Special ▸ Set Startup… picks Finder or MultiFinder; the Apple menu lists running programs and the About box grows its largest-block line',
+      'MacroMaker, the tape-recorder desk accessory from System 6.0, joins the Apple menu',
+      'The Control Panel becomes the strip-of-icons kind: Keyboard, Mouse, Sound, Memory, Startup Disk, Desktop Pattern',
+      'A 30 MB Apple Hard Disk 30SC beside the 800K startup floppy; ImageWriter LQ joins the Chooser',
+      'New system: os/system-7.0/ — the May 1991 System 7.0 on the same SE screen, with a 1.4 MB SuperDrive disk and an 80 MB hard disk',
+      'The System 7 look: beveled windows, embossed rounded buttons, ridged grow boxes, dithered scroll channels, 50% grey linen desktop',
+      'Aliases (File ▸ Make Alias, arrow badges), Balloon Help, labels with patterned bands, Find… and Force Quit on Ctrl/⌘-Option-Escape',
+      'About This Macintosh with per-application memory bars and a bow to the Blue Meanies; the Apple menu builds itself from the Apple Menu Items folder; the Trash persists across restarts'
+    ]
+  },
+  {
     version: '0.6.0',
     date: '2026-11-11',
     title: 'System 3.0 boots',
