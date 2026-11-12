@@ -230,11 +230,13 @@ mac.restart(); mac.shutdown();     // the Special menu items
 The site is static and root-relative to the repository, so project pages work with no
 build step: `https://<user>.github.io/Macintosh-OS/`.
 
-1. Push `main`.
-2. Settings ▸ Pages ▸ **Build and deployment** ▸ Source: *Deploy from a branch*,
-   Branch: `main`, folder: `/ (root)`.
-3. The included workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) can
-   also deploy on every push to `main` (Settings ▸ Pages ▸ Source: *GitHub Actions*).
+1. **Settings ▸ Pages ▸ Build and deployment ▸ Source: _GitHub Actions_** — this one click
+   cannot be done by a workflow token, so it has to be done once by a repository admin.
+2. Push to `main`. [`.github/workflows/pages.yml`](.github/workflows/pages.yml) stages the
+   repository (everything except `.git`/`.github`) and deploys it.
+
+The repository is also the artefact: `.nojekyll` is present, so nothing is filtered, and a
+branch-based deploy (`main`, `/ (root)`) works exactly as well if you prefer that.
 
 Everything the pages load is relative (`os/system-1.0/`, `../../assets/…`), so the same
 files work at a project path, a user path, a custom domain or `localhost`.
