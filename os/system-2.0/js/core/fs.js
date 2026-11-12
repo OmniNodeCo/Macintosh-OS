@@ -9,11 +9,11 @@ import { uid, fmtDate } from './ui.js';
 
 const KEY = 'macintosh-os.2.0.fs.v1';
 
-/* System 2.0 shipped on the 512K Macintosh's 400K floppy, but the volume the
-   clone presents is the full 512K of the machine, since the whole point of
-   this disk is the extra memory. */
-export const VOLUME_BYTES = 512 * 1024;
-export const VOLUME_LABEL = '512K';
+/* System 2.0 shipped on a 400K single-sided 3.5-inch floppy. The 512K was RAM,
+   not disk: every Macintosh of 1984-85 booted from the same 400K media.
+   400 x 1024 = 409,600 bytes, the formatted capacity of the disk. */
+export const VOLUME_BYTES = 400 * 1024;
+export const VOLUME_LABEL = '400K';
 
 const now = () => Date.now();
 
@@ -149,8 +149,14 @@ export function usedBytes(node = systemDisk()) {
   return total;
 }
 
-export function freeBytes() {
-  return Math.max(0, VOLUME_BYTES - usedBytes());
+/* each volume reports its own free space; the System Disk is the budget */
+export function volumeBytes(node = systemDisk()) {
+  if (node && node.bytes) return node.bytes;
+  return VOLUME_BYTES;
+}
+
+export function freeBytes(node = systemDisk()) {
+  return Math.max(0, volumeBytes(node) - usedBytes(node));
 }
 
 export function sizeOf(node) {

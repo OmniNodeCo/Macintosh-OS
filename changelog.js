@@ -4,6 +4,23 @@
 
 window.CHANGELOG = [
   {
+    version: '0.6.0',
+    date: '2026-11-11',
+    title: 'System 3.0 boots',
+    summary: 'January 1986: the Macintosh Plus, HFS, 800K disks and the Chooser.',
+    items: [
+      'New system: os/system-3.0/ — a Macintosh Plus running System 3.0 and Finder 5.1',
+      'HFS at last: folders nest to any depth, and the Documents folder proves it',
+      'Three volumes: an 800K startup disk, a 20 MB HD20 on SCSI, and a 400K disk from a 512K machine',
+      'Zoom boxes on every title bar, one click to fill the screen',
+      'The Chooser replaces Choose Printer, with AppleTalk, zones and a printed test page',
+      'Control Panel with words: blink rate, mouse tracking, RAM cache and AppleTalk',
+      'Finder windows report "N items · 512K in disk · N available"; the Trash bulges',
+      'Insert Disk File mounts a fresh 800K disk; MiniFinder retires with the 512K machines',
+      'System 2.0 corrected: its volume is the 400K floppy the 512K really booted from, not 512K of RAM'
+    ]
+  },
+  {
     version: '0.5.0',
     date: '2026-11-11',
     title: 'System 2.0 boots',

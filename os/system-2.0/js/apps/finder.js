@@ -478,7 +478,7 @@ export async function printCatalog(container) {
 
   const lines = [];
   lines.push(`${container.name} — Catalog`);
-  lines.push(`${entries.length} item${entries.length === 1 ? '' : 's'} · ${bytes(FS.freeBytes())} free`);
+  lines.push(`${entries.length} item${entries.length === 1 ? '' : 's'} · ${bytes(FS.freeBytes(container))} free`);
   lines.push('');
   const walk = (nodes, depth) => {
     for (const n of nodes) {
@@ -634,7 +634,7 @@ export function getInfo(node) {
     el('div', {
       style: { opacity: '.7' },
       text: node.kind === 'disk'
-        ? `${FS.VOLUME_LABEL} disk, one volume · ${bytes(FS.freeBytes())} free.`
+        ? `${FS.VOLUME_LABEL} disk, one volume · ${bytes(FS.freeBytes(node))} free.`
         : 'Click the close box when finished.',
     }),
   );

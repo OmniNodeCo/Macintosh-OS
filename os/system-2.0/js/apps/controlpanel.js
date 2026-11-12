@@ -113,7 +113,7 @@ export default {
       el('h4', {}, el('span', { text: 'Startup Disk' })),
       el('div', { class: 'ctl-row' },
         el('span', { class: 'lab', text: 'System Disk' }),
-        el('span', { style: { opacity: '.65' }, text: '512K — System 2.0' }),
+        el('span', { style: { opacity: '.65' }, text: '400K — System 2.0' }),
       ),
       el('div', { class: 'ctl-row' },
         el('span', { class: 'lab', text: 'Printer' }),

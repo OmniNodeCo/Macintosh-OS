@@ -7,7 +7,8 @@ starts with the **1984 Macintosh System 1.0 / Finder 1.0**, a working, from-scra
 recreation of the original desktop in 1-bit black and white: 512 × 342 pixels of menu bar,
 striped windows, dithered icons, desk accessories — written in plain HTML, CSS and
 JavaScript with **no frameworks, no image files and no Apple assets**. **System 2.0 /
-Finder 4.1** (April 1985) is the second bootable disk.
+Finder 4.1** (April 1985) and **System 3.0 / Finder 5.1** (January 1986, the Macintosh
+Plus) are the second and third bootable disks.
 
 **Live site:** <https://omninodeco.github.io/Macintosh-OS/> (GitHub Pages, served from `main`).
 
@@ -16,6 +17,7 @@ python3 -m http.server 8000      # or: npx serve .
 # then open http://localhost:8000/            → the launcher / startup disks
 #           http://localhost:8000/os/system-1.0/  → System 1.0
 #           http://localhost:8000/os/system-2.0/  → System 2.0
+#           http://localhost:8000/os/system-3.0/  → System 3.0
 ```
 
 The museum page is a pure static page, so it also works straight from `file://` —
@@ -34,7 +36,7 @@ server or GitHub Pages.
 | --- | --- | --- | --- |
 | [System 1.0](os/system-1.0/) | 1984 | Macintosh 128K | **bootable** |
 | [System 2.0](os/system-2.0/) | 1985 | Macintosh 512K | **bootable** |
-| System 3.0 | 1986 | Macintosh Plus | planned |
+| [System 3.0](os/system-3.0/) | 1986 | Macintosh Plus | **bootable** |
 | System 6.0 | 1988 | Macintosh II | planned |
 | System 7.0 | 1991 | Macintosh II fx | planned |
 | Mac OS 8 | 1997 | Power Macintosh 8600 | planned |
@@ -67,9 +69,9 @@ Two steps:
 2. Add one object to [`systems.js`](systems.js) with `status: 'ready'` and its `href`
    (`os/<id>/`). The startup-disk wall picks it up automatically.
 
-Scaffolding a system is `mkdir os/system-2.0 && cp -r os/system-1.0/* os/system-2.0/`,
-then edit. `os/system-2.0/index.html` in this commit is the placeholder shown when a
-"soon" disk is opened by URL.
+Scaffolding a system is `cp -r os/system-2.0 os/system-4.0 && cp -r css/system-2.0 css/system-4.0`,
+then edit — give it its own `localStorage` keys, its own `index.html` and its own entry in
+`systems.js`.
 
 ### Layout
 
@@ -77,13 +79,15 @@ then edit. `os/system-2.0/index.html` in this commit is the placeholder shown wh
 os/system-1.0/          one self-contained system: index.html + js/ (+ its own tools/)
 os/system-1.0/tools/    the typeface builder for that system
 os/system-2.0/          System 2.0 / Finder 4.1 — its own js/, no imports from 1.0
+os/system-3.0/          System 3.0 / Finder 5.1 — HFS, the Chooser, zoom boxes, 800K disks
 css/system-1.0/mac.css  that system's chrome; systems do not share CSS
-css/system-2.0/mac.css  System 2.0's chrome (Adds Choose Printer, MiniFinder, Print Catalog)
+css/system-2.0/mac.css  System 2.0's chrome (Choose Printer, MiniFinder, Print Catalog)
+css/system-3.0/mac.css  System 3.0's chrome (Chooser, status strip, test page, memory meter)
 assets/fonts/           shared typefaces (MacPixel Chicago)
 assets/icons/           shared icon art (favicon)
 systems.js              the registry the launcher reads
 index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
-changelog.js            release history; the newest entry feeds "What's new" (v0.5.0 = System 2.0)
+changelog.js            release history; the newest entry feeds "What's new" (v0.6.0 = System 3.0)
 launcher.css, launcher.js
 ```
 
@@ -166,10 +170,36 @@ What is actually different on screen, and why:
 | **Choose Printer** | New desk accessory, the Chooser's forerunner: ImageWriter or LaserWriter, on the Printer / Modem / AppleTalk port. The title bar and Control Panel follow the choice. |
 | **Eject by Trash** | Drag a volume to the Trash and it is ejected (the icon leaves the desktop). The System Disk refuses, because you are running from it. A second volume, the MacPaint Disk, ships on the desktop so you can try it — and *Put Away* does the same thing from the menu. |
 | **All-white disks** | The disk icon lost its black shutter, the most visible change of the release. |
-| **512K** | The About box shows 512K with System 196K · Largest unused 316K; Get Info reports the volume as `512K disk, one volume · N free`, computed from a real 512 KB budget. |
+| **512K of memory, 400K of disk** | The About box shows the 512K machine with System 196K · Largest unused 316K. The disk is the 400K floppy that machine really booted from: Get Info reports `400K disk, one volume · N free`, computed from a 400 × 1024-byte budget. |
 | **Faster start-up** | The splash clears after 680 ms instead of 850 ms — the 20 % quicker boot System 2.0 advertised. |
 
 Put Back and Close All are deliberately absent: Finder 4.1 removed them.
+
+
+---
+
+## System 3.0 — what the update changed
+
+System 3.0 (January 1986, sold as System Software 0.7, shipped with the Macintosh Plus)
+is the third recreation: `os/system-3.0/`, its own JS and CSS, its own storage namespace
+(`macintosh-os.3.0.*`) and its own changelog entry.
+
+| Feature | Where |
+| --- | --- |
+| **Finder 5.1** | The about box is now *About the Finder…*, and it is a memory meter: total memory, System and Finder residency, and the largest free block. The mountain picture is gone with 4.1. |
+| **HFS** | Folders are real directories and nest to any depth: `System Disk ▸ Documents ▸ Projects ▸ Disk Labels ▸ 1986 ▸ January Labels`. The 1.0 and 2.0 Finders faked folders on a flat MFS disk; this one does not. |
+| **800K disks** and **SCSI** | The startup disk is an 800 × 1024-byte volume. An **HD20**, 20 MB of it, sits on the desktop — the volume HFS was actually written for — and a 400K disk from an older 512K machine still mounts. |
+| **Zoom box** | Every window has one in its title bar: one click fills the screen, another click restores. The 2.0 windows only zoomed on a title-bar double-click. |
+| **The Chooser** | Replaces 2.0's *Choose Printer*: printer icons (ImageWriter / LaserWriter), **AppleTalk Active / Inactive**, a Zones list and a live Devices list — pick a LaserWriter out of `*` or `Engineering` and the title bar follows. *Print Test Page* produces a real 1-bit test sheet with the driver version and the date. |
+| **Control Panel, with words** | The picture-only panel grew labels and the settings the Plus needed: **Blink Rate**, **Mouse Tracking**, a **RAM Cache** (Off / 64K / 128K / 256K) and **AppleTalk Connected / Disconnected**. |
+| **Status strip** | Finder windows report `12 items · 512K in disk · 288K available` — per volume, so the HD20 reports megabytes. |
+| **Trash bulging** | The Trash icon lifts and fills the moment it holds anything, as it has since 3.0. |
+| **Insert Disk File…** | Apple menu and `View ▸ Insert Disk File…` (⌘M) mount a fresh 800K volume from the Finder. |
+| **Faster start-up** | The splash clears at 520 ms: 3.0's disk cache keeps the Finder's hot routines in memory. |
+| **MiniFinder retired** | `Special` no longer offers *Use MiniFinder* — the Plus has the memory to keep the whole Finder loaded. `window.mac.enterMini()` still exists, and does nothing, so code written against 2.0 does not break. |
+
+The machine is a **Macintosh Plus**: 1 MB of memory, the 800K drive, SCSI, and the same
+512 × 342 one-bit screen as every Mac before it.
 
 ---
 
@@ -188,6 +218,7 @@ Put Back and Close All are deliberately absent: Finder 4.1 removed them.
 | `⌘`/`Ctrl` + `A` | Select All |
 | `⌘`/`Ctrl` + `S` | Save (MacWrite, MacPaint) |
 | `⌘`/`Ctrl` + `L` | Open the Launcher |
+| `⌘`/`Ctrl` + `M` | Insert Disk File (System 3.0) |
 | Delete / Backspace | Delete the selection in text fields and documents |
 
 Shortcuts are not registered specially: they come from the same table that draws the menu
@@ -224,7 +255,7 @@ Where it knowingly differs:
 
 ```
 index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
-changelog.js            release history; the newest entry feeds "What's new" (v0.5.0 = System 2.0) for every system
+changelog.js            release history; the newest entry feeds "What's new" (v0.6.0 = System 3.0) for every system
 launcher.css            the lobby in four styles (Classic, Platinum, Aqua, dark), all token-driven
 launcher.js              builds the wall from systems.js, the changelog from changelog.js,
                         the style picker, and the arrow-key/Return navigation
