@@ -23,12 +23,14 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Check out
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Configure Pages
+        id: pages
         uses: actions/configure-pages@v5
         with:
-          # first run turns Pages on for the repo (Source: GitHub Actions)
+          # if the site has not been created yet, try to create it (Source: GitHub Actions);
+          # this needs a repository admin token — otherwise enable Pages once in Settings
           enablement: true
 
       - name: Stage the site
