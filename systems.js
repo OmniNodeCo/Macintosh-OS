@@ -1,8 +1,8 @@
 /* =============================================================================
    Macintosh OS — the web museum
-   Boot chooser for every Macintosh system recreation in this repository.
-   A single data file drives the page: add a system here and it appears in the
-   grid, in the boot-menu list and in the keyboard shortcut hints.
+   The startup-disk wall for every Macintosh system recreation in this repository.
+   A single data file drives the launcher: add a system here and it appears on the
+   wall and in the keyboard navigation.
    ========================================================================== */
 
 /* Every system recreation in the repo. `href` is relative to the repo root so

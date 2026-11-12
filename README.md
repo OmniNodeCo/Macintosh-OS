@@ -1,7 +1,8 @@
 # Macintosh OS — a web museum of classic Mac systems
 
-Every Macintosh system, running in the browser. The repository is a **launcher** (a boot
-chooser and a wall of startup disks) plus one self-contained recreation per system. It
+Every Macintosh system, running in the browser. The repository is a **launcher** (one wall
+of startup disks, release notes, a changelog and a style picker) plus one self-contained
+recreation per system. It
 starts with the **1984 Macintosh System 1.0 / Finder 1.0**, a working, from-scratch
 recreation of the original desktop in 1-bit black and white: 512 × 342 pixels of menu bar,
 striped windows, dithered icons, desk accessories — written in plain HTML, CSS and
@@ -11,13 +12,13 @@ JavaScript with **no frameworks, no image files and no Apple assets**.
 
 ```bash
 python3 -m http.server 8000      # or: npx serve .
-# then open http://localhost:8000/            → the boot chooser / startup disks
+# then open http://localhost:8000/            → the launcher / startup disks
 #           http://localhost:8000/os/system-1.0/  → System 1.0
 ```
 
-The museum page (chooser + startup disks) is a pure static page, so it also works
-straight from `file://` — double-click `index.html`. System 1.0 itself uses ES modules and
-therefore needs a web server or GitHub Pages.
+The museum page is a pure static page, so it also works straight from `file://` —
+double-click `index.html`. System 1.0 itself uses ES modules and therefore needs a web
+server or GitHub Pages.
 
 > **It is an original fan tribute.** Every glyph, icon, pattern, beep and line of code was
 > made for this project. Apple's Chicago font, ROM icons and sounds are *not* included.
@@ -39,8 +40,21 @@ therefore needs a web server or GitHub Pages.
 | Mac OS X | 2001 | Power Mac G4 Cube | planned |
 
 The list lives in one place — [`systems.js`](systems.js). Add an entry with a `href` and a
-`status: 'ready'` and the system appears in the boot chooser and in the startup-disk grid;
-no other file needs to change.
+`status: 'ready'` and the system appears on the startup-disk wall; no other file needs to
+change.
+
+### What's new, changelog and launcher styles
+
+* **One list of systems.** The startup-disk wall is the only place systems are listed; it
+  is keyboard-driven (`↑ ↓ ← →` to choose, `Return` to boot) and planned disks shake + beep.
+* **What's new / Changelog.** Release history lives in [`changelog.js`](changelog.js),
+  newest first. The newest entry fills the *What's new* panel; the whole array fills the
+  changelog. Shipping a release is one object, prepended there.
+* **Launcher styles.** *Settings* offers **Classic** (1984: one bit, hard hairlines),
+  **Platinum** (System 7/8 grey, bevelled cards), **Aqua** (Mac OS X gloss) and
+  **Modern dark**. The choice sets `data-style` on `<html>`, is applied before first paint
+  and is saved in `localStorage`. Styles only re-skin the lobby — the systems keep their own
+  appearance, and the floppy art stays one-bit so it reads in every theme.
 
 ## Adding the next system
 
@@ -49,7 +63,7 @@ Two steps:
 1. Build it in `os/<id>/` (its own `index.html` + `js/`, and `css/<id>/` if it needs its
    own chrome).
 2. Add one object to [`systems.js`](systems.js) with `status: 'ready'` and its `href`
-   (`os/<id>/`). The boot chooser and the disk grid pick it up automatically.
+   (`os/<id>/`). The startup-disk wall picks it up automatically.
 
 Scaffolding a system is `mkdir os/system-2.0 && cp -r os/system-1.0/* os/system-2.0/`,
 then edit. `os/system-2.0/index.html` in this commit is the placeholder shown when a
@@ -64,7 +78,8 @@ css/system-1.0/mac.css  that system's chrome; systems do not share CSS
 assets/fonts/           shared typefaces (MacPixel Chicago)
 assets/icons/           shared icon art (favicon)
 systems.js              the registry the launcher reads
-index.html              the boot chooser / startup-disk wall
+index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
+changelog.js            release history; the newest entry feeds "What's new"
 launcher.css, launcher.js
 ```
 
@@ -179,9 +194,11 @@ Where it knowingly differs:
 ## How it is built
 
 ```
-index.html              the boot chooser / startup-disk wall for every system
-launcher.css            the museum lobby: 1-bit masthead, feature panel, disk grid, chooser
-launcher.js             builds the grid from systems.js, runs the boot chooser (keys: ↑ ↓ Return Esc)
+index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
+changelog.js            release history; the newest entry feeds "What's new" for every system
+launcher.css            the lobby in four styles (Classic, Platinum, Aqua, dark), all token-driven
+launcher.js              builds the wall from systems.js, the changelog from changelog.js,
+                        the style picker, and the arrow-key/Return navigation
 systems.js              the registry of systems: name, year, machine, copy, href, status
 os/system-1.0/
 index.html              that system's shell: case > screen > desk > (menu bar, desktop,

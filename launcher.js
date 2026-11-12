@@ -1,21 +1,50 @@
 /* =============================================================================
    Macintosh OS — the web museum
-   Builds the startup-disk grid from systems.js and drives the boot chooser.
-   Written as a plain script (no modules) so the page also works when opened
-   straight from disk, not just from a web server.
+   One launcher: the startup-disk wall (the only list of systems), the release
+   notes, the changelog, and a settings sheet that re-skins the lobby.
    ========================================================================== */
 
 (function () {
   'use strict';
 
   var systems = (window.SYSTEMS || []).slice().sort(function (a, b) { return a.year - b.year; });
+  var releases = (window.CHANGELOG || []).slice();
   var ready = systems.filter(function (s) { return s.status === 'ready' && s.href; });
 
   var grid = document.getElementById('grid');
   var tpl = document.getElementById('disk-template');
-  var chooser = document.getElementById('chooser');
-  var chooserList = document.getElementById('chooser-list');
   var page = document.getElementById('page');
+  var settings = document.getElementById('settings');
+  var styleGrid = document.getElementById('style-grid');
+
+  var STYLE_KEY = 'macintosh-os.museum.style.v1';
+  var DEFAULT_STYLE = 'classic';
+  var STYLES = [
+    {
+      id: 'classic',
+      name: 'Classic',
+      year: '1984',
+      blurb: 'One bit, white paper, hard hairlines. The museum as it opened.'
+    },
+    {
+      id: 'platinum',
+      name: 'Platinum',
+      year: '1997',
+      blurb: 'System 7 and 8 grey: bevelled cards, striped headers, a blue accent.'
+    },
+    {
+      id: 'aqua',
+      name: 'Aqua',
+      year: '2001',
+      blurb: 'Mac OS X: glossy whites, round corners, a lickable blue button.'
+    },
+    {
+      id: 'dark',
+      name: 'Modern dark',
+      year: 'today',
+      blurb: 'A dark lobby for late-night browsing. The floppies stay one-bit.'
+    }
+  ];
 
   /* ------------------------------------------------------------- helpers -- */
 
@@ -26,185 +55,18 @@
     return n;
   }
 
-  /* A floppy-disk plate drawn entirely with borders + a few children, so the
-     page keeps its promise of no image files. `badge` is the system number. */
+  /* A floppy-disk plate drawn with borders and a few children, so the page keeps
+     its promise of no image files. `badge` is the system number. */
   function floppy(badge, size) {
     var disk = el('span', 'floppy' + (size ? ' ' + size : ''));
-    var shutter = el('span', 'floppy-shutter');
-    var label = el('span', 'floppy-label', badge);
-    disk.appendChild(shutter);
-    disk.appendChild(label);
+    disk.appendChild(el('span', 'floppy-shutter'));
+    disk.appendChild(el('span', 'floppy-label', badge));
     return disk;
   }
 
-  /* ---------------------------------------------------------------- grid -- */
-
-  function renderGrid() {
-    grid.innerHTML = '';
-    systems.forEach(function (sys, i) {
-      var li = tpl.content.firstElementChild.cloneNode(true);
-      var link = li.querySelector('.disk-link');
-      var isReady = sys.status === 'ready' && !!sys.href;
-
-      li.dataset.id = sys.id;
-      li.style.setProperty('--i', String(i));
-      li.classList.add(isReady ? 'is-ready' : 'is-planned');
-
-      link.href = isReady ? sys.href : '#' + sys.id;
-      link.setAttribute('aria-label',
-        sys.name + ' (' + sys.year + ')' + (isReady ? ' — boot now' : ' — in the workshop'));
-
-      var plate = li.querySelector('.disk-plate');
-      plate.appendChild(floppy(sys.short, 'floppy-lg'));
-
-      li.querySelector('.disk-name').textContent = sys.name;
-      li.querySelector('.disk-year').textContent = String(sys.year);
-      li.querySelector('.disk-meta').textContent = sys.model + ' · ' + sys.finder;
-      li.querySelector('.disk-blurb').textContent = sys.blurb;
-
-      var tags = li.querySelector('.disk-tags');
-      (sys.highlights || []).slice(0, 4).forEach(function (t) {
-        tags.appendChild(el('span', 'tag', t));
-      });
-
-      var status = li.querySelector('.disk-status');
-      status.textContent = isReady ? 'Boot' : 'Soon';
-
-      if (!isReady) {
-        link.addEventListener('click', function (e) {
-          e.preventDefault();
-          openChooser(sys.id);
-        });
-      }
-      grid.appendChild(li);
-    });
-  }
-
-  /* ------------------------------------------------------------- chooser -- */
-
-  var focusIndex = 0;
-
-  function renderChooser(selectedId) {
-    chooserList.innerHTML = '';
-    systems.forEach(function (sys, i) {
-      var isReady = sys.status === 'ready' && !!sys.href;
-      var li = el('li', 'chooser-item' + (isReady ? ' is-ready' : ' is-planned'));
-      var btn = el('button', 'chooser-btn');
-      btn.type = 'button';
-      btn.dataset.index = String(i);
-      btn.appendChild(floppy(sys.short, 'floppy-sm'));
-      var copy = el('span', 'chooser-copy');
-      copy.appendChild(el('span', 'chooser-name', sys.name));
-      copy.appendChild(el('span', 'chooser-meta', sys.year + ' · ' + sys.model));
-      btn.appendChild(copy);
-      btn.appendChild(el('span', 'chooser-state', isReady ? 'Boot' : 'Soon'));
-      if (!isReady) btn.setAttribute('aria-disabled', 'true');
-      btn.addEventListener('click', function () { choose(i); });
-      li.appendChild(btn);
-      chooserList.appendChild(li);
-      if (sys.id === selectedId) focusIndex = i;
-    });
-    syncChooserFocus();
-  }
-
-  function syncChooserFocus() {
-    var buttons = chooserList.querySelectorAll('.chooser-btn');
-    for (var i = 0; i < buttons.length; i++) {
-      var on = i === focusIndex;
-      buttons[i].classList.toggle('is-focus', on);
-      if (on) {
-        buttons[i].setAttribute('aria-current', 'true');
-        if (document.activeElement && chooser.contains(document.activeElement)) buttons[i].focus();
-      } else {
-        buttons[i].removeAttribute('aria-current');
-      }
-    }
-  }
-
-  function choose(i) {
-    var sys = systems[i];
-    if (!sys) return;
-    if (sys.status === 'ready' && sys.href) {
-      window.location.href = sys.href;
-      return;
-    }
-    beep();
-    var item = chooserList.children[i] && chooserList.children[i].querySelector('.chooser-btn');
-    if (item) {
-      item.classList.remove('shake');
-      void item.offsetWidth;
-      item.classList.add('shake');
-      var state = item.querySelector('.chooser-state');
-      if (state) state.textContent = 'Soon';
-    }
-  }
-
-  function openChooser(selectedId) {
-    renderChooser(selectedId);
-    chooser.hidden = false;
-    document.body.classList.add('chooser-open');
-    var first = chooserList.querySelector('.chooser-item.is-ready .chooser-btn') ||
-      chooserList.querySelector('.chooser-btn');
-    if (first) first.focus();
-    drawChooserFace();
-  }
-
-  function closeChooser() {
-    chooser.hidden = true;
-    document.body.classList.remove('chooser-open');
-    revealPage();
-  }
-
-  /* ---------------------------------------------------------------- face -- */
-
-  /* The happy Mac, drawn at 1-bit precision on a 128 × 128 canvas: a case
-     outline, a screen, two square eyes and the famous smile. */
-  function drawChooserFace() {
-    var canvas = document.getElementById('chooser-face');
-    if (!canvas || canvas.dataset.drawn) return;
-    var ctx = canvas.getContext('2d');
-    var S = 128, u = S / 32;                 // 32 logical cells
-    var rect = function (x, y, w, h, fill) {
-      ctx.fillStyle = fill || '#000';
-      ctx.fillRect(Math.round(x * u), Math.round(y * u), Math.round(w * u), Math.round(h * u));
-    };
-
-    rect(0, 0, 32, 32, '#fff');
-
-    // outer case: 2-cell border, rounded by clipping the corners
-    rect(2, 2, 28, 28);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(3 * u, 3 * u, 26 * u, 26 * u);
-    [[2, 2], [29, 2], [2, 29], [29, 29]].forEach(function (c) { rect(c[0], c[1], 1, 1, '#fff'); });
-
-    // screen: a recessed 1-cell frame inside the case
-    rect(5, 5, 22, 19);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(6 * u, 6 * u, 20 * u, 17 * u);
-
-    // eyes
-    rect(9, 9, 4, 4);
-    rect(19, 9, 4, 4);
-    // cheeks / smile: a wide block with the corners lifted
-    rect(9, 16, 14, 2);
-    rect(9, 18, 2, 1);
-    rect(21, 18, 2, 1);
-    rect(11, 19, 10, 1);
-
-    // floppy slot + badge below the screen
-    rect(6, 25, 20, 3, '#000');
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(11 * u, 26 * u, 10 * u, 1 * u);
-
-    canvas.dataset.drawn = '1';
-  }
-
-  /* -------------------------------------------------------------- effects -- */
-
-  var AC = null;
   function beep() {
     try {
-      AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+      var AC = new (window.AudioContext || window.webkitAudioContext)();
       var o = AC.createOscillator();
       var g = AC.createGain();
       o.type = 'square';
@@ -216,59 +78,188 @@
     } catch (err) { /* audio is optional */ }
   }
 
-  function revealPage() {
-    if (page.classList.contains('is-in')) return;
-    page.hidden = false;
-    page.classList.add('is-in');
+  /* ------------------------------------------- the only list of systems -- */
+
+  var focusIndex = -1;
+
+  function renderGrid() {
+    grid.innerHTML = '';
+    systems.forEach(function (sys, i) {
+      var li = tpl.content.firstElementChild.cloneNode(true);
+      var link = li.querySelector('.disk-link');
+      var isReady = sys.status === 'ready' && !!sys.href;
+
+      li.dataset.id = sys.id;
+      li.dataset.index = String(i);
+      li.classList.add(isReady ? 'is-ready' : 'is-planned');
+
+      link.href = isReady ? sys.href : '#' + sys.id;
+      link.setAttribute('aria-label',
+        sys.name + ' (' + sys.year + ')' + (isReady ? ' — boot now' : ' — in the workshop'));
+
+      li.querySelector('.disk-plate').appendChild(floppy(sys.short, 'floppy-lg'));
+      li.querySelector('.disk-name').textContent = sys.name;
+      li.querySelector('.disk-year').textContent = String(sys.year);
+      li.querySelector('.disk-meta').textContent = sys.model + ' · ' + sys.finder;
+      li.querySelector('.disk-blurb').textContent = sys.blurb;
+
+      var tags = li.querySelector('.disk-tags');
+      (sys.highlights || []).slice(0, 4).forEach(function (t) {
+        tags.appendChild(el('span', 'tag', t));
+      });
+      li.querySelector('.disk-status').textContent = isReady ? 'Boot' : 'Soon';
+
+      if (!isReady) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          beep();
+          li.classList.remove('shake');
+          void li.offsetWidth;
+          li.classList.add('shake');
+        });
+      }
+      grid.appendChild(li);
+    });
   }
 
-  /* --------------------------------------------------------------- wiring -- */
+  function setFocus(i) {
+    var items = grid.children;
+    if (!items.length) return;
+    focusIndex = (i + items.length) % items.length;
+    for (var k = 0; k < items.length; k++) {
+      var on = k === focusIndex;
+      items[k].classList.toggle('is-focus', on);
+      if (on) items[k].querySelector('.disk-link').focus();
+    }
+  }
 
   document.addEventListener('keydown', function (e) {
-    if (chooser.hidden) return;
-    if (e.key === 'Escape') { e.preventDefault(); closeChooser(); return; }
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (settings && settings.open) return;         // Esc / arrows belong to the sheet
+    var items = grid.children;
+    if (!items.length) return;
+    var cols = window.matchMedia('(max-width: 860px)').matches ? 1 : 2;
+    var next = null;
+    if (e.key === 'ArrowDown') next = focusIndex < 0 ? 0 : focusIndex + cols;
+    else if (e.key === 'ArrowUp') next = focusIndex < 0 ? 0 : focusIndex - cols;
+    else if (e.key === 'ArrowRight') next = focusIndex < 0 ? 0 : focusIndex + 1;
+    else if (e.key === 'ArrowLeft') next = focusIndex < 0 ? 0 : focusIndex - 1;
+    else if ((e.key === 'Enter' || e.key === ' ') && focusIndex >= 0) {
       e.preventDefault();
-      var n = systems.length;
-      focusIndex = (focusIndex + (e.key === 'ArrowDown' ? 1 : n - 1)) % n;
-      syncChooserFocus();
+      items[focusIndex].querySelector('.disk-link').click();
       return;
     }
-    if (e.key === 'Return' || e.key === 'Enter') {
+    if (next !== null) {
       e.preventDefault();
-      choose(focusIndex);
+      setFocus(next);
     }
   });
 
-  var closeBtn = document.querySelector('.chooser-hint');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', function () { closeChooser(); });
-    closeBtn.style.cursor = 'pointer';
-    closeBtn.title = 'Close and browse all systems';
+  /* ------------------------------------------------------ release notes -- */
+
+  function renderWhatsNew() {
+    var latest = releases[0];
+    if (!latest) return;
+    document.getElementById('whats-tag').textContent = "What's new · v" + latest.version;
+    document.getElementById('whats-title').textContent = latest.title;
+    document.getElementById('whats-summary').textContent = latest.summary;
+    var list = document.getElementById('whats-list');
+    list.innerHTML = '';
+    latest.items.slice(0, 4).forEach(function (t) { list.appendChild(el('li', null, t)); });
   }
 
-  var menuBtn = document.getElementById('bootmenu-btn');
-  if (menuBtn) menuBtn.addEventListener('click', function () { openChooser(); });
-
-  var bootAny = document.querySelector('.boot-btn');
-  if (bootAny && ready.length) {
-    // the big button always points at the newest ready system, not a hard-coded path
-    bootAny.href = ready[ready.length - 1].href;
+  function renderChangelog() {
+    var ol = document.getElementById('changelog-list');
+    ol.innerHTML = '';
+    releases.forEach(function (rel) {
+      var li = el('li', 'release');
+      var head = el('div', 'release-head');
+      head.appendChild(el('span', 'release-version', 'v' + rel.version));
+      head.appendChild(el('span', 'release-date', rel.date));
+      head.appendChild(el('span', 'release-title', rel.title));
+      li.appendChild(head);
+      li.appendChild(el('p', 'release-summary', rel.summary));
+      var ul = el('ul', 'release-items');
+      rel.items.forEach(function (t) { ul.appendChild(el('li', null, t)); });
+      li.appendChild(ul);
+      ol.appendChild(li);
+    });
   }
+
+  /* -------------------------------------------------------- the settings -- */
+
+  function applyStyle(id, persist) {
+    document.documentElement.setAttribute('data-style', id);
+    if (persist) {
+      try { localStorage.setItem(STYLE_KEY, id); } catch (err) { /* ignore */ }
+    }
+    var cards = document.querySelectorAll('.style-card');
+    for (var i = 0; i < cards.length; i++) {
+      var on = cards[i].dataset.styleId === id;
+      cards[i].classList.toggle('is-on', on);
+      cards[i].setAttribute('aria-checked', on ? 'true' : 'false');
+    }
+  }
+
+  function renderStyles() {
+    var saved = DEFAULT_STYLE;
+    try { saved = localStorage.getItem(STYLE_KEY) || DEFAULT_STYLE; } catch (err) { /* ignore */ }
+    if (!STYLES.some(function (s) { return s.id === saved; })) saved = DEFAULT_STYLE;
+
+    styleGrid.innerHTML = '';
+    STYLES.forEach(function (st) {
+      var card = el('button', 'style-card');
+      card.type = 'button';
+      card.dataset.styleId = st.id;
+      card.setAttribute('role', 'radio');
+      card.setAttribute('aria-checked', 'false');
+
+      var prev = el('span', 'style-preview');
+      prev.setAttribute('data-preview', st.id);
+      prev.setAttribute('aria-hidden', 'true');
+      prev.appendChild(el('span', 'pv-bar'));
+      prev.appendChild(el('span', 'pv-card'));
+      prev.appendChild(el('span', 'pv-btn'));
+
+      var copy = el('span', 'style-copy');
+      copy.appendChild(el('span', 'style-name', st.name));
+      copy.appendChild(el('span', 'style-year', st.year));
+      copy.appendChild(el('span', 'style-blurb', st.blurb));
+
+      card.appendChild(prev);
+      card.appendChild(copy);
+      card.addEventListener('click', function () { applyStyle(st.id, true); });
+      styleGrid.appendChild(card);
+    });
+    applyStyle(saved, false);
+  }
+
+  var settingsBtn = document.getElementById('settings-btn');
+  if (settingsBtn && settings) {
+    settingsBtn.addEventListener('click', function () {
+      if (typeof settings.showModal === 'function') settings.showModal();
+      else settings.setAttribute('open', '');
+    });
+    settings.addEventListener('click', function (e) {
+      if (e.target === settings) settings.close();      // click the backdrop
+    });
+  }
+
+  /* -------------------------------------------------------------- wiring -- */
+
+  var bootAny = document.querySelector('.feature .boot-btn');
+  if (bootAny && ready.length) bootAny.href = ready[ready.length - 1].href;
 
   renderGrid();
-  renderChooser();
-  drawChooserFace();
-
-  // first visit shows the boot chooser; later visits go straight to the disks,
-  // so bookmarking the museum does not put a panel in the way every time.
-  var seenKey = 'macintosh-os.museum.seen.v1';
-  var seen = false;
-  try { seen = localStorage.getItem(seenKey) === '1'; } catch (err) { seen = false; }
-  if (!seen && ready.length) openChooser('system-1.0');
-  if (seen) closeChooser();
-  try { localStorage.setItem(seenKey, '1'); } catch (err) { /* ignore */ }
+  renderWhatsNew();
+  renderChangelog();
+  renderStyles();
+  page.classList.add('is-in');
 
   // expose for the console / tests
-  window.macMuseum = { systems: systems, openChooser: openChooser, closeChooser: closeChooser };
+  window.macMuseum = {
+    systems: systems,
+    releases: releases,
+    setStyle: function (id) { applyStyle(id, true); },
+    openSettings: function () { if (settingsBtn) settingsBtn.click(); }
+  };
 })();
