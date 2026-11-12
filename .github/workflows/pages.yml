@@ -27,6 +27,9 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # first run turns Pages on for the repo (Source: GitHub Actions)
+          enablement: true
 
       - name: Stage the site
         # the whole repository is the site: launcher at the root, one folder per system
