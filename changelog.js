@@ -4,6 +4,22 @@
 
 window.CHANGELOG = [
   {
+    version: '0.5.0',
+    date: '2026-11-11',
+    title: 'System 2.0 boots',
+    summary: 'The April 1985 update arrives: Finder 4.1, MiniFinder and Choose Printer.',
+    items: [
+      'New system: os/system-2.0/ — a 512K Macintosh running System 2.0 and Finder 4.1',
+      'MiniFinder: Special ▸ Use MiniFinder swaps the desktop for a small launcher',
+      'Choose Printer, the forerunner of the Chooser: ImageWriter or LaserWriter, on any port',
+      'File ▸ Print Catalog prints a listing of a disk or folder to the chosen printer',
+      'New Folder replaces Empty Folder; Put Back and Close All are gone, as in 4.1',
+      'Disk icons lose the black shutter, and dragging a disk to the Trash ejects it',
+      'The volume is a full 512K, with free space shown in Get Info',
+      'Both systems are bootable from the launcher; System 2.0 gets its own changelog entry'
+    ]
+  },
+  {
     version: '0.4.0',
     date: '2026-11-11',
     title: 'One launcher, four looks, a changelog',

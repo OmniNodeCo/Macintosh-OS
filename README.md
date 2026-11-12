@@ -6,7 +6,8 @@ recreation per system. It
 starts with the **1984 Macintosh System 1.0 / Finder 1.0**, a working, from-scratch
 recreation of the original desktop in 1-bit black and white: 512 × 342 pixels of menu bar,
 striped windows, dithered icons, desk accessories — written in plain HTML, CSS and
-JavaScript with **no frameworks, no image files and no Apple assets**.
+JavaScript with **no frameworks, no image files and no Apple assets**. **System 2.0 /
+Finder 4.1** (April 1985) is the second bootable disk.
 
 **Live site:** <https://omninodeco.github.io/Macintosh-OS/> (GitHub Pages, served from `main`).
 
@@ -14,6 +15,7 @@ JavaScript with **no frameworks, no image files and no Apple assets**.
 python3 -m http.server 8000      # or: npx serve .
 # then open http://localhost:8000/            → the launcher / startup disks
 #           http://localhost:8000/os/system-1.0/  → System 1.0
+#           http://localhost:8000/os/system-2.0/  → System 2.0
 ```
 
 The museum page is a pure static page, so it also works straight from `file://` —
@@ -31,7 +33,7 @@ server or GitHub Pages.
 | System | Year | Machine | State |
 | --- | --- | --- | --- |
 | [System 1.0](os/system-1.0/) | 1984 | Macintosh 128K | **bootable** |
-| System 2.0 | 1985 | Macintosh 512K | planned |
+| [System 2.0](os/system-2.0/) | 1985 | Macintosh 512K | **bootable** |
 | System 3.0 | 1986 | Macintosh Plus | planned |
 | System 6.0 | 1988 | Macintosh II | planned |
 | System 7.0 | 1991 | Macintosh II fx | planned |
@@ -74,12 +76,14 @@ then edit. `os/system-2.0/index.html` in this commit is the placeholder shown wh
 ```
 os/system-1.0/          one self-contained system: index.html + js/ (+ its own tools/)
 os/system-1.0/tools/    the typeface builder for that system
+os/system-2.0/          System 2.0 / Finder 4.1 — its own js/, no imports from 1.0
 css/system-1.0/mac.css  that system's chrome; systems do not share CSS
+css/system-2.0/mac.css  System 2.0's chrome (Adds Choose Printer, MiniFinder, Print Catalog)
 assets/fonts/           shared typefaces (MacPixel Chicago)
 assets/icons/           shared icon art (favicon)
 systems.js              the registry the launcher reads
 index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
-changelog.js            release history; the newest entry feeds "What's new"
+changelog.js            release history; the newest entry feeds "What's new" (v0.5.0 = System 2.0)
 launcher.css, launcher.js
 ```
 
@@ -144,6 +148,31 @@ their own menu bars, and only one copy can be open at a time.
 
 ---
 
+## System 2.0 — what the update changed
+
+System 2.0 (April 1985) is a separate recreation, not a theme: `os/system-2.0/` has its own
+JS, its own CSS, its own storage namespace (`macintosh-os.2.0.*`, so documents never mix
+with 1.0's) and its own changelog entry.
+
+What is actually different on screen, and why:
+
+| Feature | Where |
+| --- | --- |
+| **Finder 4.1** | The Finder version jumped 1.1 → 4.1 in this release; the About box says so. |
+| **New Folder** | `File ▸ New Folder` (⌘N) replaces *Empty Folder*, ending the empty-folder era. |
+| **Print Catalog…** | `File ▸ Print Catalog…` (⌘P) previews a listing of the disk or folder and "prints" it to the chosen printer. |
+| **Shut Down** | `Special ▸ Shut Down…` and the Apple menu; parks the head and shows the safe-to-switch-off screen. |
+| **Use MiniFinder** | `Special ▸ Use MiniFinder` dithers the desktop and puts a small application list in front of it — the At Ease ancestor. *Use Finder* (⌘W) comes back. |
+| **Choose Printer** | New desk accessory, the Chooser's forerunner: ImageWriter or LaserWriter, on the Printer / Modem / AppleTalk port. The title bar and Control Panel follow the choice. |
+| **Eject by Trash** | Drag a volume to the Trash and it is ejected (the icon leaves the desktop). The System Disk refuses, because you are running from it. A second volume, the MacPaint Disk, ships on the desktop so you can try it — and *Put Away* does the same thing from the menu. |
+| **All-white disks** | The disk icon lost its black shutter, the most visible change of the release. |
+| **512K** | The About box shows 512K with System 196K · Largest unused 316K; Get Info reports the volume as `512K disk, one volume · N free`, computed from a real 512 KB budget. |
+| **Faster start-up** | The splash clears after 680 ms instead of 850 ms — the 20 % quicker boot System 2.0 advertised. |
+
+Put Back and Close All are deliberately absent: Finder 4.1 removed them.
+
+---
+
 ## Keyboard
 
 | Keys | Action |
@@ -195,7 +224,7 @@ Where it knowingly differs:
 
 ```
 index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
-changelog.js            release history; the newest entry feeds "What's new" for every system
+changelog.js            release history; the newest entry feeds "What's new" (v0.5.0 = System 2.0) for every system
 launcher.css            the lobby in four styles (Classic, Platinum, Aqua, dark), all token-driven
 launcher.js              builds the wall from systems.js, the changelog from changelog.js,
                         the style picker, and the arrow-key/Return navigation

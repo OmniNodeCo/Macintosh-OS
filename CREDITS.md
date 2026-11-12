@@ -136,3 +136,15 @@ as such.
 
 If you believe something here misuses protected material, please open an issue
 and it will be removed.
+
+## System 2.0 (April 1985)
+
+The second recreation in this repository, `os/system-2.0/`, follows the April 1985
+release: **System 2.0 / Finder 4.1**. The version jump (1.1 → 4.1) and the command list —
+New Folder in, Empty Folder / Put Back / Close All out, Print Catalog, Shut Down and
+Use MiniFinder in, plus the Choose Printer desk accessory and eject-by-Trash — are
+documented in Apple's release notes and in the histories listed below. The all-white disk
+icon, the shortened start-up and the 512K figure follow the 512K Macintosh.
+
+Nothing from Apple's disks is included: the Finder 4.1 behaviours were reimplemented from
+public descriptions, and the Choose Printer and MiniFinder screens are original drawings.
