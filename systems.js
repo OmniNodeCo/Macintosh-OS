@@ -33,12 +33,13 @@ window.SYSTEMS = [
     date: 'April 1985',
     model: 'Macintosh 512K',
     bits: '1-bit, 512 × 342',
-    status: 'planned',
-    href: '',
+    status: 'ready',
+    href: 'os/system-2.0/',
     blurb:
-      'The first update to ship with a new Finder: the desk accessories move to ' +
-      'the Apple menu, the Chooser arrives and fonts become swappable.',
-    highlights: ['Chooser', 'Fonts', 'Apple menu'],
+      'The first real update: Finder 4.1 brings New Folder, Shut Down, the MiniFinder ' +
+      'and Choose Printer, and a disk dragged to the Trash is ejected. Faster start-up, ' +
+      'all-white disk icons.',
+    highlights: ['MiniFinder', 'Choose Printer', 'New Folder', 'Print Catalog', 'Shut Down'],
   },
   {
     id: 'system-3.0',
