@@ -1,6 +1,7 @@
 /* =============================================================================
    Macintosh OS — the web museum
-   The boot chooser / startup-disk picker for every system in this repository.
+   One launcher for every system in this repository: the startup-disk wall,
+   release notes, changelog and the style settings.
    Deliberately black-and-white and 1-bit: the page is the museum lobby, the
    recreations inside are the exhibits.
    ========================================================================== */
@@ -13,13 +14,22 @@
   font-display: block;
 }
 
+/* Palette tokens. Every launcher style overrides these; nothing below hard-codes
+   a colour except the 1-bit floppy art, which stays black and white on purpose. */
 :root {
   --ink: #000;
   --paper: #fff;
+  --card: #fff;
+  --line: #000;
+  --muted: #5b5b5f;
+  --accent: #000;
+  --radius: 0px;
+  --pill: 2px;
+  --nav-radius: 3px;
+  --rest-shadow: 3px 3px 0 #000;
   --ui-font: "MacPixel Chicago", "Chicago", "Monaco", monospace;
   --case: #e9e4d6;
   --case-dark: #cfc8b6;
-  --muted: #5b5b5f;
   --halftone: 25%;
 }
 
@@ -39,13 +49,11 @@ body {
   text-rendering: geometricPrecision;
 }
 
-body.chooser-open { overflow: hidden; }
-
 a { color: inherit; }
 
 kbd {
   font-family: var(--ui-font);
-  border: 1px solid #b4b4b8;
+  border: 1px solid var(--line);
   border-bottom-width: 2px;
   border-radius: 2px;
   padding: 0 4px;
@@ -53,7 +61,7 @@ kbd {
 }
 
 /* -------------------------------------------------------------- halftone -- */
-/* Repeating 1-bit dither used behind the masthead and the chooser. */
+/* Repeating 1-bit dither available to the styles. */
 .halftone {
   background-image: radial-gradient(var(--ink) 1px, transparent 1px);
   background-size: 3px 3px;
@@ -61,12 +69,16 @@ kbd {
 
 /* ---------------------------------------------------------------- floppy -- */
 .floppy {
+  /* the art is one-bit on purpose: ink and paper are fixed, so a dark lobby
+     always shows a white disk with black ink instead of inverting into mush */
+  --floppy-ink: #000;
+  --floppy-paper: #fff;
   position: relative;
   display: inline-block;
   width: 26px;
   height: 26px;
-  background: var(--paper);
-  border: 2px solid var(--ink);
+  background: var(--floppy-paper);
+  border: 2px solid var(--floppy-ink);
   border-radius: 1px;
   flex: none;
 }
@@ -78,7 +90,7 @@ kbd {
   top: 2px;
   width: 60%;
   height: 38%;
-  background: var(--ink);
+  background: var(--floppy-ink);
 }
 /* the corner cut, drawn as a white wedge over the border */
 .floppy::after {
@@ -88,9 +100,9 @@ kbd {
   top: -2px;
   width: 10px;
   height: 10px;
-  background: var(--paper);
-  border-left: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
+  background: var(--floppy-paper);
+  border-left: 2px solid var(--floppy-ink);
+  border-bottom: 2px solid var(--floppy-ink);
 }
 .floppy-label {
   position: absolute;
@@ -98,8 +110,9 @@ kbd {
   right: 15%;
   bottom: 12%;
   height: 42%;
-  border: 1px solid var(--ink);
-  background: var(--paper);
+  border: 1px solid var(--floppy-ink);
+  background: var(--floppy-paper);
+  color: var(--floppy-ink);
   font-size: 8px;
   line-height: 1;
   display: flex;
@@ -152,37 +165,11 @@ kbd {
 .masthead-rule {
   margin-top: 20px;
   height: 6px;
-  border-top: 1px solid var(--ink);
-  border-bottom: 1px solid var(--ink);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   background-image: radial-gradient(var(--ink) 1px, transparent 1px);
   background-size: 3px 3px;
 }
-.bootmenu-btn {
-  position: absolute;
-  right: 0;
-  top: 2px;
-  font: inherit;
-  font-size: 14px;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid var(--ink);
-  border-radius: 3px;
-  padding: 4px 10px 5px;
-  cursor: pointer;
-  box-shadow: 2px 2px 0 var(--ink);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.bootmenu-btn:hover { background: #f2f2f2; }
-.bootmenu-btn:active { box-shadow: none; transform: translate(2px, 2px); }
-.bootmenu-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--ink);
-  border-radius: 50%;
-}
-
 /* --------------------------------------------------------------- feature -- */
 .feature {
   display: grid;
@@ -190,7 +177,7 @@ kbd {
   gap: 34px;
   align-items: center;
   padding: 34px 0 40px;
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 1px solid var(--line);
 }
 
 /* a tiny 1-bit Macintosh desktop, drawn in divs */
@@ -325,7 +312,7 @@ kbd {
 .systems-head h2 { font-size: 22px; }
 .systems-legend { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; column-gap: 6px; row-gap: 2px; }
 .systems-legend > .dot {
-  width: 9px; height: 9px; border: 1px solid var(--ink); display: inline-block; border-radius: 50%; flex: none;
+  width: 9px; height: 9px; border: 1px solid var(--line); display: inline-block; border-radius: 50%; flex: none;
 }
 .systems-legend .dot.ready { background: var(--ink); }
 .systems-legend .dot.planned { background: transparent; margin-left: 8px; }
@@ -334,14 +321,15 @@ kbd {
 .grid { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 
 .disk {
-  border: 1px solid var(--ink);
-  background: var(--paper);
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: var(--radius);
   transition: box-shadow .12s linear, transform .12s linear;
 }
-.disk.is-ready { box-shadow: 3px 3px 0 var(--ink); }
+.disk.is-ready { box-shadow: var(--rest-shadow); }
 .disk.is-planned { border-style: dashed; }
 .disk:hover { transform: translate(-1px, -1px); }
-.disk.is-ready:hover { box-shadow: 5px 5px 0 var(--ink); }
+.disk.is-ready:hover { box-shadow: var(--rest-shadow); transform: translate(-1px, -1px); }
 
 .disk-link {
   display: grid;
@@ -362,19 +350,19 @@ kbd {
 .disk-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
 .tag {
   font-size: 11px;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--line);
   padding: 0 5px;
   border-radius: 2px;
   color: var(--ink);
 }
 .disk-status {
   font-size: 12px;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--line);
   padding: 1px 7px 2px;
   border-radius: 2px;
   white-space: nowrap;
 }
-.is-ready .disk-status { background: var(--ink); color: var(--paper); }
+.is-ready .disk-status { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .is-planned .disk-status { color: var(--muted); border-color: var(--muted); }
 .is-planned .disk-name { color: #3b3b3e; }
 
@@ -382,96 +370,12 @@ kbd {
 .colophon {
   margin-top: 34px;
   padding-top: 18px;
-  border-top: 1px solid var(--ink);
+  border-top: 1px solid var(--line);
   font-size: 13px;
   color: var(--muted);
   line-height: 1.6;
 }
 .colophon a { color: var(--ink); }
-
-/* ---------------------------------------------------------------- chooser -- */
-.chooser {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: var(--paper);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 22px;
-  overflow: auto;
-  animation: chooser-in .16s linear;
-}
-.chooser[hidden] { display: none; }
-@keyframes chooser-in { from { opacity: 0; } to { opacity: 1; } }
-
-.chooser-face { margin-bottom: 6px; }
-#chooser-face {
-  width: 96px;
-  height: 96px;
-  image-rendering: pixelated;
-  display: block;
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink), 0 0 0 8px var(--paper);
-}
-.chooser-title { font-size: 26px; line-height: 1.1; }
-.chooser-title, .chooser-sub { background: var(--paper); padding: 0 8px; }
-.chooser-sub {
-  text-align: center;
-  font-size: 14px;
-  color: var(--ink);
-  margin-bottom: 14px;
-  padding: 4px 10px;
-  border: 1px solid var(--ink);
-}
-.chooser-list {
-  list-style: none;
-  width: min(560px, 100%);
-  background: var(--paper);
-  border: 2px solid var(--ink);
-  box-shadow: 6px 6px 0 rgba(0, 0, 0, .35);
-  max-height: min(68vh, 560px);
-  overflow: auto;
-}
-.chooser-item + .chooser-item { border-top: 1px solid #b9b9bd; }
-.chooser-btn {
-  font: inherit;
-  width: 100%;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 14px;
-  background: var(--paper);
-  border: 0;
-  text-align: left;
-  cursor: pointer;
-  color: var(--ink);
-}
-.chooser-item.is-planned .chooser-btn { cursor: default; color: #4a4a4e; }
-.chooser-btn:hover { background: #f1f1f1; }
-.chooser-btn.is-focus { background: var(--ink); color: var(--paper); }
-.chooser-btn.is-focus .floppy { background: var(--paper); }
-.chooser-btn.is-focus .chooser-meta { color: #d8d8dc; }
-.chooser-copy { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.chooser-name { font-size: 17px; }
-.chooser-meta { font-size: 12px; color: var(--muted); }
-.chooser-state { font-size: 12px; border: 1px solid currentColor; padding: 0 6px; border-radius: 2px; }
-.chooser-item.is-ready .chooser-state { border-color: currentColor; }
-.chooser-hint {
-  margin-top: 16px;
-  font-size: 13px;
-  color: var(--ink);
-  text-align: center;
-  background: var(--paper);
-  border: 1px solid var(--ink);
-  padding: 4px 10px 5px;
-}
-.chooser-hint:hover { background: #f0f0f0; }
-.chooser-hint kbd { border-color: var(--ink); color: var(--ink); }
 
 .shake { animation: shake .22s linear 2; }
 @keyframes shake {
@@ -479,6 +383,237 @@ kbd {
   25% { transform: translateX(-3px); }
   75% { transform: translateX(3px); }
 }
+
+/* ================================================================ nav ==== */
+.masthead-plate { flex-wrap: wrap; row-gap: 10px; }
+.masthead-nav {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  align-items: center;
+}
+.nav-link {
+  font: inherit;
+  font-size: 14px;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--nav-radius);
+  padding: 3px 10px 4px;
+  background: transparent;
+  cursor: pointer;
+}
+.nav-link:hover { border-color: var(--line); }
+.nav-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.nav-btn { border-color: var(--line); }
+
+/* ======================================================= startup disks ==== */
+.systems-hint { margin-top: 14px; font-size: 13px; color: var(--muted); }
+.systems-hint kbd { font-size: 12px; }
+.disk.is-focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+.disk-link:focus-visible { outline: none; }
+
+/* ========================================================= what's new ==== */
+.whats-new {
+  margin-top: 26px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--rest-shadow);
+  padding: 20px 22px 18px;
+}
+.whats-tag { font-size: 12px; letter-spacing: 1px; color: var(--muted); }
+.whats-title { font-size: 22px; line-height: 1.2; margin-top: 4px; }
+.whats-summary { margin-top: 8px; font-size: 15px; }
+.whats-list { margin: 12px 0 0 18px; font-size: 14px; line-height: 1.55; }
+.whats-list li + li { margin-top: 3px; }
+.whats-more { margin-top: 14px; font-size: 14px; }
+
+/* ========================================================== changelog ==== */
+.changelog { padding: 34px 0 10px; scroll-margin-top: 18px; }
+.changelog h2 { font-size: 22px; margin-bottom: 16px; }
+.changelog-list { list-style: none; border-top: 1px solid var(--line); }
+.release { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.release-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px; }
+.release-version {
+  font-size: 13px;
+  border: 1px solid var(--line);
+  border-radius: var(--pill);
+  padding: 0 7px 1px;
+  background: var(--card);
+}
+.release-date { font-size: 13px; color: var(--muted); }
+.release-title { font-size: 17px; }
+.release-summary { margin-top: 6px; font-size: 14px; color: var(--muted); }
+.release-items { margin: 8px 0 0 18px; font-size: 14px; line-height: 1.55; }
+.release-items li + li { margin-top: 2px; }
+
+/* ============================================== settings (style picker) ==== */
+.sheet {
+  /* the universal reset zeroes margins, which would also un-centre the dialog */
+  margin: auto;
+  inset: 0;
+  position: fixed;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  max-width: 720px;
+  width: calc(100% - 32px);
+}
+.sheet::backdrop { background: rgba(0, 0, 0, .45); }
+.sheet-inner {
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .3);
+  padding: 22px 22px 16px;
+  font-family: var(--ui-font);
+}
+.sheet-inner h2 { font-size: 21px; }
+.sheet-sub { margin-top: 6px; font-size: 14px; color: var(--muted); }
+.style-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+.style-card {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+.style-card.is-on { outline: 2px solid var(--accent); outline-offset: 1px; }
+.style-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.style-copy { display: flex; flex-direction: column; min-width: 0; }
+.style-name { font-size: 16px; }
+.style-year { font-size: 12px; color: var(--muted); }
+.style-blurb { font-size: 13px; margin-top: 3px; line-height: 1.4; }
+.sheet-note { margin-top: 14px; font-size: 12px; color: var(--muted); }
+.sheet-actions { margin-top: 12px; text-align: right; }
+
+/* each preview swatch is painted with that style's own palette */
+.style-preview { width: 74px; height: 54px; position: relative; border-radius: 4px; overflow: hidden; }
+.style-preview .pv-bar { position: absolute; left: 0; right: 0; top: 0; height: 12px; }
+.style-preview .pv-card { position: absolute; left: 8px; right: 8px; top: 18px; height: 20px; }
+.style-preview .pv-btn { position: absolute; left: 8px; bottom: 7px; width: 26px; height: 8px; }
+
+/* ==================================================== launcher styles ==== */
+/* Classic is the default and is described by the :root tokens above. */
+
+/* Platinum — System 7/8 grey: bevelled cards, striped headers, blue accent. */
+html[data-style="platinum"] {
+  --ink: #14161a; --paper: #b9b9b9; --card: #e4e4e4; --line: #6d6d6d;
+  --muted: #4c4f55; --accent: #2b4b8f; --radius: 3px; --pill: 9px; --nav-radius: 3px;
+  --rest-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8f8f8f, 2px 2px 0 rgba(0, 0, 0, .28);
+}
+html[data-style="platinum"] body { background: #b9b9b9; }
+html[data-style="platinum"] .masthead-rule {
+  border-color: #7c7c7c;
+  background: repeating-linear-gradient(#fff 0 1px, #6d6d6d 1px 2px);
+  background-size: 100% 4px;
+}
+html[data-style="platinum"] .boot-btn {
+  background: #d6d6d6;
+  color: #111;
+  border: 1px solid #4a4a4a;
+  box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8f8f8f;
+}
+html[data-style="platinum"] .boot-btn-disk { background: #111; border-color: #111; }
+html[data-style="platinum"] .boot-btn-disk::after { background: #d6d6d6; }
+html[data-style="platinum"] .is-ready .disk-status { background: #2b4b8f; border-color: #24407c; color: #fff; }
+html[data-style="platinum"] .nav-link:hover { background: #cdcdcd; }
+
+/* Aqua — Mac OS X: smooth whites, round corners, glossy blue. */
+html[data-style="aqua"] {
+  --ink: #1c1c1e; --paper: #f6f7fb; --card: #fff; --line: #c9cfda; --muted: #5f6470;
+  --accent: #0a84ff; --radius: 14px; --pill: 999px; --nav-radius: 999px;
+  --rest-shadow: 0 1px 2px rgba(0, 0, 0, .07), 0 10px 28px rgba(0, 0, 0, .08);
+  --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+html[data-style="aqua"] body {
+  background: linear-gradient(180deg, #eef3fb 0%, #f7f9fc 40%, #eef1f7 100%);
+  letter-spacing: 0;
+}
+html[data-style="aqua"] .masthead-title { font-weight: 600; letter-spacing: -.2px; }
+html[data-style="aqua"] .masthead-rule { border: 0; height: 1px; background: var(--line); }
+html[data-style="aqua"] .masthead-nav { gap: 8px; }
+html[data-style="aqua"] .nav-link:hover { background: rgba(10, 132, 255, .1); border-color: transparent; }
+html[data-style="aqua"] .nav-btn { background: #fff; border-color: var(--line); }
+html[data-style="aqua"] .boot-btn {
+  background: linear-gradient(180deg, #3fa2ff 0%, #0a7cf0 100%);
+  border: 1px solid #0a6cd8;
+  border-radius: 10px;
+  color: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255, 255, 255, .5);
+}
+html[data-style="aqua"] .boot-btn:active { transform: translateY(1px); }
+html[data-style="aqua"] .boot-btn-disk { background: #fff; border-color: #fff; }
+html[data-style="aqua"] .boot-btn-disk::after { background: #0a7cf0; }
+html[data-style="aqua"] .tag { border-color: transparent; background: #eaf2ff; color: #0a5bd3; }
+html[data-style="aqua"] .is-ready .disk-status { background: var(--accent); border-color: transparent; color: #fff; }
+html[data-style="aqua"] .is-planned { border-color: #dde2ec; border-style: solid; }
+html[data-style="aqua"] .disk.is-ready:hover { box-shadow: 0 2px 4px rgba(0, 0, 0, .08), 0 16px 36px rgba(0, 0, 0, .12); }
+html[data-style="aqua"] .kbd, html[data-style="aqua"] kbd { border-color: var(--line); background: #fff; }
+html[data-style="aqua"] .mini { border-radius: 8px; border-color: #b9c1cf; box-shadow: 0 12px 30px rgba(0, 0, 0, .14); }
+html[data-style="aqua"] .apple { background: #4a4a4f; }
+
+/* Modern dark — the same lobby, after sunset. Floppies stay one-bit. */
+html[data-style="dark"] {
+  --ink: #eceef2; --paper: #0d0e11; --card: #16181d; --line: #2a2d34;
+  --muted: #9aa0ab; --accent: #6ea8ff; --radius: 12px; --pill: 999px; --nav-radius: 999px;
+  --rest-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html[data-style="dark"] body { background: #0d0e11; color: var(--ink); letter-spacing: 0; }
+html[data-style="dark"] .masthead-rule { border: 0; height: 1px; background: var(--line); }
+html[data-style="dark"] .apple { background: var(--ink); }
+html[data-style="dark"] .nav-link:hover { background: rgba(110, 168, 255, .12); border-color: transparent; }
+html[data-style="dark"] .nav-btn { background: #1b1e24; border-color: var(--line); }
+html[data-style="dark"] .boot-btn { background: var(--accent); color: #08192e; border-radius: 10px; }
+html[data-style="dark"] .boot-btn-disk { background: #08192e; border-color: #08192e; }
+html[data-style="dark"] .boot-btn-disk::after { background: var(--accent); }
+html[data-style="dark"] .tag { background: #1b1e24; color: #c8d2e4; border-color: #2f3540; }
+html[data-style="dark"] .is-ready .disk-status { background: var(--accent); border-color: transparent; color: #08192e; }
+html[data-style="dark"] .is-planned { border-color: #333842; border-style: solid; }
+html[data-style="dark"] .is-planned .disk-name { color: #c2c8d3; }
+html[data-style="dark"] .floppy { box-shadow: 0 3px 10px rgba(0, 0, 0, .55); }
+html[data-style="dark"] .mini { border-color: #3a3f49; box-shadow: 0 14px 34px rgba(0, 0, 0, .6); }
+html[data-style="dark"] .mini-desk,
+html[data-style="dark"] .mini-window { background: #fff; }
+html[data-style="dark"] .colophon a, html[data-style="dark"] .ghost-btn { color: var(--ink); }
+html[data-style="dark"] .sheet::backdrop { background: rgba(0, 0, 0, .72); }
+html[data-style="dark"] .style-card { background: #1b1e24; }
+html[data-style="dark"] .release-version { background: #1b1e24; }
+html[data-style="dark"] kbd { background: #1b1e24; }
+
+/* previews */
+.style-preview[data-preview="classic"] { background: #fff; border: 1px solid #000; }
+.style-preview[data-preview="classic"] .pv-bar { background: #000; }
+.style-preview[data-preview="classic"] .pv-card { background: #fff; border: 1px solid #000; }
+.style-preview[data-preview="classic"] .pv-btn { background: #000; }
+
+.style-preview[data-preview="platinum"] { background: #b9b9b9; border: 1px solid #6d6d6d; }
+.style-preview[data-preview="platinum"] .pv-bar { background: repeating-linear-gradient(#fff 0 1px, #6d6d6d 1px 2px); }
+.style-preview[data-preview="platinum"] .pv-card { background: #e4e4e4; box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #8f8f8f; }
+.style-preview[data-preview="platinum"] .pv-btn { background: #2b4b8f; }
+
+.style-preview[data-preview="aqua"] { background: linear-gradient(180deg, #eef3fb, #e2e9f5); border: 1px solid #c9cfda; }
+.style-preview[data-preview="aqua"] .pv-bar { background: linear-gradient(180deg, #fbfcfe, #e6eaf2); border-bottom: 1px solid #c9cfda; }
+.style-preview[data-preview="aqua"] .pv-card { background: #fff; border-radius: 5px; box-shadow: 0 2px 6px rgba(0, 0, 0, .14); }
+.style-preview[data-preview="aqua"] .pv-btn { background: linear-gradient(180deg, #3fa2ff, #0a7cf0); border-radius: 6px; }
+
+.style-preview[data-preview="dark"] { background: #0d0e11; border: 1px solid #2a2d34; }
+.style-preview[data-preview="dark"] .pv-bar { background: #16181d; }
+.style-preview[data-preview="dark"] .pv-card { background: #1b1e24; border-radius: 4px; }
+.style-preview[data-preview="dark"] .pv-btn { background: #6ea8ff; border-radius: 5px; }
 
 /* ----------------------------------------------------------- small screens -- */
 @media (max-width: 860px) {
@@ -491,26 +626,26 @@ kbd {
   .masthead-plate { order: 1; }
   .masthead-sub { order: 2; }
   .masthead-rule { order: 4; }
-  .bootmenu-btn { order: 3; position: static; align-self: flex-start; margin-top: 14px; }
+  .masthead-nav { order: 3; margin-left: 0; margin-top: 12px; }
+  .style-grid { grid-template-columns: minmax(0, 1fr); }
+  .whats-new { padding: 16px 16px 14px; }
 }
 
 @media (max-width: 520px) {
   .page { padding: 26px 16px 20px; }
   .disk-link { grid-template-columns: auto minmax(0, 1fr); padding: 13px 13px; }
   .disk-status { grid-column: 2; justify-self: start; }
-  .chooser-hint { font-size: 12px; }
   .masthead-sub { font-size: 14px; }
   .feature-lede { font-size: 15px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .page.is-in { transition: none; }
-  .chooser { animation: none; }
   .shake { animation: none; }
-  .disk, .boot-btn, .bootmenu-btn { transition: none; }
+  .disk, .boot-btn, .nav-link { transition: none; }
 }
 
 @media print {
-  .chooser, .bootmenu-btn { display: none !important; }
+  .masthead-nav, .sheet, .systems-hint { display: none !important; }
   body { background: #fff; }
 }

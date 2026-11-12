@@ -10,37 +10,44 @@
 <link rel="stylesheet" href="launcher.css">
 <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icons/favicon.svg">
+<script>
+  /* apply the saved launcher style before first paint, so there is no flash */
+  try {
+    var savedStyle = localStorage.getItem('macintosh-os.museum.style.v1');
+    if (savedStyle) document.documentElement.setAttribute('data-style', savedStyle);
+  } catch (e) { /* private mode: default style is fine */ }
+</script>
 </head>
 <body>
-
-<!-- boot chooser: the first thing on screen, and the way to jump between systems -->
-<div id="chooser" class="chooser" hidden aria-modal="true" role="dialog" aria-labelledby="chooser-title">
-  <div class="chooser-face">
-    <canvas id="chooser-face" width="128" height="128" aria-hidden="true"></canvas>
-  </div>
-  <h1 id="chooser-title" class="chooser-title">Macintosh OS</h1>
-  <p class="chooser-sub">A web museum of classic Macintosh systems.<br>Choose a startup disk.</p>
-  <ul id="chooser-list" class="chooser-list" role="list"></ul>
-  <p class="chooser-hint"><kbd>↑</kbd> <kbd>↓</kbd> to choose &middot; <kbd>Return</kbd> to start &middot; <kbd>Esc</kbd> to close</p>
-</div>
 
 <div id="page" class="page">
   <header class="masthead">
     <div class="masthead-plate">
       <span class="apple" aria-hidden="true"></span>
       <span class="masthead-title">Macintosh&nbsp;OS</span>
+      <nav class="masthead-nav" aria-label="Museum">
+        <a class="nav-link" href="#systems">Systems</a>
+        <a class="nav-link" href="#whats-new">What's new</a>
+        <a class="nav-link" href="#changelog">Changelog</a>
+        <button class="nav-link nav-btn" type="button" id="settings-btn">Settings</button>
+      </nav>
     </div>
-    <button class="bootmenu-btn" type="button" id="bootmenu-btn">
-      <span class="bootmenu-dot" aria-hidden="true"></span> Boot menu
-    </button>
     <p class="masthead-sub">Every Macintosh system, running in the browser. Start with 1.0; the rest are on the way.</p>
     <div class="masthead-rule" aria-hidden="true"></div>
   </header>
 
   <main>
+    <section id="whats-new" class="whats-new" aria-labelledby="whats-title">
+      <p class="whats-tag" id="whats-tag">What's new</p>
+      <h2 id="whats-title" class="whats-title"></h2>
+      <p class="whats-summary" id="whats-summary"></p>
+      <ul class="whats-list" id="whats-list"></ul>
+      <p class="whats-more"><a class="ghost-btn" href="#changelog">Full changelog</a></p>
+    </section>
+
     <section class="feature" aria-labelledby="feature-title">
       <div class="feature-art" aria-hidden="true">
-        <div class="mini" id="mini">
+        <div class="mini">
           <div class="mini-menubar"></div>
           <div class="mini-desk">
             <div class="mini-win">
@@ -59,8 +66,8 @@
         <p class="eyebrow">Start here &middot; 1984</p>
         <h2 id="feature-title">System 1.0</h2>
         <p class="feature-lede">
-          The one that started it all: 512 × 342 pixels of menu bar, striped windows,
-          dithered icons and desk accessories — rebuilt from scratch in plain
+          The one that started it all: 512 &times; 342 pixels of menu bar, striped windows,
+          dithered icons and desk accessories &mdash; rebuilt from scratch in plain
           HTML, CSS and JavaScript, with an original bitmap typeface.
         </p>
         <p class="feature-note">
@@ -72,7 +79,6 @@
             <span class="boot-btn-disk" aria-hidden="true"></span>
             Boot System 1.0
           </a>
-          <a class="ghost-btn" href="#systems">All systems</a>
         </p>
       </div>
     </section>
@@ -86,6 +92,12 @@
         </p>
       </div>
       <ul id="grid" class="grid" role="list"></ul>
+      <p class="systems-hint"><kbd>&uarr;</kbd> <kbd>&darr;</kbd> <kbd>&larr;</kbd> <kbd>&rarr;</kbd> to choose &middot; <kbd>Return</kbd> to boot</p>
+    </section>
+
+    <section id="changelog" class="changelog" aria-labelledby="changelog-title">
+      <h2 id="changelog-title">Changelog</h2>
+      <ol id="changelog-list" class="changelog-list"></ol>
     </section>
   </main>
 
@@ -98,6 +110,16 @@
     </p>
   </footer>
 </div>
+
+<dialog id="settings" class="sheet" aria-labelledby="settings-title">
+  <form method="dialog" class="sheet-inner">
+    <h2 id="settings-title">Launcher style</h2>
+    <p class="sheet-sub">How the museum lobby looks. The systems themselves keep their own appearance.</p>
+    <div class="style-grid" id="style-grid" role="radiogroup" aria-label="Launcher style"></div>
+    <p class="sheet-note">Saved in this browser only.</p>
+    <menu class="sheet-actions"><button class="boot-btn" value="close">Done</button></menu>
+  </form>
+</dialog>
 
 <template id="disk-template">
   <li class="disk">
@@ -118,6 +140,7 @@
 </template>
 
 <script src="systems.js"></script>
+<script src="changelog.js"></script>
 <script src="launcher.js"></script>
 </body>
 </html>
