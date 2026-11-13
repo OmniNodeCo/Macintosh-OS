@@ -111,10 +111,9 @@ export default {
 
   open(appCtx) {
     const { win } = appCtx;
-    const sc = scroller();
-    sc.body.classList.add('credits');
-    sc.body.innerHTML = HTML;
-    win.body.append(sc.root);
+    const sc = scroller(win, { v: true, h: false });
+    const box = el('div', { class: 'credits', html: HTML });
+    sc.view.append(box);
     win.refreshMenus();
   },
 };

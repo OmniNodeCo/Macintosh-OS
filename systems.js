@@ -99,15 +99,16 @@ window.SYSTEMS = [
     short: '8',
     finder: 'Finder 8.0',
     year: 1997,
-    date: 'July 1997',
+    date: '26 July 1997',
     model: 'Power Macintosh 8600',
-    bits: 'Platinum, 8-bit+',
-    status: 'planned',
-    href: '',
+    bits: 'Platinum, colour 640 × 480',
+    status: 'ready',
+    href: 'os/mac-os-8/',
     blurb:
-      'The Platinum appearance, spring-loaded folders, the Finder as a multi-user ' +
-      'shell and the beginning of the modern Mac look.',
-    highlights: ['Platinum', 'Spring-loaded folders', 'Multitasking'],
+      'The Platinum appearance in colour on a Power Macintosh 8600: spring-loaded ' +
+      'folders, contextual menus, a native multithreaded Finder, Virtual Memory ' +
+      'that finally works, and SimpleText in the box.',
+    highlights: ['Platinum', 'Spring-loaded folders', 'Contextual menus'],
   },
   {
     id: 'mac-os-9',

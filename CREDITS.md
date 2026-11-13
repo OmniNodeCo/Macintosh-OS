@@ -235,3 +235,42 @@ shades), and the desktop's localStorage memory of window positions and labels. A
 AppleEvents, Publish & Subscribe, personal file sharing and TrueType outline rendering are
 named and honoured but not simulated; the virtual-memory panel exists precisely to say why
 it cannot work here.
+
+## Mac OS 8.0 (July 1997)
+
+**System:** Mac OS 8.0 (released 26 July 1997; the "Allegro" release built from
+the remains of Copland) running on a **Power Macintosh 8600/200** ("Kansas",
+February 1997): PowerPC 604e at 200 MHz, 32 MB of RAM, 4 MB ROM, 2 MB VRAM,
+2.0 GB Fast SCSI disk, 1.4 MB SuperDrive, 12x CD-ROM. Sources: Wikipedia
+(Mac OS 8, Copland, Appearance Manager, HFS Plus) and Apple's Power
+Macintosh 8600 technical specifications. The 2 GB volume is exactly plain
+HFS's ceiling — HFS Plus arrived with Mac OS 8.1. Virtual Memory is real
+here: the 604e has an MMU.
+
+**What is drawn for the first time in colour:** the **Apple Platinum
+appearance** — light grey window frames, ridged active title bars, candy-box
+window controls, rounded embossed buttons, grey scroll channels and a
+highlight colour. All of it is CSS and our own pixel art: no Platinum
+resources, no Apple bitmaps. The colour icons (gold folders, steel disks,
+periwinkle alias arrows) are our own 32 × 32 drawings that echo the Platinum
+colour language without copying Apple's icon art. The default highlight
+colour (periwinkle) and the seven Appearance swatches are our
+approximations of the Appearance Manager's colour choices.
+
+**Not included, marked plainly:** the **Charcoal** system font (Mac OS 8's
+face) is NOT included — everything renders in the museum's own pixel face,
+MacPixelChicago. **Submenus:** contextual menus here are flat — the Label
+items stand alone instead of under a Label submenu (the museum has no
+submenus in any system). **HFS Plus, Sherlock, Multi-User, Appearance
+themes beyond Platinum, QuickTime playback and Java** are not claimed:
+HFS Plus is 8.1, Sherlock is 8.5, and the rest needs machinery the museum
+does not pretend to have.
+
+**Clone-only conveniences:** persistent preferences in localStorage;
+"Insert Disk File…" in the Apple menu; the Credits application; the launcher
+page; `window.mac` for the console. **SimpleText** is a renamed MacWrite in
+this museum (the real SimpleText grew out of TeachText); MacWrite and
+MacPaint remain available as museum pieces even though neither shipped with
+Mac OS 8. Contextual menus and spring-loaded folders are modelled from
+published Mac OS 8 behaviour descriptions (850 ms spring delay is a chosen
+approximation).

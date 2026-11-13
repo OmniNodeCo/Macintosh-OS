@@ -4,6 +4,23 @@
 
 window.CHANGELOG = [
   {
+    version: '0.8.0',
+    date: '2026-11-11',
+    title: 'Mac OS 8 boots',
+    summary: 'Platinum in colour on a Power Macintosh 8600: spring-loaded folders, contextual menus, and Virtual Memory that finally works.',
+    items: [
+      'New system: os/mac-os-8/ — Mac OS 8.0 (26 July 1997) on a Power Macintosh 8600, the museum\'s first colour screen at 640 × 480',
+      'The Platinum appearance in CSS: light grey frames, ridged title bars, candy-box window controls, rounded embossed buttons, grey scroll channels',
+      'Spring-loaded folders: hold a dragged icon over a folder and it springs open',
+      'Contextual menus: Control-click an icon for Open, Get Info, Make Alias, Move to Trash and label items (flat — the museum has no submenus)',
+      'Appearance control panel with a working highlight colour: seven swatches recolour menus, selections and icons across the system',
+      'Virtual Memory is available at last — the PowerPC 604e has an MMU, and the 2 GB hard disk lends the backing file',
+      'Volumes of 1997: a 1.4 MB SuperDrive disk, a 2 GB Fast SCSI hard disk and a locked Mac OS 8 CD',
+      'SimpleText in the box (a renamed MacWrite in this museum), Colour icons in the Platinum palette (our own art), About This Macintosh 8 with per-application memory bars for 32 MB',
+      'Fix: Credits crashed with "a system error occurred" in System 6.0 and 7.0 — the scroller helper was called with the wrong signature; both systems now open Credits cleanly'
+    ],
+  },
+  {
     version: '0.7.0',
     date: '2026-11-11',
     title: 'System 6.0 and System 7.0 boot',

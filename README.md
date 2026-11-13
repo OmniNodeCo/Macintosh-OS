@@ -8,8 +8,9 @@ recreation of the original desktop in 1-bit black and white: 512 × 342 pixels o
 striped windows, dithered icons, desk accessories — written in plain HTML, CSS and
 JavaScript with **no frameworks, no image files and no Apple assets**. **System 2.0 /
 Finder 4.1** (April 1985), **System 3.0 / Finder 5.1** (January 1986, the Macintosh
-Plus), **System 6.0 / Finder 6.1** (April 1988, the Macintosh SE) and **System 7.0**
-(May 1991) are the second through fifth bootable disks.
+Plus), **System 6.0 / Finder 6.1** (April 1988, the Macintosh SE), **System 7.0**
+(May 1991) and **Mac OS 8.0** (July 1997, the Power Macintosh 8600 — the
+museum's first colour screen) are the second through sixth bootable disks.
 
 **Live site:** <https://omninodeco.github.io/Macintosh-OS/> (GitHub Pages, served from `main`).
 
@@ -21,6 +22,7 @@ python3 -m http.server 8000      # or: npx serve .
 #           http://localhost:8000/os/system-3.0/  → System 3.0
 #           http://localhost:8000/os/system-6.0/  → System 6.0
 #           http://localhost:8000/os/system-7.0/  → System 7.0
+#           http://localhost:8000/os/mac-os-8/    → Mac OS 8.0
 ```
 
 The museum page is a pure static page, so it also works straight from `file://` —
@@ -42,6 +44,7 @@ server or GitHub Pages.
 | [System 3.0](os/system-3.0/) | 1986 | Macintosh Plus | **bootable** |
 | [System 6.0](os/system-6.0/) | 1988 | Macintosh SE | **bootable** |
 | [System 7.0](os/system-7.0/) | 1991 | Macintosh SE | **bootable** |
+| [Mac OS 8](os/mac-os-8/) | 1997 | Power Macintosh 8600 | **bootable** |
 | Mac OS 8 | 1997 | Power Macintosh 8600 | planned |
 | Mac OS 9 | 1999 | Power Mac G4 | planned |
 | Mac OS X | 2001 | Power Mac G4 Cube | planned |
@@ -85,16 +88,18 @@ os/system-2.0/          System 2.0 / Finder 4.1 — its own js/, no imports from
 os/system-3.0/          System 3.0 / Finder 5.1 — HFS, the Chooser, zoom boxes, 800K disks
 os/system-6.0/          System 6.0 / Finder 6.1 — MultiFinder, Set Startup, MacroMaker
 os/system-7.0/          System 7.0 — the System 7 look, aliases, Balloon Help, labels
+os/mac-os-8/            Mac OS 8.0 — Platinum in colour, spring folders, context menus
 css/system-1.0/mac.css  that system's chrome; systems do not share CSS
 css/system-2.0/mac.css  System 2.0's chrome (Choose Printer, MiniFinder, Print Catalog)
 css/system-3.0/mac.css  System 3.0's chrome (Chooser, status strip, test page, memory meter)
 css/system-6.0/mac.css  System 6.0's chrome (cdev strip, MacroMaker)
 css/system-7.0/mac.css  System 7.0's chrome (bevels, balloons, label bands, app menu)
+css/mac-os-8/mac.css    Mac OS 8.0's Platinum layer (ridged title bars, candy controls)
 assets/fonts/           shared typefaces (MacPixel Chicago)
 assets/icons/           shared icon art (favicon)
 systems.js              the registry the launcher reads
 index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
-changelog.js            release history; the newest entry feeds "What's new" (v0.7.0 = System 6.0 + 7.0)
+changelog.js            release history; the newest entry feeds "What's new" (v0.8.0 = Mac OS 8.0)
 launcher.css, launcher.js
 ```
 
@@ -256,7 +261,34 @@ screen (the SE really ran System 7 in black and white) and gains a
   and the **Trash is a real folder**: throw something away, restart, and it is
   still there.
 
-## Keyboard
+## Mac OS 8.0 — what the update changed
+
+26 July 1997: the biggest overhaul since System 7, and the place where the
+cancelled Copland project finally reached machines. The museum machine is a
+**Power Macintosh 8600** (PowerPC 604e at 200 MHz, 32 MB of RAM) and the
+museum's **first colour screen**: 640 × 480. Volumes: a **1.4 MB SuperDrive
+disk**, a **2 GB Fast SCSI hard disk** (exactly plain HFS's ceiling) and a
+**Mac OS 8 CD**.
+
+* **The Platinum appearance.** Light grey frames, ridged active title bars,
+  candy-box window controls, rounded embossed buttons and grey scroll
+  channels — all drawn in CSS, no Apple art.
+* **Spring-loaded folders.** Drag an icon over a folder and hold it there:
+  the folder springs open underneath you.
+* **Contextual menus.** Control-click an icon for Open, Get Info…, Make Alias,
+  Move to Trash and label items. (Cloned flat: the museum has no submenus.)
+* **The Appearance control panel** with a working highlight colour — pick one
+  of seven swatches and menus, selections and icon highlights follow along.
+* **Virtual Memory is available** — the PowerPC 604e has an MMU; the 2 GB disk
+  lends a backing file. The System 7 panel's polite refusal is over.
+* **SimpleText** in the box (a renamed MacWrite in this museum), colour icons
+  in our Platinum palette, and About This Macintosh with per-application
+  memory bars for 32 MB.
+* Everything System 7 brought along stays: aliases, Balloon Help, labels,
+  the Application menu, Apple Menu Items, Force Quit, Find…, and a Trash that
+  persists.
+
+
 
 | Keys | Action |
 | --- | --- |
@@ -308,7 +340,7 @@ Where it knowingly differs:
 
 ```
 index.html              the launcher: masthead nav, what's new, feature, disk wall, changelog
-changelog.js            release history; the newest entry feeds "What's new" (v0.7.0 = System 6.0 + 7.0) for every system
+changelog.js            release history; the newest entry feeds "What's new" (v0.8.0 = Mac OS 8.0) for every system
 launcher.css            the lobby in four styles (Classic, Platinum, Aqua, dark), all token-driven
 launcher.js              builds the wall from systems.js, the changelog from changelog.js,
                         the style picker, and the arrow-key/Return navigation
