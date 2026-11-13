@@ -1,0 +1,51 @@
+/* Application registry — everything the Launcher and the Apple menu can
+   start. */
+
+import launcher from './launcher.js';
+import macwrite from './macwrite.js';
+import macpaint from './macpaint.js';
+import calculator from './calculator.js';
+import clock from './clock.js';
+import controlpanel from './controlpanel.js';
+import keycaps from './keycaps.js';
+import notepad from './notepad.js';
+import puzzle from './puzzle.js';
+import scrapbook from './scrapbook.js';
+import credits from './credits.js';
+import about from './about.js';
+import chooser from './chooser.js';
+import printertest from './printertest.js';
+import simpletext from './simpletext.js';
+import sherlock from './sherlock.js';
+import keychain from './keychain.js';
+import multipleusers from './multipleusers.js';
+import softwareupdate from './softwareupdate.js';
+
+export const APPS = [
+  launcher,
+  simpletext,
+  macwrite,
+  macpaint,
+  calculator,
+  clock,
+  controlpanel,
+  keycaps,
+  notepad,
+  puzzle,
+  scrapbook,
+  credits,
+  about,
+  chooser,
+  printertest,
+  sherlock,
+  keychain,
+  multipleusers,
+  softwareupdate,
+];
+
+export const APP_MAP = new Map(APPS.map((a) => [a.id, a]));
+
+export function getApp(id) { return APP_MAP.get(id); }
+
+/** App list for the Launcher grid (everything except the launchers). */
+export const LAUNCHABLE = APPS.filter((a) => a.id !== 'launcher' && a.id !== 'printertest');

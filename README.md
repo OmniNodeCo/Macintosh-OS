@@ -5,12 +5,14 @@ of startup disks, release notes, a changelog and a style picker) plus one self-c
 recreation per system. It
 starts with the **1984 Macintosh System 1.0 / Finder 1.0**, a working, from-scratch
 recreation of the original desktop in 1-bit black and white: 512 × 342 pixels of menu bar,
-striped windows, dithered icons, desk accessories — written in plain HTML, CSS and
+striped windows, official icons, desk accessories — written in plain HTML, CSS and
 JavaScript with **no frameworks, no image files and no Apple assets**. **System 2.0 /
 Finder 4.1** (April 1985), **System 3.0 / Finder 5.1** (January 1986, the Macintosh
 Plus), **System 6.0 / Finder 6.1** (April 1988, the Macintosh SE), **System 7.0**
-(May 1991) and **Mac OS 8.0** (July 1997, the Power Macintosh 8600 — the
-museum's first colour screen) are the second through sixth bootable disks.
+(May 1991), **Mac OS 8.0** (July 1997, the Power Macintosh 8600 — the
+museum's first colour screen) and **Mac OS 9.0** (October 1999, a Power
+Macintosh G4 "Yikes!" — Sherlock 2, Multiple Users, the Keychain and
+Software Update) are the second through seventh bootable disks.
 
 **Live site:** <https://omninodeco.github.io/Macintosh-OS/> (GitHub Pages, served from `main`).
 
@@ -23,14 +25,17 @@ python3 -m http.server 8000      # or: npx serve .
 #           http://localhost:8000/os/system-6.0/  → System 6.0
 #           http://localhost:8000/os/system-7.0/  → System 7.0
 #           http://localhost:8000/os/mac-os-8/    → Mac OS 8.0
+#           http://localhost:8000/os/mac-os-9/    → Mac OS 9.0
 ```
 
 The museum page is a pure static page, so it also works straight from `file://` —
 double-click `index.html`. System 1.0 itself uses ES modules and therefore needs a web
 server or GitHub Pages.
 
-> **It is an original fan tribute.** Every glyph, icon, pattern, beep and line of code was
-> made for this project. Apple's Chicago font, ROM icons and sounds are *not* included.
+> **It is an original fan tribute.** Every glyph, pattern, beep and line of code was
+> made for this project. The **icons are the official Apple artwork** of each era,
+> credited in [CREDITS.md](CREDITS.md); Apple's Chicago font, ROM art and sounds are
+> *not* included.
 > See [CREDITS.md](CREDITS.md) for full credits, sources and licensing.
 
 ---
@@ -45,8 +50,7 @@ server or GitHub Pages.
 | [System 6.0](os/system-6.0/) | 1988 | Macintosh SE | **bootable** |
 | [System 7.0](os/system-7.0/) | 1991 | Macintosh SE | **bootable** |
 | [Mac OS 8](os/mac-os-8/) | 1997 | Power Macintosh 8600 | **bootable** |
-| Mac OS 8 | 1997 | Power Macintosh 8600 | planned |
-| Mac OS 9 | 1999 | Power Mac G4 | planned |
+| [Mac OS 9](os/mac-os-9/) | 1999 | Power Macintosh G4 (Yikes!) | **bootable** |
 | Mac OS X | 2001 | Power Mac G4 Cube | planned |
 
 The list lives in one place — [`systems.js`](systems.js). Add an entry with a `href` and a

@@ -1218,8 +1218,50 @@ export function renderBitmap(bmp, scale = 1) {
   return cv;
 }
 
+/* Official Apple icon artwork of this system's era — see CREDITS.md.
+   Any name listed here is served from the museum's icon archive; anything
+   else falls back to the museum's own drawn icons below. */
+const OFFICIAL = {
+  "floppy": "../../assets/icons/mac-os-8.0/floppy.png",
+  "disk": "../../assets/icons/mac-os-8.0/floppy.png",
+  "floppy400": "../../assets/icons/mac-os-8.0/floppy.png",
+  "harddisk": "../../assets/icons/mac-os-8.0/harddisk.png",
+  "cd": "../../assets/icons/mac-os-8.0/cd.png",
+  "trash": "../../assets/icons/mac-os-8.0/trash.png",
+  "trashFull": "../../assets/icons/mac-os-8.0/trashFull.png",
+  "trashEmpty": "../../assets/icons/mac-os-8.0/trash.png",
+  "folder": "../../assets/icons/mac-os-8.0/folder.png",
+  "folderOpen": "../../assets/icons/mac-os-8.0/folderOpen.png",
+  "systemfolder": "../../assets/icons/mac-os-8.0/systemfolder.png",
+  "doc": "../../assets/icons/mac-os-8.0/doc.png",
+  "docText": "../../assets/icons/mac-os-8.0/docText.png",
+  "docPaint": "../../assets/icons/mac-os-8.0/doc.png",
+  "draw": "../../assets/icons/mac-os-8.0/doc.png",
+  "app": "../../assets/icons/mac-os-8.0/app.png",
+  "extension": "../../assets/icons/mac-os-8.0/extension.png",
+  "locked": "../../assets/icons/mac-os-8.0/extension.png",
+  "apple": "../../assets/icons/mac-os-8.0/apple.png",
+  "appleLarge": "../../assets/icons/mac-os-8.0/apple.png",
+  "simpletext": "../../assets/icons/mac-os-8.0/simpletext.png",
+  "macwrite": "../../assets/icons/mac-os-8.0/macwrite.png",
+  "macpaint": "../../assets/icons/mac-os-8.0/macpaint.png",
+  "note": "../../assets/icons/mac-os-8.0/note.png",
+  "notepad": "../../assets/icons/mac-os-8.0/notepad.png",
+  "clock": "../../assets/icons/mac-os-8.0/clock.png",
+  "keycaps": "../../assets/icons/mac-os-8.0/keycaps.png",
+  "scrapbook": "../../assets/icons/mac-os-8.0/scrapbook.png",
+  "controlpanel": "../../assets/icons/mac-os-8.0/controlpanel.png",
+  "printer": "../../assets/icons/mac-os-8.0/printer.png",
+  "caution": "../../assets/icons/mac-os-8.0/caution.png",
+  "stop": "../../assets/icons/mac-os-8.0/stop.png",
+  "cdevStartup": "../../assets/icons/mac-os-8.0/cdevStartup.png",
+  "cdevMemory": "../../assets/icons/mac-os-8.0/cdevMemory.png",
+  "happyMac": "../../assets/icons/mac-os-8.0/happyMac.png",
+};
+
 const cache = new Map();
 export function iconURL(name) {
+  if (OFFICIAL[name]) return OFFICIAL[name];
   if (cache.has(name)) return cache.get(name);
   const factory = ICONS[name] || ICONS.doc;
   const url = renderBitmap(factory(), 1).toDataURL('image/png');
@@ -1250,6 +1292,19 @@ export function iconImg(name, cls = '') {
 
 /** big canvas for the start-up screen (happy Mac) — kept monochrome like the ROM icon */
 export function drawHappyMac(canvas, scale = 1) {
+  if (OFFICIAL.happyMac) {
+    const img = new Image();
+    img.onload = () => {
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const s2 = Math.max(1, Math.floor(Math.min(canvas.width, canvas.height) / 32));
+      const w = 32 * s2, h = 32 * s2;
+      ctx.drawImage(img, Math.round((canvas.width - w) / 2), Math.round((canvas.height - h) / 2), w, h);
+    };
+    img.src = OFFICIAL.happyMac;
+    return;
+  }
   const b = new Bitmap(64);
   // case
   b.rect(6, 2, 52, 52, W);
