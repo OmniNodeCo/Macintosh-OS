@@ -4,6 +4,17 @@
 
 window.CHANGELOG = [
   {
+    version: '0.9.0',
+    date: '2026-11-11',
+    title: 'Mac OS 9, and official icons everywhere',
+    summary: 'Sherlock 2, Multiple Users, the Keychain and Software Update on a G4 — and every system now wears Apple\u2019s real icon art.',
+    items: [
+      'Mac OS 9.0 on a Power Macintosh G4 (Yikes!, 350 MHz): Sherlock 2 search channels, Multiple Users login with account kinds, Keychain Access and Software Update, 800 \u00d7 600 Platinum',
+      'Official Apple icon artwork across every system, era by era: Susan Kare\u2019s 1984 originals (System 1.0\u20136.0), System 7.5.3 extractions (7.0), Mac OS 8.1 extractions (8.0), Mac OS 9 originals (9.0) \u2014 all credited in CREDITS.md and the Credits app',
+      'New icon assets in assets/icons/, 32 \u00d7 32, with era conversions and per-source attribution'
+    ]
+  },
+  {
     version: '0.8.0',
     date: '2026-11-11',
     title: 'Mac OS 8 boots',

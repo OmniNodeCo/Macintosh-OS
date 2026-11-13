@@ -642,8 +642,50 @@ export function renderBitmap(bmp, scale = 1) {
   return cv;
 }
 
+/* Official Apple icon artwork of this system's era — see CREDITS.md.
+   Any name listed here is served from the museum's icon archive; anything
+   else falls back to the museum's own drawn icons below. */
+const OFFICIAL = {
+  "floppy": "../../assets/icons/system-7.0/floppy.png",
+  "disk": "../../assets/icons/system-7.0/floppy.png",
+  "floppy400": "../../assets/icons/system-7.0/floppy.png",
+  "harddisk": "../../assets/icons/system-7.0/harddisk.png",
+  "cd": "../../assets/icons/system-7.0/cd.png",
+  "trash": "../../assets/icons/system-7.0/trash.png",
+  "trashFull": "../../assets/icons/system-7.0/trashFull.png",
+  "trashEmpty": "../../assets/icons/system-7.0/trash.png",
+  "folder": "../../assets/icons/system-7.0/folder.png",
+  "folderOpen": "../../assets/icons/system-7.0/folderOpen.png",
+  "systemfolder": "../../assets/icons/system-7.0/systemfolder.png",
+  "doc": "../../assets/icons/system-7.0/doc.png",
+  "docText": "../../assets/icons/system-7.0/docText.png",
+  "docPaint": "../../assets/icons/system-7.0/docPaint.png",
+  "draw": "../../assets/icons/system-7.0/docPaint.png",
+  "app": "../../assets/icons/system-7.0/app.png",
+  "extension": "../../assets/icons/system-7.0/extension.png",
+  "locked": "../../assets/icons/system-7.0/extension.png",
+  "macwrite": "../../assets/icons/system-7.0/macwrite.png",
+  "macpaint": "../../assets/icons/system-7.0/macpaint.png",
+  "clock": "../../assets/icons/system-7.0/clock.png",
+  "keycaps": "../../assets/icons/system-7.0/keycaps.png",
+  "notepad": "../../assets/icons/system-7.0/notepad.png",
+  "note": "../../assets/icons/system-7.0/notepad.png",
+  "scrapbook": "../../assets/icons/system-7.0/scrapbook.png",
+  "controlpanel": "../../assets/icons/system-7.0/controlpanel.png",
+  "printer": "../../assets/icons/system-7.0/printer.png",
+  "caution": "../../assets/icons/system-7.0/caution.png",
+  "cdevMemory": "../../assets/icons/system-7.0/cdevMemory.png",
+  "cdevKeyboard": "../../assets/icons/system-7.0/cdevKeyboard.png",
+  "cdevSound": "../../assets/icons/system-7.0/cdevSound.png",
+  "apple": "../../assets/icons/system-7.0/apple.png",
+  "bomb": "../../assets/icons/system-7.0/bomb.png",
+  "cdevStartup": "../../assets/icons/system-7.0/cdevStartup.png",
+  "happyMac": "../../assets/icons/system-7.0/happyMac.png",
+};
+
 const cache = new Map();
 export function iconURL(name) {
+  if (OFFICIAL[name]) return OFFICIAL[name];
   if (cache.has(name)) return cache.get(name);
   const factory = ICONS[name] || ICONS.doc;
   const url = renderBitmap(factory(), 1).toDataURL('image/png');
@@ -674,6 +716,19 @@ export function iconImg(name, cls = '') {
 
 /** big canvas for the start-up screen (happy Mac) */
 export function drawHappyMac(canvas, scale = 1) {
+  if (OFFICIAL.happyMac) {
+    const img = new Image();
+    img.onload = () => {
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const s2 = Math.max(1, Math.floor(Math.min(canvas.width, canvas.height) / 32));
+      const w = 32 * s2, h = 32 * s2;
+      ctx.drawImage(img, Math.round((canvas.width - w) / 2), Math.round((canvas.height - h) / 2), w, h);
+    };
+    img.src = OFFICIAL.happyMac;
+    return;
+  }
   const b = new Bitmap(64);
   // case
   b.rect(6, 2, 52, 52, W);

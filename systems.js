@@ -116,15 +116,16 @@ window.SYSTEMS = [
     short: '9',
     finder: 'Finder 9.0',
     year: 1999,
-    date: 'October 1999',
-    model: 'Power Mac G4',
-    bits: 'Platinum, 8-bit+',
-    status: 'planned',
-    href: '',
+    date: '23 October 1999',
+    model: 'Power Macintosh G4 (Yikes!)',
+    bits: 'Platinum, colour 800 × 600',
+    status: 'ready',
+    href: 'os/mac-os-9/',
     blurb:
-      'The last of the classic Mac OS: Sherlock, Keychain, multiple users, ' +
-      'and the sound of a startup chime that closed an era.',
-    highlights: ['Sherlock', 'Keychain', 'Multiple users'],
+      'The last of the classic Mac OS on a Power Macintosh G4: Sherlock 2 ' +
+      'channels, Multiple Users, the Keychain, Automatic Software Update, ' +
+      'a 10 GB disk and a Zip 100 in place of the floppy.',
+    highlights: ['Sherlock 2', 'Keychain', 'Multiple Users', 'Software Update'],
   },
   {
     id: 'mac-os-x',
