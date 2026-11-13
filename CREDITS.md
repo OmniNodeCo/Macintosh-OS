@@ -3,7 +3,8 @@
 **Macintosh-OS** is a fan-made, non-commercial homage to the classic Apple
 Macintosh and its system software: System 1.0 (1984), System 2.0 (1985),
 System 3.0 (1986), System 6.0 (1988), System 7.0 (1991), Mac OS 8.0 (1997)
-and Mac OS 9.0 (1999), each booting side by side. It is not affiliated
+and Mac OS 9.0 (1999), Mac OS X 10.0 (2001) and macOS Big Sur 11 (2020),
+each booting side by side. It is not affiliated
 with, endorsed by, or sponsored by Apple Inc.
 
 ---
@@ -80,7 +81,35 @@ extracted from Mac OS 9 system software (documented at
 blog.warmwolf.com, May 2020): Sherlock's folder, the Zip disk, the
 suitcase and friends. Downscaled to 32 × 32 here.
 
-### 2.5 Icons still drawn in code
+### 2.5 Mac OS X "Cheetah" official icons (`assets/icons/mac-os-x/`)
+
+The Aqua-era icons (Finder, Mail, Sherlock, QuickTime, TextEdit,
+document, Macintosh HD, FireWire disk, Network, Photos, AirPort) are
+sliced from published **Mac OS X 10.0 screenshots** — the exact pixels
+the real system drew (sources: the 512pixels Aqua Screenshot Library,
+storiesofapple.net, letemsvetemapplem.eu). The **wire-mesh Trash** is the
+512 px icon extracted from Mac OS X system software. Museum drawings (no
+clean official bitmap was obtainable at this size): the blue folder,
+generic application, Terminal, iTunes' CD-and-note, the Apple logo and
+the full Trash state.
+
+### 2.6 macOS Big Sur official icons (`assets/icons/macos-11/`)
+
+The complete Big Sur set — applications (Finder, Safari, Mail, Messages,
+Music, Photos, Notes, Calendar, Calculator, Terminal, System
+Preferences, TextEdit, App Store, Maps, TV, Podcasts, Reminders, FaceTime,
+News, Weather, Books, Stocks, Preview, Chess, Font Book, Disk Utility,
+Software Update, About This Mac, Keychain Access, QuickTime Player, Siri,
+Notifications, Spotlight, Displays), system icons (Trash and Full Trash,
+folders, home, Documents, Downloads, Applications, generic app/document,
+hard disk, mounted drive, network, alerts, alias badge, lock, user,
+Spotlight, AirDrop, sidebar glyphs) and the MacBook Pro hardware icon —
+extracted from **macOS system software** (.icns containers, PNG
+representations) via
+[github.com/KevinGutowski/Big-Sur-Icons](https://github.com/KevinGutowski/Big-Sur-Icons).
+The menu-bar glyphs and Apple logo in the clone are drawn in code.
+
+### 2.7 Icons still drawn in code
 
 A handful of icons remain drawn in code for this clone where no clean
 official bitmap exists at this size: the Calculator, Puzzle, launcher
@@ -114,6 +143,8 @@ era documentation and behaviour, not decompiled from Apple software.
 ## 6. What is deliberately *not* here
 
 - Apple's ROM images, ROM artwork, boot chimes and system fonts.
+- Apple's desktop pictures (the Aqua and Big Sur wallpapers here are the
+  museum's own gradients).
 - Apple's application code of any kind.
 - The Finder's exact look at the pixel level — this museum keeps its own
   drawing style for chrome while using the official icon art above.
@@ -124,6 +155,6 @@ era documentation and behaviour, not decompiled from Apple software.
 ## 7. Trademarks
 
 Mac, Macintosh, Mac OS, Finder, Sherlock, Keychain, MultiFinder,
-MacPaint, MacWrite, Platinum, and the happy Macintosh are trademarks of
-**Apple Inc.** This project is an homage for study and nostalgia, not an
+MacPaint, MacWrite, Mac OS X, macOS, Big Sur, Aqua, Safari, Finder,
+Platinum, and the happy Macintosh are trademarks of **Apple Inc.** This project is an homage for study and nostalgia, not an
 Apple product, and claims no ownership of the artwork credited in §2.

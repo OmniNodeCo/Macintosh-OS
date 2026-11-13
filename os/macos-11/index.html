@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17181c">
+<title>macOS Big Sur 11 — Web Clone</title>
+<meta name="description" content="A recreation of the 2020 macOS Big Sur desktop on a MacBook Pro (13-inch, M1): the rounded redesign, translucent menu bar, Control Center, Notification Center, the squircle Dock and About This Mac, rebuilt for the web.">
+<link rel="stylesheet" href="../../css/macos-11/mac.css">
+<link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <div id="stage">
+    <div id="screen" aria-label="Macintosh screen">
+      <div id="menubar" role="menubar"></div>
+      <div id="desktop"></div>
+      <div id="dock"></div>
+      <div id="controlcenter" class="panel"></div>
+      <div id="notifcenter" class="panel"></div>
+      <div id="windows"></div>
+      <div id="dialogs"></div>
+      <div id="boot" class="boot">
+        <div class="boot-inner">
+          <div class="boot-apple"><svg width="72" height="82" viewBox="0 0 14 16" aria-label="Apple"><path fill="#3c4148" d="M9.6 2.1c.5-.6.8-1.4.7-2.1-.7 0-1.5.4-2 .9-.4.5-.8 1.3-.7 2 .8.1 1.5-.3 2-.8z"/><path fill="#3c4148" d="M11.8 8.5c0-1.9 1.5-2.8 1.6-2.8-.9-1.3-2.2-1.4-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6-1.2 0-2.3.7-2.9 1.8-1.2 2.1-.3 5.3.9 7 .6.9 1.3 1.8 2.2 1.8.9 0 1.2-.6 2.3-.6 1.1 0 1.4.6 2.3.6.9 0 1.5-.9 2.1-1.7.7-1 .9-1.9.9-2-.1 0-1.5-.6-1.5-2.7z"/></svg></div>
+          <div class="boot-bar"><i></i></div>
+          <div class="boot-msg">Click to start up.</div>
+          <div class="boot-sub">macOS Big Sur 11 &middot; MacBook Pro (13-inch, M1, 2020)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="outside">
+    <span><b>macOS Big Sur 11</b> — web clone. Click the screen to start. Try the clock and the Control Center glyph at top right.</span>
+    <a class="back-to-launcher" href="../../">&#8592; All systems</a>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
