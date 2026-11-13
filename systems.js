@@ -133,14 +133,30 @@ window.SYSTEMS = [
     short: 'X',
     finder: 'Finder 10.0',
     year: 2001,
-    date: 'March 2001',
-    model: 'Power Mac G4 Cube',
-    bits: 'Aqua, 32-bit',
-    status: 'planned',
-    href: '',
+    date: '24 March 2001',
+    model: 'Power Macintosh G4 (PCI)',
+    bits: 'Aqua, colour 1024 × 768',
+    status: 'ready',
+    href: 'os/mac-os-x/',
     blurb:
-      'Aqua, the Dock, the genie effect and a Unix core under a lickable ' +
-      'interface. Where the modern Mac begins.',
-    highlights: ['Aqua', 'Dock', 'Quartz'],
+      'Cheetah: Aqua pinstripes, the glass Dock, jelly-bean window controls ' +
+      'and the Finder — where the modern Mac begins.',
+    highlights: ['Aqua', 'The Dock', 'Protected memory'],
+  },
+  {
+    id: 'macos-11',
+    name: 'macOS Big Sur',
+    short: '11',
+    finder: 'Finder 20',
+    year: 2020,
+    date: '12 November 2020',
+    model: 'MacBook Pro (13-inch, M1, 2020)',
+    bits: 'Big Sur, Retina 1440 × 900',
+    status: 'ready',
+    href: 'os/macos-11/',
+    blurb:
+      'The rounded redesign and the Apple silicon debut: Control Center, ' +
+      'Notification Center widgets, the squircle Dock and About This Mac.',
+    highlights: ['Control Center', 'Apple silicon', 'Squircle icons'],
   },
 ];

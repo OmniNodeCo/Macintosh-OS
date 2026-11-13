@@ -10,9 +10,11 @@ JavaScript with **no frameworks, no image files and no Apple assets**. **System 
 Finder 4.1** (April 1985), **System 3.0 / Finder 5.1** (January 1986, the Macintosh
 Plus), **System 6.0 / Finder 6.1** (April 1988, the Macintosh SE), **System 7.0**
 (May 1991), **Mac OS 8.0** (July 1997, the Power Macintosh 8600 — the
-museum's first colour screen) and **Mac OS 9.0** (October 1999, a Power
-Macintosh G4 "Yikes!" — Sherlock 2, Multiple Users, the Keychain and
-Software Update) are the second through seventh bootable disks.
+museum's first colour screen), **Mac OS 9.0** (October 1999, a Power
+Macintosh G4 "Yikes!"), **Mac OS X 10.0** (March 2001, "Cheetah" — Aqua and
+the Dock) and **macOS Big Sur 11** (November 2020, an M1 MacBook Pro —
+Control Center and the rounded redesign) are the second through ninth
+bootable disks.
 
 **Live site:** <https://omninodeco.github.io/Macintosh-OS/> (GitHub Pages, served from `main`).
 
@@ -26,6 +28,8 @@ python3 -m http.server 8000      # or: npx serve .
 #           http://localhost:8000/os/system-7.0/  → System 7.0
 #           http://localhost:8000/os/mac-os-8/    → Mac OS 8.0
 #           http://localhost:8000/os/mac-os-9/    → Mac OS 9.0
+#           http://localhost:8000/os/mac-os-x/    → Mac OS X 10.0
+#           http://localhost:8000/os/macos-11/   → macOS Big Sur 11
 ```
 
 The museum page is a pure static page, so it also works straight from `file://` —
@@ -51,7 +55,8 @@ server or GitHub Pages.
 | [System 7.0](os/system-7.0/) | 1991 | Macintosh SE | **bootable** |
 | [Mac OS 8](os/mac-os-8/) | 1997 | Power Macintosh 8600 | **bootable** |
 | [Mac OS 9](os/mac-os-9/) | 1999 | Power Macintosh G4 (Yikes!) | **bootable** |
-| Mac OS X | 2001 | Power Mac G4 Cube | planned |
+| [Mac OS X](os/mac-os-x/) | 2001 | Power Macintosh G4 (PCI) | **bootable** |
+| [macOS Big Sur](os/macos-11/) | 2020 | MacBook Pro (13-inch, M1) | **bootable** |
 
 The list lives in one place — [`systems.js`](systems.js). Add an entry with a `href` and a
 `status: 'ready'` and the system appears on the startup-disk wall; no other file needs to

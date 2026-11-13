@@ -4,6 +4,18 @@
 
 window.CHANGELOG = [
   {
+    version: '1.0.0',
+    date: '2026-11-13',
+    title: 'Mac OS X 10.0 and macOS Big Sur 11',
+    summary: 'Aqua and the rounded redesign join the museum \u2014 two ends of twenty years.',
+    items: [
+      'Mac OS X 10.0 Cheetah (2001) on a Power Macintosh G4: Aqua pinstripes, the glass Dock with magnification, Finder windows with the aqua toolbar, Mail, TextEdit, Terminal (try \u201chelp\u201d), About This Mac \u2014 1024 \u00d7 768',
+      'macOS Big Sur 11 (2020) on a MacBook Pro (13-inch, M1): translucent menu bar, Control Center, Notification Center with widgets, the squircle Dock, Finder with sidebar, System Preferences, About This Mac with M1 specs \u2014 1440 \u00d7 900',
+      'Official icon art both eras: Aqua-era icons sliced from published Mac OS X 10.0 screens plus the extracted wire-mesh Trash; Big Sur icons extracted from macOS system software \u2014 all credited in CREDITS.md and the Credits app',
+      'Headless suites: Mac OS X 15 checks, Big Sur 17 checks, all green'
+    ]
+  },
+  {
     version: '0.9.0',
     date: '2026-11-11',
     title: 'Mac OS 9, and official icons everywhere',
