@@ -127,7 +127,21 @@ two interlocking arrows), since no Big Sur-era extraction covers it. The
 tile and grey hardware glyph tiles). The menu-bar glyphs, Focus pill and
 Apple logo (menu bar and the white startup logo) are drawn in code.
 
-### 2.8 Icons still drawn in code
+### 2.8 macOS 13 Ventura / 14 Sonoma / 15 Sequoia (2022–2024)
+
+Same provenance as Monterey (§2.7): Ventura kept Big Sur's icon designs, Sonoma and
+Sequoia refreshed a handful, but the set remains recognisably the Big Sur family. All
+three systems reuse the official Big Sur-family artwork extracted from macOS system
+software (.icns containers, PNG representations) via
+**[github.com/KevinGutowski/Big-Sur-Icons](https://github.com/KevinGutowski/Big-Sur-Icons)** —
+Apple's icon artwork, extracted by Kevin Gutowski. Icons unique to these releases that the
+extraction does not cover — **System Settings, Weather, Clock and Passwords** — are the
+museum's own drawings in the same idiom (see §2.9). The desktop-widget glass, the System
+Settings sidebar, window tiling and the Calculator UI are drawn in CSS/JS; the wallpaper
+gradients are the museum's own. Apple's icon artwork remains the property of Apple Inc.;
+used here for study and nostalgia.
+
+### 2.9 Icons still drawn in code
 
 A handful of icons remain drawn in code for this clone where no clean
 official bitmap exists at this size: the Calculator, Puzzle, launcher
