@@ -68,6 +68,10 @@ const OFFICIAL = {
   sbCloud: BASE + 'sbCloud.png',
   laptop: BASE + 'laptop.png',
   shortcuts: BASE + 'shortcuts.png',
+  focus: BASE + 'focus.png',
+  keyboard: BASE + 'keyboard.png',
+  mouse: BASE + 'mouse.png',
+  trackpad: BASE + 'trackpad.png',
 };
 
 export function iconURL(name) {
