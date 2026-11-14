@@ -79,6 +79,8 @@ body {
 .menu .mi .key { float: right; margin-left: 28px; opacity: .65; }
 .menu .sep { height: 1px; background: rgba(0, 0, 0, .12); margin: 5px 12px; }
 
+@keyframes menuIn { from { opacity: 0; transform: translateY(-5px); } }
+
 /* ------------------------------------------------------------- desktop -- */
 #desktop { position: absolute; inset: var(--menu-h) 0 0 0; }
 .dicon { position: absolute; width: 100px; text-align: center; cursor: default; }
@@ -124,13 +126,16 @@ body {
   box-shadow: 0 22px 60px rgba(0, 0, 0, .38);
   padding: 12px;
 }
-#controlcenter { top: calc(var(--menu-h) + 8px); right: 12px; width: 320px; display: none; }
+#controlcenter { top: calc(var(--menu-h) + 8px); right: 12px; width: 320px; display: none; animation: ccIn .18s ease; }
 #notifcenter {
   top: var(--menu-h); right: 0; bottom: 0; width: 344px;
   border-radius: 12px 0 0 12px;
   overflow: auto; display: none;
   padding: 16px 14px;
+  animation: ncIn .22s ease;
 }
+@keyframes ccIn { from { opacity: 0; transform: translateY(-8px) scale(.97); } }
+@keyframes ncIn { from { opacity: 0; transform: translateX(28px); } }
 .cc-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .cc-tile {
   background: rgba(255, 255, 255, .55); border-radius: 11px; padding: 10px 11px;
@@ -171,6 +176,7 @@ body {
 .win {
   position: absolute;
   border-radius: 11px;
+  animation: winOpen .2s ease;
   background: var(--win-bg);
   backdrop-filter: blur(30px) saturate(160%);
   -webkit-backdrop-filter: blur(30px) saturate(160%);
@@ -179,6 +185,10 @@ body {
   display: flex; flex-direction: column;
   overflow: hidden;
 }
+.win.closing { animation: winClose .15s ease forwards; pointer-events: none; }
+@keyframes winOpen { from { opacity: 0; transform: scale(.94) translateY(12px); } }
+@keyframes winClose { to { opacity: 0; transform: scale(.96) translateY(6px); } }
+
 .win .title {
   height: 40px; flex: 0 0 auto;
   display: flex; align-items: center; gap: 8px;
@@ -277,6 +287,7 @@ body {
 .modal-shield { position: absolute; inset: 0; z-index: 2000; background: rgba(0, 0, 0, .12); }
 .dialog {
   position: absolute; left: 50%; top: 34%; transform: translate(-50%, -50%);
+  animation: dlgIn .16s ease;
   width: 360px;
   background: rgba(246, 246, 248, .96);
   backdrop-filter: blur(30px);
@@ -284,6 +295,24 @@ body {
   box-shadow: 0 30px 70px rgba(0, 0, 0, .4);
   z-index: 2001;
 }
+@keyframes dlgIn { from { opacity: 0; transform: translate(-50%, -50%) scale(.92); } }
+
 .dialog .dlg-title { text-align: center; font-weight: 700; font-size: 13px; padding: 16px 18px 6px; }
 .dialog .dlg-body { padding: 4px 20px 14px; font-size: 12px; text-align: center; opacity: .88; }
 .dialog .btns { display: flex; justify-content: center; gap: 10px; padding: 0 18px 18px; }
+
+#dock .tile.bounce { animation: dockBounce .62s ease; }
+@keyframes dockBounce {
+  0% { transform: translateY(0); }
+  32% { transform: translateY(-22px); }
+  55% { transform: translateY(0); }
+  74% { transform: translateY(-9px); }
+  100% { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01s !important;
+    transition-duration: .01s !important;
+  }
+}

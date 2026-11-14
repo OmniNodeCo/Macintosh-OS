@@ -71,7 +71,8 @@ body {
 
 /* dropdown menus (Aqua: white rounded, blue selection) */
 .menu {
-  position: fixed; z-index: 1200; min-width: 190px;
+  position: absolute; z-index: 1200; min-width: 190px;
+  animation: menuIn .12s ease;
   background: rgba(250, 251, 253, .98);
   border: 1px solid #8b93a3; border-radius: 5px;
   box-shadow: 0 8px 22px rgba(0,0,0,.35), 0 1px 0 #fff inset;
@@ -129,6 +130,8 @@ body {
 #dock .tile.running .dot { display: block; }
 #dock .sep { width: 1px; align-self: stretch; margin: 4px 5px; background: rgba(70, 90, 120, .5); box-shadow: 1px 0 0 rgba(255,255,255,.5); }
 
+@keyframes menuIn { from { opacity: 0; transform: translateY(-5px); } }
+
 /* --------------------------------------------------------------- boot -- */
 .boot {
   position: absolute; inset: 0; z-index: 3000;
@@ -152,6 +155,7 @@ body {
 /* ------------------------------------------------------------- windows -- */
 .win {
   position: absolute; min-width: 200px;
+  animation: winOpen .18s ease;
   border-radius: 7px 7px 3px 3px;
   background: var(--metal-a);
   border: 1px solid #6e7687;
@@ -159,6 +163,10 @@ body {
   display: flex; flex-direction: column;
   overflow: hidden;
 }
+.win.closing { animation: winClose .14s ease forwards; pointer-events: none; }
+@keyframes winOpen { from { opacity: 0; transform: scale(.93) translateY(10px); } }
+@keyframes winClose { to { opacity: 0; transform: scale(.95) translateY(4px); } }
+
 .win .title {
   height: 22px; flex: 0 0 auto;
   display: flex; align-items: center; gap: 6px;
@@ -284,11 +292,34 @@ body {
 .modal-shield { position: absolute; inset: 0; z-index: 2000; background: transparent; }
 .dialog {
   position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%);
+  animation: dlgIn .16s ease;
   width: 340px; background: var(--metal-a);
   border: 1px solid #6e7687; border-radius: 8px;
   box-shadow: 0 22px 50px rgba(0,0,0,.5);
   z-index: 2001;
 }
+@keyframes dlgIn { from { opacity: 0; transform: translate(-50%, -50%) scale(.92); } }
+
 .dialog .title { border-radius: 8px 8px 0 0; }
 .dialog .dlg-body { padding: 14px 16px 10px; font-size: 12.5px; background: #fff; }
 .dialog .btns { display: flex; justify-content: flex-end; gap: 8px; padding: 10px 14px 12px; background: var(--metal-a); border-radius: 0 0 8px 8px; }
+
+/* Dock launch bounce */
+#dock .tile.bounce { animation: dockBounce .62s ease; }
+@keyframes dockBounce {
+  0% { transform: translateY(0); }
+  32% { transform: translateY(-22px); }
+  55% { transform: translateY(0); }
+  74% { transform: translateY(-9px); }
+  100% { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01s !important;
+    transition-duration: .01s !important;
+  }
+}
+
+/* volume labels carry era-accurate capacity on a second line */
+.fitem .lbl { white-space: pre-line; }

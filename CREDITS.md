@@ -109,7 +109,18 @@ representations) via
 [github.com/KevinGutowski/Big-Sur-Icons](https://github.com/KevinGutowski/Big-Sur-Icons).
 The menu-bar glyphs and Apple logo in the clone are drawn in code.
 
-### 2.7 Icons still drawn in code
+### 2.7 macOS Monterey official icons (`assets/icons/macos-12/`)
+
+Monterey shipped no visual redesign, so the clone reuses the **same
+official Big Sur artwork** (§2.6 — extracted from macOS system software
+via [github.com/KevinGutowski/Big-Sur-Icons](https://github.com/KevinGutowski/Big-Sur-Icons))
+for every shared icon: Finder, Safari, Mail, System Preferences, folders,
+disks, Trash, sidebar glyphs and the rest. The Shortcuts application icon
+`shortcuts.png` is the museum's own drawing in code (a rounded tile with
+two interlocking arrows), since no Big Sur-era extraction covers it. The
+menu-bar glyphs, Focus pill and Apple logo are drawn in code.
+
+### 2.8 Icons still drawn in code
 
 A handful of icons remain drawn in code for this clone where no clean
 official bitmap exists at this size: the Calculator, Puzzle, launcher

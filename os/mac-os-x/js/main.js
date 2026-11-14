@@ -18,6 +18,8 @@ const el = (tag, props = {}, ...kids) => {
   return n;
 };
 
+const SCREEN_W = 1024;
+const SCREEN_H = 768;
 const P = 'macintosh-os.x.10.0';
 const APPLE_SVG = `<svg width="14" height="16" viewBox="0 0 14 16" aria-label="Apple"><path fill="#111" d="M9.6 2.1c.5-.6.8-1.4.7-2.1-.7 0-1.5.4-2 .9-.4.5-.8 1.3-.7 2 .8.1 1.5-.3 2-.8z"/><path fill="#111" d="M11.8 8.5c0-1.9 1.5-2.8 1.6-2.8-.9-1.3-2.2-1.4-2.7-1.5-1.1-.1-2.2.7-2.8.7-.6 0-1.5-.7-2.4-.6-1.2 0-2.3.7-2.9 1.8-1.2 2.1-.3 5.3.9 7 .6.9 1.3 1.8 2.2 1.8.9 0 1.2-.6 2.3-.6 1.1 0 1.4.6 2.3.6.9 0 1.5-.9 2.1-1.7.7-1 .9-1.9.9-2-.1 0-1.5-.6-1.5-2.7z"/></svg>`;
 const state = {
@@ -63,7 +65,12 @@ function makeFS() {
             node('Public', 'folder', 'folder', []),
           ]),
         ]),
-      ]),
+      ], { spec: '40 GB HFS+' }),
+      node('Mac OS X Install CD', 'disk', 'extdisk', [
+        node('Install Mac OS X', 'app', 'app', [], { app: null }),
+        node('Read Me', 'doc', 'textdoc', [], { app: 'textedit', data: 'Mac OS X Install CD\n\n650 MB, HFS hybrid: a Mac OS 9 System Folder for\nClassic, and the Unix-era packages for the new world.\nBoot from this disk to install.\n' }),
+        node('System', 'folder', 'folder', []),
+      ], { spec: '650 MB' }),
       node('Network', 'folder', 'network', []),
     ]),
   };
@@ -108,7 +115,7 @@ function makeWindow({ title, app, width = 460, height = 320, x, y, finder = fals
     ),
     body,
   );
-  const w = { el: win, title, app };
+  const w = { el: win, title, app, body };
   win.style.width = `${width}px`;
   win.style.height = `${height}px`;
   win.style.left = `${x ?? 90 + (state.windows.length % 6) * 26}px`;
@@ -142,7 +149,9 @@ function makeWindow({ title, app, width = 460, height = 320, x, y, finder = fals
 }
 
 function closeWindow(w) {
-  w.el.remove();
+  if (!w || !w.el) return;
+  w.el.classList.add('closing');
+  setTimeout(() => w.el.remove(), 140);
   state.windows = state.windows.filter((x) => x !== w);
   state.active = state.windows[state.windows.length - 1] || null;
   updateDockDots();
@@ -290,10 +299,10 @@ function openMenu(i) {
   const btn = bar.querySelectorAll('.mb-item')[i];
   const r = btn.getBoundingClientRect();
   const scr = $('#screen').getBoundingClientRect();
-  const scale = scr.width / 1024;
+  const scale = scr.width / SCREEN_W || 1;
   menuLayer = el('div', { class: 'menu' });
-  menuLayer.style.left = `${r.left - scr.left}px`;
-  menuLayer.style.top = `${r.bottom - scr.top}px`;
+  menuLayer.style.left = `${(r.left - scr.left) / scale}px`;
+  menuLayer.style.top = `${(r.bottom - scr.top) / scale}px`;
   for (const it of def.items) {
     if (it.sep) { menuLayer.append(el('div', { class: 'sep' })); continue; }
     menuLayer.append(el('div', {
@@ -375,31 +384,37 @@ function finderBody() {
     titleEl.current = node.name;
     grid.innerHTML = '';
     for (const child of node.children) {
-      const item = el('div', { class: 'fitem' }, iconEl(child.icon, 48), el('span', { class: 'lbl', text: child.name }));
+      const item = el('div', { class: 'fitem' }, iconEl(child.icon, 48),
+        el('span', { class: 'lbl', text: child.spec ? `${child.name}\n${child.spec}` : child.name }));
       item.addEventListener('dblclick', () => {
         if (child.kind === 'folder' || child.kind === 'disk') {
           grid.innerHTML = '';
-          const sub = { name: child.name, children: child.children };
+          const sub = { name: child.name, children: child.children, spec: child.spec };
           w.renderNode(sub);
         } else if (child.app) launch(child.app, { doc: child.data, docName: child.name });
       });
       grid.append(item);
     }
-    status.textContent = `${node.children.length} items`;
+    status.textContent = node.spec
+      ? `${node.children.length} items · ${node.spec} · 18.2 GB free`
+      : `${node.children.length} items · 40 GB HFS+ · 650 MB CD`;
     const win = state.windows.find((x) => x.body === body);
     if (win) win.el.querySelector('.title > div:last-child').textContent = node.name;
   },
   renderNode(node) {
     grid.innerHTML = '';
     for (const child of node.children) {
-      const item = el('div', { class: 'fitem' }, iconEl(child.icon, 48), el('span', { class: 'lbl', text: child.name }));
+      const item = el('div', { class: 'fitem' }, iconEl(child.icon, 48),
+        el('span', { class: 'lbl', text: child.spec ? `${child.name}\n${child.spec}` : child.name }));
       item.addEventListener('dblclick', () => {
-        if (child.kind === 'folder' || child.kind === 'disk') w.renderNode({ name: child.name, children: child.children });
+        if (child.kind === 'folder' || child.kind === 'disk') w.renderNode({ name: child.name, children: child.children, spec: child.spec });
         else if (child.app) launch(child.app, { doc: child.data, docName: child.name });
       });
       grid.append(item);
     }
-    status.textContent = `${node.children.length} items`;
+    status.textContent = node.spec
+      ? `${node.children.length} items · ${node.spec} · 18.2 GB free`
+      : `${node.children.length} items`;
     const win = state.windows.find((x) => x.body === body);
     if (win) win.el.querySelector('.title > div:last-child').textContent = node.name;
   } };
@@ -506,7 +521,8 @@ function aboutBody() {
         el('div', {}, el('span', { text: 'Mac OS X' }), el('b', { text: '10.0.4 (Darwin 1.3.7)' })),
         el('div', {}, el('span', { text: 'Processor' }), el('b', { text: 'PowerPC G4 500 MHz' })),
         el('div', {}, el('span', { text: 'Memory' }), el('b', { text: '128 MB' })),
-        el('div', {}, el('span', { text: 'Machine' }), el('b', { text: 'Power Mac G4 (PCI)' })),
+        el('div', {}, el('span', { text: 'Machine' }), el('b', { text: 'Power Macintosh G4 (PCI)' })),
+        el('div', {}, el('span', { text: 'Startup disk' }), el('b', { text: 'Macintosh HD 40 GB HFS+' })),
       ),
       el('div', { class: 'btns' },
         el('button', { class: 'btn', text: 'Software Update…', onclick: () => dialog({ title: 'Software Update', message: 'The museum keeps its modem in a drawer. In March 2001 this button was magic.' }) }),
@@ -647,6 +663,13 @@ const APPS = {
 function launch(app, opts) {
   const a = APPS[app];
   if (!a) return null;
+  const tile = document.querySelector(`#dock .tile[data-app="${app}"]`);
+  if (tile) {
+    tile.classList.remove('bounce');
+    void tile.offsetWidth;
+    tile.classList.add('bounce');
+    setTimeout(() => tile.classList.remove('bounce'), 700);
+  }
   return a.make(opts);
 }
 
@@ -657,7 +680,20 @@ function restart() {
 }
 
 /* ============================================================ boot */
+function fitScreen() {
+  const scr = $('#screen');
+  const stage = $('#stage');
+  const availW = Math.max(320, window.innerWidth - 28);
+  const availH = Math.max(240, window.innerHeight - 96);
+  const scale = Math.min(1, availW / SCREEN_W, availH / SCREEN_H);
+  window.__macScale = scale;
+  scr.style.transform = `scale(${scale})`;
+  if (stage) stage.style.height = `${SCREEN_H * scale + 2}px`;
+}
+
 function boot() {
+  fitScreen();
+  window.addEventListener('resize', fitScreen);
   state.fs = makeFS();
   renderMenubar();
   renderDock();

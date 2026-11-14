@@ -4,6 +4,20 @@
 
 window.CHANGELOG = [
   {
+    version: '1.1.0',
+    date: '2026-11-11',
+    title: 'macOS 12 Monterey \u2014 and every system polished',
+    summary: 'Focus modes and Shortcuts on a 14-inch M1 Pro MacBook Pro; menus anchored right, natural animations, era-accurate volumes and a full bug sweep.',
+    items: [
+      'macOS Monterey 12.0.1 (2021) on a MacBook Pro (14-inch, M1 Pro): Focus modes with the menu-bar pill, Shortcuts (Shuffle Wallpaper, Evening Focus, Museum Tour), Safari tab groups, Notification Center widgets, Control Center \u2014 1512 \u00d7 982',
+      'Menus now drop exactly under their menu-bar item in Mac OS X and Big Sur \u2014 the long-standing sideways-shift bug is fixed and test-verified (dx=0, dy=0)',
+      'Natural UI animations: windows open and close with a quick scale-fade, menus and dialogs ease in, Dock icons bounce on launch, Control/Notification Centers slide \u2014 with a prefers-reduced-motion off switch',
+      'Era-accurate volume capacities everywhere: Mac OS X Finder shows Macintosh HD 40 GB HFS+ and the Mac OS X Install CD 650 MB; Big Sur reports 256 GB APFS; Monterey 512 GB SSD',
+      'Bug fixes: Finder window titles now follow navigation in Mac OS X and Big Sur (they never updated before); close guards against double-close; Monterey boots to Finder + About + Safari',
+      'Every system re-tested headless: System 1.0\u20137.0 and Mac OS 8\u20139 (42 checks), Mac OS X (19), Big Sur (19), Monterey (17) \u2014 all green'
+    ]
+  },
+  {
     version: '1.0.0',
     date: '2026-11-13',
     title: 'Mac OS X 10.0 and macOS Big Sur 11',

@@ -17,6 +17,8 @@ const el = (tag, props = {}, ...kids) => {
   return n;
 };
 
+const SCREEN_W = 1440;
+const SCREEN_H = 900;
 const state = { windows: [], z: 100, menuOpen: -1, ccOpen: false, ncOpen: false };
 
 const SVG = {
@@ -40,7 +42,7 @@ function makeWindow({ title, glyph, app, width, height, x, y, body }) {
     ),
     body,
   );
-  const w = { el: win, app, title };
+  const w = { el: win, app, title, body };
   win.style.width = `${width}px`;
   win.style.height = `${height}px`;
   win.style.left = `${x ?? 120 + (state.windows.length % 7) * 28}px`;
@@ -70,7 +72,9 @@ function makeWindow({ title, glyph, app, width, height, x, y, body }) {
   return w;
 }
 function closeWindow(w) {
-  w.el.remove();
+  if (!w || !w.el) return;
+  w.el.classList.add('closing');
+  setTimeout(() => w.el.remove(), 150);
   state.windows = state.windows.filter((x) => x !== w);
   updateDockDots();
 }
@@ -178,9 +182,10 @@ function openMenu(i, btn) {
   const btnNow = $('#menubar').querySelectorAll('.mb-item')[i];
   const r = btnNow.getBoundingClientRect();
   const scr = $('#screen').getBoundingClientRect();
+  const scale = scr.width / SCREEN_W || 1;
   menuLayer = el('div', { class: 'menu' });
-  menuLayer.style.left = `${r.left - scr.left}px`;
-  menuLayer.style.top = `${r.bottom - scr.top}px`;
+  menuLayer.style.left = `${(r.left - scr.left) / scale}px`;
+  menuLayer.style.top = `${(r.bottom - scr.top) / scale}px`;
   for (const it of menus()[i].items) {
     if (it.sep) { menuLayer.append(el('div', { class: 'sep' })); continue; }
     menuLayer.append(el('div', {
@@ -360,7 +365,7 @@ function finderBody(at = 'recents') {
           el('span', { class: 'seg', text: '🔍' }),
         ),
         grid,
-        el('div', { class: 'fstatus', text: `${loc.items.length} items, 245.62 GB available` }),
+        el('div', { class: 'fstatus', text: `${loc.items.length} items, 256 GB APFS, 245.62 GB available` }),
       ),
     ),
   );
@@ -377,6 +382,7 @@ function aboutBody() {
         el('div', {}, el('span', { text: 'Chip' }), el('b', { text: 'Apple M1' })),
         el('div', {}, el('span', { text: 'Memory' }), el('b', { text: '8 GB' })),
         el('div', {}, el('span', { text: 'Startup disk' }), el('b', { text: 'Macintosh HD' })),
+        el('div', {}, el('span', { text: 'Storage' }), el('b', { text: '256 GB APFS' })),
         el('div', {}, el('span', { text: 'Serial number' }), el('b', { text: 'C02GHL1JQ6L4' })),
       ),
       el('div', { class: 'os' }, el('b', { text: 'macOS Big Sur' }),
@@ -564,14 +570,35 @@ for (const app of ['mail', 'messages', 'music', 'photos', 'notes', 'calendar']) 
 
 function launch(app, opts) {
   const a = APPS[app];
-  return a ? a.make(opts) : null;
+  if (!a) return null;
+  const tile = document.querySelector(`#dock .tile[data-app="${app}"]`);
+  if (tile) {
+    tile.classList.remove('bounce');
+    void tile.offsetWidth;
+    tile.classList.add('bounce');
+    setTimeout(() => tile.classList.remove('bounce'), 700);
+  }
+  return a.make(opts);
 }
 function restart() {
   $('#boot').style.display = '';
 }
 
 /* ============================================================ boot */
+function fitScreen() {
+  const scr = $('#screen');
+  const stage = $('#stage');
+  const availW = Math.max(320, window.innerWidth - 28);
+  const availH = Math.max(240, window.innerHeight - 96);
+  const scale = Math.min(1, availW / SCREEN_W, availH / SCREEN_H);
+  window.__macScale = scale;
+  scr.style.transform = `scale(${scale})`;
+  if (stage) stage.style.height = `${SCREEN_H * scale + 2}px`;
+}
+
 function boot() {
+  fitScreen();
+  window.addEventListener('resize', fitScreen);
   renderMenubar();
   renderDock();
   renderDesktop();
