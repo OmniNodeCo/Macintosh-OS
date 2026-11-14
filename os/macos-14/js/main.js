@@ -610,12 +610,20 @@ function settingsMake() {
      ['softwareupdate', 'Software Update']],
   ];
   const SPECIAL = {
-    'General': [['About', MACHINE + ' \u00b7 ' + CHIP], ['Software Update', OSNAME + ' ' + OSVER + ' \u2014 your Mac is up to date.'], ['Storage', 'Macintosh HD \u00b7 256 GB SSD']],
+    'General': [['About', MACHINE + ' \u00b7 ' + CHIP], ['Software Update', OSNAME + ' ' + OSVER + ' \u2014 your Mac is up to date.'], ['Storage', 'Macintosh HD \u00b7 256 GB SSD'], ['AirDrop & Handoff', 'Contacts Only \u00b7 Handoff on'], ['Login Items & Extensions', '3 items open at login'], ['Language & Region', 'English (US) \u00b7 United States'], ['Sharing', 'Computer name: ' + MACHINE.split(' (')[0]]],
     'Wi-Fi': [['Wi-Fi', 'On'], ['Museum-5G', '\u2713 Connected \u00b7 3 bars'], ['Other Networks\u2026', 'Museum-Guest']],
     'Software Update': [['Automatic Updates', 'On'], [OSNAME + ' ' + OSVER, 'Build ' + OSBUILD + ' \u2014 this museum is already pretending to be it.']],
     'Focus': [['Focus', 'Modes live in the Control Center \u2014 try the moon in the menu bar.']],
-    'Displays': [['Brightness', '\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c\u258c 82%'], ['Night Shift', 'Off until sunrise']],
-    'Wallpaper': [['Desktop picture', 'Museum gradient (not Apple\u2019s)'], ['Shuffle', 'On \u2014 every 30 minutes']],
+    'Displays': [['Brightness', '\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258c\u258c 82%'], ['Resolution', 'Default for display \u00b7 ' + SCREEN_W + ' \u00d7 ' + SCREEN_H], ['Night Shift', 'Off until sunrise'], ['True Tone', 'On']],
+    'Wallpaper': [['Desktop picture', 'Museum gradient (not Apple\u2019s)'], ['Shuffle', 'On \u2014 every 30 minutes'], ['Show on all Spaces', 'On']],
+    'Sound': [['Alert sound', 'Boop'], ['Output volume', '\u2588\u2588\u2588\u2588\u2588\u2588\u258c\u258c\u258c\u258c 60%'], ['Show Sound in menu bar', 'On']],
+    'Battery': [['Battery health', 'Normal \u00b7 100% capacity'], ['Show battery percentage', 'On'], ['Turn display off on battery', '2 minutes']],
+    'Desktop & Dock': [['Size', '\u2588\u2588\u2588\u2588\u2588\u258c\u258c\u258c\u258c 60%'], ['Magnification', 'Off'], ['Position on screen', 'Bottom'], ['Minimize windows using', 'Genie effect'], ['Stage Manager', 'Off']],
+    'Siri & Spotlight': [['Siri', 'Off'], ['Spotlight', 'Search this Mac'], ['Ask Siri', 'Press \u2318 Space']],
+    'Privacy & Security': [['Location Services', 'Off'], ['Full Disk Access', 'Terminal'], ['FileVault', 'On']],
+    'Touch ID & Password': [['Touch ID', 'Finger 1 \u00b7 Unlocking the Mac'], ['Add fingerprint\u2026', ''], ['Password', 'Last changed 24 October 2022']],
+    'Users & Groups': [['Steve Jobs', 'Admin'], ['Guest User', 'Off'], ['Add User\u2026', '']],
+    'Keyboard': [['Key repeat rate', '\u2588\u2588\u2588\u2588\u2588\u2588\u258c\u258c\u258c 60%'], ['Adjust keyboard brightness in low light', 'On'], ['Dictation', 'Off']],
   };
   const pane = el('div', { class: 'set-pane' });
   const side = el('div', { class: 'set-side' },

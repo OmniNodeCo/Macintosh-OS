@@ -352,6 +352,14 @@ All three: the white Apple-logo startup screen, 24px menu bar, 28px titles, offi
 Big Sur-family icon artwork (credited in [CREDITS.md](CREDITS.md) §2.8) and drawn
 System Settings/Weather/Clock/Passwords icons where no official art exists.
 
+## Settings across macOS 11–15
+
+macOS 11 and 12 ship the real **System Preferences**: an Apple ID row, a search field and
+hairline-separated rows of squircle icons with labels below; clicking an icon drills into
+the pane with a back button, working toggles and sliders. macOS 13–15 ship **System
+Settings**: the Ventura-and-later sidebar with 25+ panes and fuller per-pane content
+(General, Desktop & Dock, Displays, Sound, Battery, Touch ID & Password and more).
+
 ## Fidelity notes
 
 What is faithful to 1984:

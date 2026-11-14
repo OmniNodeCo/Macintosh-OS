@@ -41,6 +41,18 @@ t('Control Center: Stage Manager + Focus', await page.evaluate(() => {
 t('Weather app: Cupertino 58°', await page.evaluate(() => !!window.mac.launch('weather')) && (await winText('.win[data-app="weather"]')).includes('Cupertino') && (await winText('.win[data-app="weather"]')).includes('58°'));
 t('Clock app opens', await page.evaluate(() => !!window.mac.launch('clock')));
 
+t('Settings panes: rich content', await page.evaluate(() => {
+  const w = document.querySelector('.win[data-app="sysprefs"]');
+  const rows = [...w.querySelectorAll('.set-row')];
+  const click = (name) => rows.find((r) => r.dataset.name === name).dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  click('General');
+  const gen = w.querySelector('.set-pane').textContent.includes('Storage') && w.querySelector('.set-pane').textContent.includes('Login Items');
+  click('Desktop & Dock');
+  const dd = w.querySelector('.set-pane').textContent.includes('Genie effect');
+  click('Sound');
+  return gen && dd && w.querySelector('.set-pane').textContent.includes('Boop');
+}));
+
 t('restart returns to boot with logo', await page.evaluate(() => { window.mac.restart(); return true; }) && await page.waitForFunction(() => !!document.querySelector('.boot-apple svg'), { timeout: 4000 }).then(() => true).catch(() => false));
 t('no console errors at end', errors.length === 0, errors.join(' | '));
 

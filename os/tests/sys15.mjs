@@ -45,6 +45,18 @@ await page.evaluate(() => window.mac.launch('sysprefs'));
 await page.waitForSelector('.win[data-app="sysprefs"] .set-row', { timeout: 3000 });
 t('Settings sidebar (25+ rows)', await page.$eval('.win[data-app="sysprefs"]', (w) => w.querySelectorAll('.set-row').length > 25));
 
+t('Settings panes: rich content', await page.evaluate(() => {
+  const w = document.querySelector('.win[data-app="sysprefs"]');
+  const rows = [...w.querySelectorAll('.set-row')];
+  const click = (name) => rows.find((r) => r.dataset.name === name).dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  click('General');
+  const gen = w.querySelector('.set-pane').textContent.includes('Storage') && w.querySelector('.set-pane').textContent.includes('Login Items');
+  click('Desktop & Dock');
+  const dd = w.querySelector('.set-pane').textContent.includes('Genie effect');
+  click('Sound');
+  return gen && dd && w.querySelector('.set-pane').textContent.includes('Boop');
+}));
+
 t('restart returns to boot with logo', await page.evaluate(() => { window.mac.restart(); return true; }) && await page.waitForFunction(() => !!document.querySelector('.boot-apple svg'), { timeout: 4000 }).then(() => true).catch(() => false));
 t('no console errors at end', errors.length === 0, errors.join(' | '));
 

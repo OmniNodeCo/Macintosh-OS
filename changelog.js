@@ -4,6 +4,17 @@
 
 window.CHANGELOG = [
   {
+    version: '1.4.0',
+    date: '2026-11-16',
+    title: 'System Preferences, rebuilt \u2014 and settings made real',
+    summary: 'Big Sur and Monterey get the real icon-grid System Preferences with drill-in panes; Ventura, Sonoma and Sequoia get fuller System Settings panes.',
+    items: [
+      'macOS 11 and 12: System Preferences is now the real layout \u2014 Apple ID row, search field and hairline-separated rows of squircle icons with labels below, clicking one drills into the pane with a \u2039 back button and working toggles and sliders',
+      'macOS 13, 14 and 15: System Settings panes are much fuller \u2014 General (About, Software Update, Storage, AirDrop & Handoff, Login Items, Language & Region, Sharing), Desktop & Dock, Displays, Sound, Battery, Wallpaper, Siri & Spotlight, Privacy & Security, Touch ID & Password, Users & Groups, Keyboard',
+      'All five systems re-tested headless: Big Sur 19, Monterey 20, Ventura 23, Sonoma 15, Sequoia 15 \u2014 92 checks, all green'
+    ]
+  },
+  {
     version: '1.3.0',
     date: '2026-11-15',
     title: 'macOS Ventura 13, Sonoma 14 and Sequoia 15',
