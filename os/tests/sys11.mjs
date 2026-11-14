@@ -38,6 +38,15 @@ t('Do Not Disturb toggles (era-correct)', await page.evaluate(() => {
   return ok;
 }));
 
+t('System Preferences icon grid', await page.evaluate(() => { window.mac.launch('sysprefs'); return document.querySelectorAll('.prefs-item').length >= 25 && !!document.querySelector('.prefs-appleid') && !!document.querySelector('.prefs-search'); }));
+t('prefs drill-in + back', await page.evaluate(() => {
+  const item = [...document.querySelectorAll('.prefs-item')].find((i) => i.dataset.name === 'General');
+  item.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  const pane = document.querySelectorAll('.prefs-row').length >= 2;
+  document.querySelector('.prefs-back').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  return pane && document.querySelectorAll('.prefs-item').length >= 25;
+}));
+
 const restart = await page.evaluate(() => { window.mac.restart(); return true; });
 t('restart returns to boot screen', restart && await page.waitForFunction(() => !!document.querySelector('.boot-apple'), { timeout: 4000 }).then(() => true).catch(() => false));
 t('boot logo renders after restart', await page.waitForFunction(() => { const b = document.querySelector('.boot-apple svg'); return !!b && b.getBoundingClientRect().width > 20; }, { timeout: 4000 }).then(() => true).catch(() => false));

@@ -17,6 +17,8 @@ const el = (tag, props = {}, ...kids) => {
   return n;
 };
 
+const OSNAME = 'macOS Big Sur';
+const OSVER = '11.2.3';
 const SCREEN_W = 1440;
 const SCREEN_H = 900;
 const state = { windows: [], z: 100, menuOpen: -1, ccOpen: false, ncOpen: false };
@@ -424,8 +426,7 @@ function aboutBody() {
   );
 }
 
-function sysprefsBody() {
-  const BANDS = [
+const PREF_BANDS = [
     [null, [['user', 'Apple ID']]],
     ['Personal', [
       ['sysprefs', 'General'], ['user', 'Accessibility'], ['displays', 'Control Center'],
@@ -447,20 +448,69 @@ function sysprefsBody() {
       ['diskutil', 'Startup Disk'], ['extdisk', 'Time Machine'], ['home', 'Users & Groups'],
     ]],
   ];
-  const grid = el('div', { class: 'sprefs' });
-  for (const [band, panes] of BANDS) {
-    const row = el('div', { class: 'row' });
-    for (const [icon, label] of panes) {
-      row.append(el('div', {
-        class: 'sp', onpointerdown: () => dialog({
-          title: label, message: `${label} would open here. This museum ships the grid, not every prefpane.`,
-        }),
-      }, iconEl(icon, 44), el('div', { text: label })));
+
+function prefsMake() {
+  const BANDS = PREF_BANDS;
+  const PANES = {
+    'General': [['Appearance', 'Light'], ['Close windows when quitting an app', 'toggle off'], ['Allow Handoff between Mac and iCloud devices', 'toggle on']],
+    'Desktop & Screen Saver': [['Desktop picture', 'Museum gradient (not Apple\u2019s)'], ['Shuffle every 30 minutes', 'toggle off'], ['Start screen saver after', 'Never']],
+    'Dock & Menu Bar': [['Size', 'slider'], ['Magnification', 'toggle off'], ['Position on screen', 'Bottom'], ['Minimize windows using', 'Genie effect']],
+    'Displays': [['Built-in Retina Display', '1512 \u00d7 982'], ['Brightness', 'slider'], ['Night Shift', 'Off until sunrise']],
+    'Sound': [['Alert sound', 'Boop'], ['Output volume', 'slider'], ['Show Sound in menu bar', 'toggle on']],
+    'Battery': [['Battery health', 'Normal'], ['Show battery percentage', 'toggle on'], ['Turn display off on battery', '2 minutes']],
+    'Software Update': [['Automatic updates', 'toggle on'], ['', OSNAME + ' ' + OSVER + ' \u2014 your Mac is up to date.']],
+    'Focus': [['Focus', 'Modes live in Control Center \u2014 try the moon in the menu bar.']],
+  };
+  const win = makeWindow({
+    title: 'System Preferences', app: 'sysprefs', width: 700, height: 540,
+    body: el('div', { class: 'win-body prefs-win' }),
+  });
+  const body = win.body;
+  const rowEl = (label, value) => {
+    let right;
+    if (value.startsWith('toggle')) {
+      right = el('div', { class: 'toggle' + (value.endsWith('off') ? ' off' : ''), onclick: (e) => { e.currentTarget.classList.toggle('off'); } }, el('i'));
+    } else if (value === 'slider') {
+      right = el('div', { class: 'prefs-slider' }, el('i'));
+    } else {
+      right = el('span', { style: 'opacity:.55', text: value + '  \u203a' });
     }
-    grid.append(el('div', { class: 'band' }, band ? el('h5', { text: band }) : null, row));
+    return el('div', { class: 'prefs-row' }, el('span', { text: label }), right);
+  };
+  const showPane = (icon, name) => {
+    body.innerHTML = '';
+    body.append(el('div', { class: 'prefs-toolbar' },
+      el('div', { class: 'prefs-back', onpointerdown: showGrid }, '\u2039'),
+      iconEl(icon, 22),
+      el('b', { text: name })));
+    const rows = PANES[name] || [['', 'This pane would open here. The museum ships the grid, not every switch.']];
+    const pane = el('div', { class: 'prefs-pane' });
+    for (const [label, value] of rows) pane.append(rowEl(label || name, value));
+    body.append(pane, el('div', { class: 'fine prefs-fine', text: 'Settings here are museum props \u2014 they remember nothing between visits.' }));
+  };
+  function showGrid() {
+    body.innerHTML = '';
+    body.append(el('div', { class: 'prefs-top' },
+      el('div', { class: 'prefs-appleid', onpointerdown: () => showPane('user', 'Apple ID') },
+        el('div', { class: 'prefs-avatar' }, iconEl('user', 30)),
+        el('div', {}, el('b', { text: 'Apple ID' }), el('div', { class: 'fine', text: 'Steve Jobs, iCloud, Media & Purchases' }))),
+      el('div', { class: 'prefs-search', text: 'Search' })));
+    for (let bi = 1; bi < BANDS.length; bi++) {
+      body.append(el('div', { class: 'prefs-sep' }));
+      const grid = el('div', { class: 'prefs-grid' });
+      for (const [icon, name] of BANDS[bi][1]) {
+        grid.append(el('div', {
+          class: 'prefs-item', 'data-name': name,
+          onpointerdown: () => showPane(icon, name),
+        }, iconEl(icon, 40), el('div', { class: 'prefs-label', text: name })));
+      }
+      body.append(grid);
+    }
   }
-  return el('div', { class: 'win-body' }, grid);
+  showGrid();
+  return win;
 }
+
 
 const TERM_HELP = `Available commands:
   help      this list
@@ -570,7 +620,7 @@ const APPS = {
   about: {
     make() { return makeWindow({ title: '', app: 'about', width: 420, height: 520, body: aboutBody() }); },
   },
-  sysprefs: { make() { return makeWindow({ title: 'System Preferences', app: 'sysprefs', width: 680, height: 560, body: sysprefsBody() }); } },
+  sysprefs: { make() { return prefsMake(); } },
   terminal: {
     make() { return makeWindow({ title: 'steve — -zsh — 80×24', app: 'terminal', width: 620, height: 360, body: terminalBody() }); },
   },
