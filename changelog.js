@@ -4,6 +4,20 @@
 
 window.CHANGELOG = [
   {
+    version: '1.3.0',
+    date: '2026-11-15',
+    title: 'macOS Ventura 13, Sonoma 14 and Sequoia 15',
+    summary: 'Three more Apple-silicon Macs boot today: the System Settings sidebar, desktop widgets and window tiling \u2014 with the same accuracy standard and the same test rig.',
+    items: [
+      'macOS Ventura 13.0 (22A380) on a MacBook Air (M2, 2022) \u2014 1470 \u00d7 956: the real System Settings sidebar (25+ panes, per-pane content, working toggles), Stage Manager in Control Center, Weather and Clock apps',
+      'macOS Sonoma 14.0 (23A344) on a MacBook Pro (14-inch, M2 Pro, 2023) \u2014 1512 \u00d7 982: desktop widgets (calendar, weather, world clocks) in frosted glass over the wallpaper, alongside the System Settings sidebar',
+      'macOS Sequoia 15.0 (24A335) on a MacBook Pro (14-inch, M3 Pro, 2023) with 18 GB: real window tiling \u2014 drag a window to any edge or corner and a preview shows the snap (also from the Window menu) \u2014 the Passwords app, iPhone Mirroring in Control Center and a working Calculator',
+      'All three boot with the white Apple logo on black, 24px menu bar and 28px titles, era-correct clocks and terminal output (sw_vers, uname, Release_ARM64_T8112/T6020/T6031)',
+      'Bug fix: Apple \u25b8 Restart actually restarts again \u2014 the boot guard that protected against double-start had left the click handler dead after a restart (fixed in macOS 11, 12 and carried into 13\u201415)',
+      'Tests: Big Sur 17, Monterey 18, Ventura 22, Sonoma 14, Sequoia 14 \u2014 85 checks, all green'
+    ]
+  },
+  {
     version: '1.2.0',
     date: '2026-11-14',
     title: 'The Apple logo on startup \u2014 and a pixel-accuracy pass',

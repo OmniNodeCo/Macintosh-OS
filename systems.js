@@ -175,4 +175,52 @@ window.SYSTEMS = [
       '14-inch MacBook Pro \u2014 Big Sur\u2019s look, a calmer year inside.',
     highlights: ['Focus modes', 'Shortcuts', 'Safari tab groups'],
   },
+  {
+    id: 'macos-13',
+    name: 'macOS Ventura',
+    short: '13',
+    finder: 'Finder 20',
+    year: 2022,
+    date: '24 October 2022',
+    model: 'MacBook Air (13.6-inch, M2, 2022)',
+    bits: 'Ventura, Retina 1470 \u00d7 956',
+    status: 'ready',
+    href: 'os/macos-13/',
+    blurb:
+      'System Preferences becomes System Settings \u2014 the sidebar every Mac user had ' +
+      'to relearn \u2014 plus Stage Manager in Control Center and Weather and Clock on the Mac.',
+    highlights: ['System Settings sidebar', 'Stage Manager', 'Weather + Clock'],
+  },
+  {
+    id: 'macos-14',
+    name: 'macOS Sonoma',
+    short: '14',
+    finder: 'Finder 20',
+    year: 2023,
+    date: '26 September 2023',
+    model: 'MacBook Pro (14-inch, M2 Pro, 2023)',
+    bits: 'Sonoma, Retina 1512 \u00d7 982',
+    status: 'ready',
+    href: 'os/macos-14/',
+    blurb:
+      'Widgets come to the desktop, floating over the wallpaper in frosted glass \u2014 ' +
+      'calendar, weather and world clocks over a Sonoma sunset.',
+    highlights: ['Desktop widgets', 'System Settings', 'Weather + Clock'],
+  },
+  {
+    id: 'macos-15',
+    name: 'macOS Sequoia',
+    short: '15',
+    finder: 'Finder 20',
+    year: 2024,
+    date: '16 September 2024',
+    model: 'MacBook Pro (14-inch, M3 Pro, 2023)',
+    bits: 'Sequoia, Retina 1512 \u00d7 982',
+    status: 'ready',
+    href: 'os/macos-15/',
+    blurb:
+      'Drag a window to an edge and it snaps into place \u2014 real window tiling, plus the ' +
+      'new Passwords app, iPhone Mirroring in Control Center and a calculator that calculates.',
+    highlights: ['Window tiling', 'Passwords app', 'Working Calculator'],
+  },
 ];

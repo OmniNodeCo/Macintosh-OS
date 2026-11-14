@@ -13,9 +13,13 @@ Plus), **System 6.0 / Finder 6.1** (April 1988, the Macintosh SE), **System 7.0*
 museum's first colour screen), **Mac OS 9.0** (October 1999, a Power
 Macintosh G4 "Yikes!"), **Mac OS X 10.0** (March 2001, "Cheetah" — Aqua and
 the Dock), **macOS Big Sur 11** (November 2020, an M1 MacBook Pro —
-Control Center and the rounded redesign) and **macOS Monterey 12**
+Control Center and the rounded redesign), **macOS Monterey 12**
 (October 2021, a 14-inch M1 Pro MacBook Pro — Focus modes and
-Shortcuts) are the second through tenth bootable disks.
+Shortcuts), **macOS Ventura 13** (October 2022, an M2 MacBook Air —
+the System Settings sidebar), **macOS Sonoma 14** (September 2023, an
+M2 Pro MacBook Pro — desktop widgets) and **macOS Sequoia 15**
+(September 2024, an M3 Pro MacBook Pro — window tiling, Passwords and
+a working Calculator) are the second through thirteenth bootable disks.
 
 **Live site:** <https://omninodeco.github.io/Macintosh-OS/> (GitHub Pages, served from `main`).
 
@@ -60,6 +64,9 @@ server or GitHub Pages.
 | [Mac OS X](os/mac-os-x/) | 2001 | Power Macintosh G4 (PCI) | **bootable** |
 | [macOS Big Sur](os/macos-11/) | 2020 | MacBook Pro (13-inch, M1) | **bootable** |
 | [macOS Monterey](os/macos-12/) | 2021 | MacBook Pro (14-inch, M1 Pro) | **bootable** |
+| [macOS Ventura](os/macos-13/) | 2022 | MacBook Air (13.6-inch, M2) | **bootable** |
+| [macOS Sonoma](os/macos-14/) | 2023 | MacBook Pro (14-inch, M2 Pro) | **bootable** |
+| [macOS Sequoia](os/macos-15/) | 2024 | MacBook Pro (14-inch, M3 Pro) | **bootable** |
 
 The list lives in one place — [`systems.js`](systems.js). Add an entry with a `href` and a
 `status: 'ready'` and the system appears on the startup-disk wall; no other file needs to
@@ -322,6 +329,28 @@ Shortcuts are not registered specially: they come from the same table that draws
 items, so the keystroke shown next to an item is always the one that works.
 
 ---
+
+## macOS 13/14/15 — what each release adds
+
+**Ventura 13.0** (22A380) on a MacBook Air (M2, 2022), 1470 × 956: the defining change —
+*System Preferences becomes **System Settings***: the real sidebar with 25+ panes
+(Wi-Fi, Desktop & Dock, Wallpaper, Touch ID & Password, Software Update…), per-pane
+content with working toggles, the wide window with centered title. Plus Stage Manager in
+Control Center, Weather and Clock apps, era-correct `sw_vers`/`uname`
+(22.1.0, RELEASE_ARM64_T8112).
+
+**Sonoma 14.0** (23A344) on a MacBook Pro (14-inch, M2 Pro, 2023), 1512 × 982: *desktop
+widgets* — calendar, weather and world clocks floating in frosted glass over the
+wallpaper — the System Settings sidebar, Stage Manager, and the 23.0.0 / T6020 terminal.
+
+**Sequoia 15.0** (24A335) on a MacBook Pro (14-inch, M3 Pro, 2023), 1512 × 982 with
+18 GB: *window tiling* — drag a window to any edge or corner and a glass preview shows
+the snap; the Window menu offers Fill/Left/Right/corners. Plus the **Passwords** app, iPhone
+Mirroring in Control Center, a **working Calculator**, and 24.0.0 / T6031 in the terminal.
+
+All three: the white Apple-logo startup screen, 24px menu bar, 28px titles, official
+Big Sur-family icon artwork (credited in [CREDITS.md](CREDITS.md) §2.8) and drawn
+System Settings/Weather/Clock/Passwords icons where no official art exists.
 
 ## Fidelity notes
 

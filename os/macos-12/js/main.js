@@ -714,6 +714,10 @@ function launch(app, opts) {
   return a.make(opts);
 }
 function restart() {
+  for (const w of [...state.windows]) closeWindow(w);
+  started = false;
+  const bar = document.querySelector('.boot-bar i');
+  if (bar) { bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = ''; }
   $('#boot').style.display = '';
 }
 
@@ -729,6 +733,18 @@ function fitScreen() {
   if (stage) stage.style.height = `${SCREEN_H * scale + 2}px`;
 }
 
+let started = false;
+function startDesktop() {
+  if (started) return;
+  started = true;
+  $('#boot').style.display = 'none';
+  const bar = document.querySelector('.boot-bar i');
+  if (bar) { bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = ''; }
+  launch('finder', { at: 'recents' });
+  setTimeout(() => launch('about'), 200);
+  setTimeout(() => launch('safari'), 420);
+}
+
 function boot() {
   fitScreen();
   window.addEventListener('resize', fitScreen);
@@ -737,15 +753,7 @@ function boot() {
   renderDesktop();
   renderControlCenter();
   renderNotifCenter();
-  let started = false;
-  $('#boot').addEventListener('pointerdown', () => {
-    if (started) return;
-    started = true;
-    $('#boot').style.display = 'none';
-    launch('finder', { at: 'recents' });
-    setTimeout(() => launch('about'), 200);
-    setTimeout(() => launch('safari'), 420);
-  });
+  $('#boot').addEventListener('pointerdown', startDesktop);
   window.mac = {
     launch, dialog, restart,
     windows: () => state.windows.map((w) => w.title),
