@@ -159,4 +159,20 @@ window.SYSTEMS = [
       'Notification Center widgets, the squircle Dock and About This Mac.',
     highlights: ['Control Center', 'Apple silicon', 'Squircle icons'],
   },
+  {
+    id: 'macos-12',
+    name: 'macOS Monterey',
+    short: '12',
+    finder: 'Finder 20',
+    year: 2021,
+    date: '25 October 2021',
+    model: 'MacBook Pro (14-inch, M1 Pro, 2021)',
+    bits: 'Monterey, Retina 1512 \u00d7 982',
+    status: 'ready',
+    href: 'os/macos-12/',
+    blurb:
+      'Focus modes, Shortcuts on the Mac and Safari tab groups on the new ' +
+      '14-inch MacBook Pro \u2014 Big Sur\u2019s look, a calmer year inside.',
+    highlights: ['Focus modes', 'Shortcuts', 'Safari tab groups'],
+  },
 ];
