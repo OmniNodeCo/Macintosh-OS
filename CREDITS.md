@@ -107,7 +107,10 @@ Spotlight, AirDrop, sidebar glyphs) and the MacBook Pro hardware icon —
 extracted from **macOS system software** (.icns containers, PNG
 representations) via
 [github.com/KevinGutowski/Big-Sur-Icons](https://github.com/KevinGutowski/Big-Sur-Icons).
-The menu-bar glyphs and Apple logo in the clone are drawn in code.
+The **Keyboard**, **Mouse** and **Trackpad** preference-pane icons
+(`keyboard.png`, `mouse.png`, `trackpad.png`) are the museum's own
+drawings (grey hardware glyph tiles), used the same way in the Monterey
+set. The menu-bar glyphs and Apple logo in the clone are drawn in code.
 
 ### 2.7 macOS Monterey official icons (`assets/icons/macos-12/`)
 
@@ -118,7 +121,11 @@ for every shared icon: Finder, Safari, Mail, System Preferences, folders,
 disks, Trash, sidebar glyphs and the rest. The Shortcuts application icon
 `shortcuts.png` is the museum's own drawing in code (a rounded tile with
 two interlocking arrows), since no Big Sur-era extraction covers it. The
-menu-bar glyphs, Focus pill and Apple logo are drawn in code.
+**Focus** preference-pane icon (`focus.png`) and the **Keyboard**,
+**Mouse** and **Trackpad** pane icons (`keyboard.png`, `mouse.png`,
+`trackpad.png`) are likewise the museum's own drawings (a purple moon
+tile and grey hardware glyph tiles). The menu-bar glyphs, Focus pill and
+Apple logo (menu bar and the white startup logo) are drawn in code.
 
 ### 2.8 Icons still drawn in code
 

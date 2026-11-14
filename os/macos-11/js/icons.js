@@ -66,6 +66,9 @@ const OFFICIAL = {
   sbDesktop: '../../assets/icons/macos-11/sbDesktop.png',
   sbCloud: '../../assets/icons/macos-11/sbCloud.png',
   laptop: '../../assets/icons/macos-11/laptop.png',
+  keyboard: '../../assets/icons/macos-11/keyboard.png',
+  mouse: '../../assets/icons/macos-11/mouse.png',
+  trackpad: '../../assets/icons/macos-11/trackpad.png',
 };
 
 export function iconURL(name) {

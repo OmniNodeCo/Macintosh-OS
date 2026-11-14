@@ -4,6 +4,22 @@
 
 window.CHANGELOG = [
   {
+    version: '1.2.0',
+    date: '2026-11-14',
+    title: 'The Apple logo on startup \u2014 and a pixel-accuracy pass',
+    summary: 'Big Sur and Monterey now boot like real Apple-silicon Macs, with real window chrome, Control Center modules and the full System Preferences grid.',
+    items: [
+      'Real startup screens: the white Apple logo over a black screen with the progress bar \u2014 the Apple-silicon power-on look \u2014 on both macOS 11 and macOS 12',
+      'Exact window chrome: 24px menu bar, 28px title bars with centered standard titles, and Finder\u2019s real unified toolbar (folder name, back/forward, view controls and Search in one bar)',
+      'Finder navigates in place \u2014 clicking the sidebar changes the folder and window title instead of stacking a new window',
+      'Safari tabs live in the title bar with the address toolbar below, matching Big Sur-and-later Safari',
+      'Control Center rebuilt to the real module layout: Wi-Fi/Bluetooth/AirDrop and Focus/Screen Mirroring tiles, Display and Sound sliders, Now Playing \u2014 with the Focus picker in Monterey and a working Do Not Disturb (menu-bar moon) in Big Sur',
+      'System Preferences now shows the real category bands (Apple ID, Personal, Hardware, Internet & System, System) with the full pane set of each release, Focus for Monterey',
+      'Bug fixes: Control Center rows no longer dismiss the panel, boot cannot double-start, dock and desktop metrics tuned to Big Sur proportions',
+      'Tests: Monterey 16 checks, Big Sur 15 checks \u2014 all green'
+    ]
+  },
+  {
     version: '1.1.0',
     date: '2026-11-11',
     title: 'macOS 12 Monterey \u2014 and every system polished',

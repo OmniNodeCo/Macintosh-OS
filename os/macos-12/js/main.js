@@ -31,11 +31,15 @@ const SVG = {
   wifi: '<svg width="16" height="14" viewBox="0 0 16 14"><g fill="none" stroke="#111" stroke-width="1.4" stroke-linecap="round"><path d="M2 5.2a9 9 0 0 1 12 0"/><path d="M4.2 7.9a5.8 5.8 0 0 1 7.6 0"/></g><circle cx="8" cy="11" r="1.4" fill="#111"/></svg>',
   search: '<svg width="15" height="15" viewBox="0 0 15 15"><circle cx="6.2" cy="6.2" r="4.3" fill="none" stroke="#111" stroke-width="1.5"/><path d="M9.6 9.6 13.4 13.4" stroke="#111" stroke-width="1.7" stroke-linecap="round"/></svg>',
   cc: '<svg width="17" height="13" viewBox="0 0 17 13"><rect x="1" y="1.5" width="15" height="4.2" rx="2.1" fill="none" stroke="#111" stroke-width="1.3"/><circle cx="4.2" cy="3.6" r="1.3" fill="#111"/><rect x="1" y="7.4" width="15" height="4.2" rx="2.1" fill="none" stroke="#111" stroke-width="1.3"/><circle cx="12.8" cy="9.5" r="1.3" fill="#111"/></svg>',
+  bt: '<svg width="11" height="14" viewBox="0 0 11 14"><path fill="none" stroke="#111" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" d="M3 3.4 8.2 9.8 5.5 12.4V1.6L8.2 4.2 3 10.6"/></svg>',
+  airdrop: '<svg width="15" height="15" viewBox="0 0 15 15"><g fill="none" stroke="#111" stroke-width="1.3" stroke-linecap="round"><path d="M4.4 9.4a4.6 4.6 0 0 1 6.2 0"/><path d="M6.2 11.3a2 2 0 0 1 2.6 0"/></g><path fill="#111" d="M7.5 3.2 10 7.6H5z"/></svg>',
+  sun: '<svg width="15" height="15" viewBox="0 0 15 15"><circle cx="7.5" cy="7.5" r="2.8" fill="#111"/><g stroke="#111" stroke-width="1.3" stroke-linecap="round"><path d="M7.5 1v1.8M7.5 12.2V14M1 7.5h1.8M12.2 7.5H14M2.9 2.9l1.3 1.3M10.8 10.8l1.3 1.3M12.1 2.9l-1.3 1.3M4.2 10.8l-1.3 1.3"/></g></svg>',
+  lock: '<svg width="11" height="13" viewBox="0 0 11 13"><rect x="1" y="5.5" width="9" height="6.5" rx="1.6" fill="#111"/><path fill="none" stroke="#111" stroke-width="1.3" d="M3.2 5.5V4a2.3 2.3 0 0 1 4.6 0v1.5"/></svg>',
   moon: '<svg width="12" height="12" viewBox="0 0 12 12"><path fill="#111" d="M10.2 7.6A4.8 4.8 0 0 1 4.4 1.8a4.8 4.8 0 1 0 5.8 5.8z"/></svg>',
 };
 
 /* ============================================================ window mgr */
-function makeWindow({ title, app, width, height, x, y, body }) {
+function makeWindow({ title, app, width, height, x, y, body, leftTitle, titleLeft, titleRight, hideTitle }) {
   const win = el('div', { class: 'win' },
     el('div', { class: 'title' },
       el('div', { class: 'traffic' },
@@ -43,11 +47,17 @@ function makeWindow({ title, app, width, height, x, y, body }) {
         el('div', { class: 'light min', onpointerdown: (e) => { e.stopPropagation(); closeWindow(w); } }),
         el('div', { class: 'light zoom', onpointerdown: (e) => { e.stopPropagation(); w.el.style.width = '1472px'; w.el.style.height = '880px'; w.el.style.left = '20px'; w.el.style.top = '36px'; } }),
       ),
-      el('div', { text: title }),
+      titleLeft || null,
+      el('div', { class: 'wt' + (hideTitle ? ' hide' : ''), text: title }),
+      titleRight || null,
     ),
     body,
   );
-  const w = { el: win, app, title, body };
+  if (leftTitle) win.classList.add('left-title');
+  const w = {
+    el: win, app, title, body,
+    setTitle(t) { w.title = t; const wt = win.querySelector('.title .wt'); if (wt) wt.textContent = t; },
+  };
   win.style.width = `${width}px`;
   win.style.height = `${height}px`;
   win.style.left = `${x ?? 130 + (state.windows.length % 7) * 28}px`;
@@ -240,33 +250,40 @@ window.addEventListener('pointerdown', (e) => {
 function renderControlCenter() {
   const cc = $('#controlcenter');
   cc.innerHTML = '';
+  const wht = (h) => h.replace(/#111/g, '#fff');
+  const icon = (html, cls) => el('div', { class: 'cc-ic' + (cls ? ' ' + cls : ''), html });
+  const row = (icEl, nm, sb, on, sel) => el('div', {
+    class: 'cc-row' + (sel ? ' sel' : ''),
+    onpointerdown: (e) => { e.stopPropagation(); if (on) on(e); },
+  }, icEl, el('div', {}, el('div', { class: 'nm', text: nm }), el('div', { class: 'sb', text: sb })));
+  const menu = el('div', { class: 'focus-menu', style: 'display:none' },
+    ...FOCUS_MODES.map(([m, d]) => el('div', {
+      class: 'fmode' + (state.focus === m ? ' sel' : ''),
+      onpointerdown: (e) => { e.stopPropagation(); setFocus(state.focus === m ? null : m); },
+    }, el('b', { text: m }), el('span', { class: 'grow', style: 'opacity:.75;font-size:11px', text: d }))));
   cc.append(
     el('div', { class: 'cc-tiles' },
-      el('div', { class: 'cc-tile cc-full' },
-        el('div', { class: 'big' }, el('span', { html: SVG.moon }), el('span', { text: 'Focus' })),
-        el('div', { class: 'sub', text: state.focus ? `${state.focus} — on` : 'Off' }),
-        el('div', { class: 'focus-menu', style: 'margin-top:8px' },
-          ...FOCUS_MODES.map(([m, d]) => el('div', {
-            class: 'fmode' + (state.focus === m ? ' sel' : ''),
-            onpointerdown: () => setFocus(state.focus === m ? null : m),
-          }, el('b', { text: m }), el('span', { class: 'grow', style: 'opacity:.75;font-size:11px', text: d })))),
-        el('div', { class: 'cc-label', text: 'Network' })),
       el('div', { class: 'cc-tile' },
-        el('div', { class: 'big' }, el('span', { text: '◉' }), el('span', { text: 'Wi-Fi' })),
-        el('div', { class: 'sub', text: 'Museum-5G' })),
+        row(icon(wht(SVG.wifi)), 'Wi-Fi', 'Museum-5G'),
+        row(icon(wht(SVG.bt), 'gray'), 'Bluetooth', 'On'),
+        row(icon(wht(SVG.airdrop), 'gray'), 'AirDrop', 'Contacts Only'),
+      ),
       el('div', { class: 'cc-tile' },
-        el('div', { class: 'big' }, el('span', { text: '●' }), el('span', { text: 'Bluetooth' })),
-        el('div', { class: 'sub', text: 'On' })),
-      el('div', { class: 'cc-tile cc-full' },
-        el('div', { class: 'big' }, el('span', { text: '☀' }), el('span', { text: 'Display' })),
-        el('div', { class: 'cc-slider' }, el('i', { style: 'right:32%' }))),
-      el('div', { class: 'cc-tile cc-full' },
-        el('div', { class: 'big' }, el('span', { text: '♪' }), el('span', { text: 'Sound' })),
-        el('div', { class: 'cc-slider' }, el('i', { style: 'right:52%' }))),
+        row(icon(wht(SVG.moon)), 'Focus', state.focus ? `${state.focus} \u2014 on` : 'Off',
+          () => { menu.style.display = menu.style.display === 'none' ? '' : 'none'; }, !!state.focus),
+        row(icon('\u25a3', 'gray'), 'Screen Mirroring', 'Off'),
+        menu,
+      ),
     ),
+    el('div', { class: 'cc-tile cc-full', style: 'margin-top:10px' },
+      el('div', { class: 'big' }, icon(wht(SVG.sun)), el('span', { text: 'Display' })),
+      el('div', { class: 'cc-slider' }, el('i', { style: 'right:32%' }))),
+    el('div', { class: 'cc-tile cc-full', style: 'margin-top:10px' },
+      el('div', { class: 'big' }, icon('\u266a'), el('span', { text: 'Sound' })),
+      el('div', { class: 'cc-slider' }, el('i', { style: 'right:52%' }))),
     el('div', { class: 'cc-label', text: 'Now Playing' }),
     el('div', { class: 'cc-tile cc-full' },
-      el('div', { class: 'big' }, el('span', { text: '♪' }), el('span', { text: 'Not Playing' })),
+      el('div', { class: 'big' }, icon('\u266a', 'gray'), el('span', { text: 'Not Playing' })),
       el('div', { class: 'sub', text: 'SharePlay is standing by.' })),
   );
 }
@@ -348,7 +365,7 @@ function shuffleWallpaper() {
 }
 
 /* ============================================================ Finder */
-function finderBody(at = 'recents') {
+function finderMake(at = 'recents') {
   const locations = {
     recents: { title: 'Recents', items: [
       ['Hello Monterey.rtf', 'doc'], ['Focus schedule', 'notes'], ['M1 Pro notes.txt', 'doc'], ['Shortcuts.app', 'shortcuts'],
@@ -362,79 +379,105 @@ function finderBody(at = 'recents') {
     ] },
     hd: { title: 'Macintosh HD', items: [['Applications', 'appsFolder'], ['Library', 'folder'], ['System', 'systemFolder'], ['Users', 'home']] },
   };
-  const loc = locations[at] || locations.recents;
   const grid = el('div', { class: 'fgrid' });
-  for (const [name, icon] of loc.items) {
-    const item = el('div', { class: 'fitem' }, iconEl(icon, 56), el('span', { class: 'lbl', text: name }));
-    item.addEventListener('click', () => {
-      grid.querySelectorAll('.fitem').forEach((f) => f.classList.remove('sel'));
-      item.classList.add('sel');
-    });
-    item.addEventListener('dblclick', () => {
-      const app = name.toLowerCase().replace(/\.app/, '').split(' ')[0];
-      launch(app) || launch('textedit', { doc: 'A museum document.' });
-    });
-    grid.append(item);
-  }
-  return el('div', { class: 'win-body' },
-    el('div', { class: 'finder-layout' },
-      el('div', { class: 'finder-side' },
-        el('h4', { text: 'Favorites' }),
-        ...[['airdrop', 'AirDrop', 'recents'], ['sbRecents', 'Recents', 'recents'], ['appsFolder', 'Applications', 'applications'],
-            ['sbDesktop', 'Desktop', 'recents'], ['docsFolder', 'Documents', 'documents'], ['downloads', 'Downloads', 'downloads']]
-          .map(([ic, lb, key]) => el('div', {
-            class: 'row' + (key === at ? ' sel' : ''),
-            onpointerdown: () => launch('finder', { at: key }),
-          }, iconEl(ic, 18), el('span', { text: lb }))),
-        el('h4', { text: 'iCloud' }),
-        el('div', { class: 'row' }, iconEl('sbCloud', 18), el('span', { text: 'iCloud Drive' })),
-        el('h4', { text: 'Locations' }),
-        el('div', { class: 'row' }, iconEl('harddisk', 18), el('span', { text: 'Macintosh HD' })),
-        el('div', { class: 'row' }, iconEl('network', 18), el('span', { text: 'Network' })),
-      ),
-      el('div', { class: 'finder-main' },
-        el('div', { class: 'finder-tb' },
-          el('span', { class: 'nav', text: '‹' }), el('span', { class: 'nav', text: '›' }),
-          el('span', { class: 'name', text: loc.title }),
-          el('span', { class: 'sp' }),
-          el('span', { class: 'seg', text: '⊞ ⊟ ▤' }),
-          el('span', { class: 'seg', text: '⇧ ⋯' }),
-          el('span', { class: 'seg', text: '🔍' }),
-        ),
-        grid,
-        el('div', { class: 'fstatus', text: `${loc.items.length} items, 512 GB SSD, 342.18 GB available` }),
-      ),
+  const status = el('div', { class: 'fstatus' });
+  const side = el('div', { class: 'finder-side' },
+    el('h4', { text: 'Favorites' }),
+    ...[['airdrop', 'AirDrop', 'recents'], ['sbRecents', 'Recents', 'recents'], ['appsFolder', 'Applications', 'applications'],
+        ['sbDesktop', 'Desktop', 'recents'], ['docsFolder', 'Documents', 'documents'], ['downloads', 'Downloads', 'downloads']]
+      .map(([ic, lb, key]) => el('div', {
+        class: 'row' + (key === at ? ' sel' : ''), 'data-key': key,
+        onpointerdown: () => render(key),
+      }, iconEl(ic, 18), el('span', { text: lb }))),
+    el('h4', { text: 'iCloud' }),
+    el('div', { class: 'row' }, iconEl('sbCloud', 18), el('span', { text: 'iCloud Drive' })),
+    el('h4', { text: 'Locations' }),
+    el('div', { class: 'row', 'data-key': 'hd', onpointerdown: () => render('hd') }, iconEl('harddisk', 18), el('span', { text: 'Macintosh HD' })),
+    el('div', { class: 'row' }, iconEl('network', 18), el('span', { text: 'Network' })),
+  );
+  const body = el('div', { class: 'win-body' },
+    el('div', { class: 'finder-layout' }, side,
+      el('div', { class: 'finder-main' }, grid, status),
     ),
   );
+  const titleLeft = el('div', { class: 'tl-extra' },
+    el('span', { class: 'nav', text: '\u2039' }), el('span', { class: 'nav', text: '\u203a' }),
+  );
+  const titleRight = el('div', { class: 'tr-extra' },
+    el('div', { class: 'grow' }),
+    el('span', { class: 'seg', text: '\u229e \u229f \u22a4' }),
+    el('span', { class: 'seg', text: '\u22ef' }),
+    el('span', { class: 'srch' }, el('span', { html: SVG.search }), el('span', { style: 'margin-left:5px', text: 'Search' })),
+  );
+  const w = makeWindow({
+    title: (locations[at] || locations.recents).title,
+    leftTitle: true, titleLeft, titleRight,
+    app: 'finder', width: 900, height: 560, body,
+  });
+  function render(key) {
+    const loc = locations[key] || locations.recents;
+    grid.innerHTML = '';
+    for (const [name, icon] of loc.items) {
+      const item = el('div', { class: 'fitem' }, iconEl(icon, 56), el('span', { class: 'lbl', text: name }));
+      item.addEventListener('click', () => {
+        grid.querySelectorAll('.fitem').forEach((f) => f.classList.remove('sel'));
+        item.classList.add('sel');
+      });
+      item.addEventListener('dblclick', () => {
+        const app = name.toLowerCase().replace(/\.app/, '').split(' ')[0];
+        launch(app) || launch('textedit', { doc: 'A museum document.' });
+      });
+      grid.append(item);
+    }
+    status.textContent = `${loc.items.length} items, 512 GB SSD, 342.18 GB available`;
+    w.setTitle(loc.title);
+    side.querySelectorAll('.row[data-key]').forEach((r) => r.classList.toggle('sel', r.dataset.key === key));
+  }
+  render(at);
+  return w;
 }
 
 /* ============================================================ Safari (tab groups) */
-function safariBody() {
+function safariMake() {
   const tabs = [
-    ['Apple', 'apple.com', 'Apple — macOS Monterey. Focus, Shortcuts, Universal Control, SharePlay, Live Text, AirPlay to Mac.'],
+    ['Apple', 'apple.com', 'Apple \u2014 macOS Monterey. Focus, Shortcuts, Universal Control, SharePlay, Live Text, AirPlay to Mac.'],
     ['MacRumors', 'macrumors.com', 'macOS 12 review: the update that ties the Mac, iPad and iPhone closer together.'],
-    ['Museum Wall', 'localhost', 'Welcome back to the Macintosh-OS museum. Nine systems boot today.'],
+    ['Museum Wall', 'localhost', 'Welcome back to the Macintosh-OS museum. Ten systems boot today.'],
   ];
   const content = el('div', { style: 'padding:20px 26px;font-size:13px;line-height:1.55' });
   const bar = el('div', { class: 'safari-tabs' });
+  const urlText = el('span', { text: tabs[0][1] });
   const setTab = (i) => {
     for (const n of bar.children) n.classList.remove('sel');
     bar.children[i].classList.add('sel');
+    urlText.textContent = tabs[i][1];
     content.innerHTML = '';
     content.append(
-      el('div', { style: 'font-size:11px;opacity:.6;margin-bottom:6px', text: tabs[i][1] }),
       el('div', { style: 'font-size:16px;font-weight:600;margin-bottom:8px', text: tabs[i][0] }),
       el('div', { text: tabs[i][2] }),
     );
   };
   tabs.forEach(([name], i) => {
-    const tab = el('div', { class: 'tab' }, document.createTextNode(name), el('span', { class: 'x', text: '×' }));
+    const tab = el('div', { class: 'tab' }, document.createTextNode(name), el('span', { class: 'x', text: '\u00d7' }));
     tab.addEventListener('pointerdown', () => setTab(i));
     bar.append(tab);
   });
-  const body = el('div', { class: 'win-body' }, bar, content);
+  const body = el('div', { class: 'win-body' },
+    el('div', { class: 'safari-tb' },
+      el('span', { class: 'nav', text: '\u2039' }), el('span', { class: 'nav', text: '\u203a' }),
+      el('div', { class: 'url' }, el('span', { html: SVG.lock || '' }), urlText),
+      el('span', { class: 'nav', text: '\u2191' }),
+    ),
+    content,
+  );
+  const w = makeWindow({
+    title: 'Safari', hideTitle: true,
+    titleLeft: el('div', { class: 'tl-extra' }, el('span', { class: 'nav', text: '\u25a5' })),
+    titleRight: bar,
+    app: 'safari', width: 820, height: 520, body,
+  });
   setTab(0);
-  return body;
+  return w;
 }
 
 /* ============================================================ Shortcuts */
@@ -488,18 +531,42 @@ function aboutBody() {
 }
 
 function sysprefsBody() {
-  const panes = [
-    ['sysprefs', 'General'], ['displays', 'Displays'], ['softwareupdate', 'Software Update'],
-    ['keychain', 'Users & Groups'], ['diskutil', 'Startup Disk'], ['network', 'Network'],
-    ['airdrop', 'Bluetooth'], ['music', 'Sound'], ['notifications', 'Notifications'],
-    ['shortcuts', 'Focus'], ['siri', 'Siri'], ['spotlight', 'Spotlight'],
-    ['locked', 'Security & Privacy'], ['sbDesktop', 'Desktop & Screen Saver'], ['calendar', 'Date & Time'],
+  const BANDS = [
+    [null, [['user', 'Apple ID']]],
+    ['Personal', [
+      ['sysprefs', 'General'], ['user', 'Accessibility'], ['displays', 'Control Center'],
+      ['sbDesktop', 'Desktop & Screen Saver'], ['displays', 'Displays'], ['finder', 'Dock & Menu Bar'],
+      ['focus', 'Focus'], ['appstore', 'Extensions'], ['maps', 'Language & Region'],
+      ['sbRecents', 'Mission Control'], ['notifications', 'Notifications'], ['calendar', 'Screen Time'],
+      ['siri', 'Siri'], ['spotlight', 'Spotlight'],
+    ]],
+    ['Hardware', [
+      ['laptop', 'Battery'], ['keyboard', 'Keyboard'], ['mouse', 'Mouse'],
+      ['server', 'Printers & Scanners'], ['music', 'Sound'], ['trackpad', 'Trackpad'],
+    ]],
+    ['Internet & System', [
+      ['network', 'Network'], ['mail', 'Internet Accounts'], ['keychain', 'Wallet & Apple Pay'],
+      ['server', 'Sharing'], ['chess', 'Game Center'],
+    ]],
+    ['System', [
+      ['quicktime', 'Date & Time'], ['locked', 'Profiles'], ['softwareupdate', 'Software Update'],
+      ['diskutil', 'Startup Disk'], ['extdisk', 'Time Machine'], ['home', 'Users & Groups'],
+    ]],
   ];
   const grid = el('div', { class: 'sprefs' });
-  for (const [icon, label] of panes) {
-    grid.append(el('div', {
-      class: 'sp', onpointerdown: () => dialog({ title: label, message: label === 'Focus' ? 'Focus modes live in the Control Center here — try the moon.' : `${label} would open here. This museum ships the grid, not every prefpane.` }),
-    }, iconEl(icon, 44), el('div', { text: label })));
+  for (const [band, panes] of BANDS) {
+    const row = el('div', { class: 'row' });
+    for (const [icon, label] of panes) {
+      row.append(el('div', {
+        class: 'sp', onpointerdown: () => dialog({
+          title: label,
+          message: label === 'Focus'
+            ? 'Focus modes live in the Control Center here \u2014 try the moon in the menu bar.'
+            : `${label} would open here. This museum ships the grid, not every prefpane.`,
+        }),
+      }, iconEl(icon, 44), el('div', { text: label })));
+    }
+    grid.append(el('div', { class: 'band' }, band ? el('h5', { text: band }) : null, row));
   }
   return el('div', { class: 'win-body' }, grid);
 }
@@ -569,8 +636,10 @@ Monterey-era icon artwork</b> (Monterey kept Big Sur's design), extracted
 from macOS system software (.icns containers, PNG representations) via
 <b>github.com/KevinGutowski/Big-Sur-Icons</b> — the same set used by the
 Big Sur exhibit (assets/icons/macos-11).</li>
-<li><b>Museum drawings:</b> the Shortcuts icon, the Apple logo, the
-menu-bar glyphs and the wallpaper gradients. Apple's icon artwork is the
+<li><b>Museum drawings:</b> the Shortcuts icon, the Focus and
+Keyboard/Mouse/Trackpad pane icons, the Apple logo (on the startup
+screen and in the menu bar), the menu-bar glyphs and the wallpaper
+gradients. Apple's icon artwork is the
 property of Apple Inc., used for study and nostalgia.</li>
 <li>The type is the platform UI stack (Helvetica/Arial fallbacks); SF Pro
 is Apple's and is not included. No Apple fonts, sounds or firmware.</li>
@@ -602,12 +671,12 @@ Inc. This is an homage for study and nostalgia, not an Apple product.</p>` }),
 }
 
 const APPS = {
-  finder: { make(opts) { return makeWindow({ title: 'Finder', app: 'finder', width: 900, height: 560, body: finderBody(opts?.at) }); } },
+  finder: { make(opts) { return finderMake(opts?.at); } },
   about: { make() { return makeWindow({ title: '', app: 'about', width: 420, height: 520, body: aboutBody() }); } },
-  sysprefs: { make() { return makeWindow({ title: 'System Preferences', app: 'sysprefs', width: 560, height: 420, body: sysprefsBody() }); } },
+  sysprefs: { make() { return makeWindow({ title: 'System Preferences', app: 'sysprefs', width: 680, height: 560, body: sysprefsBody() }); } },
   terminal: { make() { return makeWindow({ title: 'steve — -zsh — 80×24', app: 'terminal', width: 620, height: 360, body: terminalBody() }); } },
   credits: { make() { return makeWindow({ title: 'Credits', app: 'credits', width: 620, height: 520, body: creditsBody() }); } },
-  safari: { make() { return makeWindow({ title: 'Safari', app: 'safari', width: 760, height: 480, body: safariBody() }); } },
+  safari: { make() { return safariMake(); } },
   shortcuts: { make() { return makeWindow({ title: 'Shortcuts', app: 'shortcuts', width: 560, height: 380, body: shortcutsBody() }); } },
   trash: {
     make() {
@@ -668,7 +737,10 @@ function boot() {
   renderDesktop();
   renderControlCenter();
   renderNotifCenter();
+  let started = false;
   $('#boot').addEventListener('pointerdown', () => {
+    if (started) return;
+    started = true;
     $('#boot').style.display = 'none';
     launch('finder', { at: 'recents' });
     setTimeout(() => launch('about'), 200);
