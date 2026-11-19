@@ -323,3 +323,8 @@ body {
 
 /* volume labels carry era-accurate capacity on a second line */
 .fitem .lbl { white-space: pre-line; }
+
+
+/* --------------------------------------------- window animations --------- */
+.win.anim { transition: left .34s cubic-bezier(.3,.8,.35,1), top .34s cubic-bezier(.3,.8,.35,1), width .34s cubic-bezier(.3,.8,.35,1), height .34s cubic-bezier(.3,.8,.35,1); }
+.win.minimizing { transition: transform .32s cubic-bezier(.5,0,.75,0), opacity .32s ease-in; transform-origin: center center; }

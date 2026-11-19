@@ -223,4 +223,20 @@ window.SYSTEMS = [
       'new Passwords app, iPhone Mirroring in Control Center and a calculator that calculates.',
     highlights: ['Window tiling', 'Passwords app', 'Working Calculator'],
   },
+  {
+    id: 'macos-26',
+    name: 'macOS Tahoe',
+    short: '26',
+    finder: 'Finder 20',
+    year: 2025,
+    date: '15 September 2025',
+    model: 'MacBook Pro (14-inch, M4 Pro, 2024)',
+    bits: 'Tahoe, Liquid Glass 1512 \u00d7 982',
+    status: 'ready',
+    href: 'os/macos-26/',
+    blurb:
+      'The first big redesign since Big Sur: Liquid Glass everywhere \u2014 translucent ' +
+      'menu bar, glass Dock and glassy windows \u2014 plus the Phone and Games apps.',
+    highlights: ['Liquid Glass', 'Phone + Games apps', 'Window tiling'],
+  },
 ];

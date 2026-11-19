@@ -42,6 +42,24 @@ t('Settings panes: rich content', await page.evaluate(() => {
   return gen && dd && w.querySelector('.set-pane').textContent.includes('Boop');
 }));
 
+t('green button animates to full screen', await page.evaluate(async () => {
+  const win = document.querySelector('.win');
+  const before = win.offsetWidth;
+  win.querySelector('.light.zoom').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 450));
+  const grew = win.offsetWidth >= before + 200;
+  win.querySelector('.light.zoom').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 450));
+  return grew && Math.abs(win.offsetWidth - before) < 8;
+}));
+t('yellow button minimizes', await page.evaluate(async () => {
+  const wins = document.querySelectorAll('.win');
+  const win = wins[wins.length - 1];
+  win.querySelector('.light.min').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 800));
+  return !win.isConnected;
+}));
+
 t('restart returns to boot with logo', await page.evaluate(() => { window.mac.restart(); return true; }) && await page.waitForFunction(() => !!document.querySelector('.boot-apple svg'), { timeout: 4000 }).then(() => true).catch(() => false));
 t('no console errors at end', errors.length === 0, errors.join(' | '));
 

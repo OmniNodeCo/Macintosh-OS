@@ -108,7 +108,7 @@ function makeWindow({ title, app, width = 460, height = 320, x, y, finder = fals
     el('div', { class: 'title' },
       el('div', { class: 'traffic' },
         el('div', { class: 'light close', onpointerdown: (e) => { e.stopPropagation(); closeWindow(w); } }),
-        el('div', { class: 'light min', onpointerdown: (e) => { e.stopPropagation(); closeWindow(w); } }),
+        el('div', { class: 'light min', onpointerdown: (e) => { e.stopPropagation(); minimizeWindow(w); } }),
         el('div', { class: 'light zoom', onpointerdown: (e) => { e.stopPropagation(); zoomWindow(w); } }),
       ),
       el('div', { text: title }),
@@ -156,11 +156,41 @@ function closeWindow(w) {
   state.active = state.windows[state.windows.length - 1] || null;
   updateDockDots();
 }
+function animWindow(w, styles, done) {
+  const win = w.el;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    Object.assign(win.style, styles); done && done(); return;
+  }
+  win.classList.add('anim');
+  void win.offsetWidth;
+  Object.assign(win.style, styles);
+  setTimeout(() => { win.classList.remove('anim'); done && done(); }, 360);
+}
 function zoomWindow(w) {
-  w.el.style.left = '12px';
-  w.el.style.top = '34px';
-  w.el.style.width = '1000px';
-  w.el.style.height = '640px';
+  const win = w.el;
+  if (win.dataset.zoomed) {
+    const p = JSON.parse(win.dataset.zoomed);
+    delete win.dataset.zoomed;
+    animWindow(w, { left: p.left + 'px', top: p.top + 'px', width: p.width + 'px', height: p.height + 'px' });
+  } else {
+    win.dataset.zoomed = JSON.stringify({ left: win.offsetLeft, top: win.offsetTop, width: win.offsetWidth, height: win.offsetHeight });
+    animWindow(w, { left: '0px', top: '24px', width: SCREEN_W + 'px', height: (SCREEN_H - 24) + 'px' });
+  }
+}
+function minimizeWindow(w) {
+  const win = w.el;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { closeWindow(w); return; }
+  const dock = document.querySelector('#dock');
+  const dr = dock ? dock.getBoundingClientRect() : null;
+  const wr = win.getBoundingClientRect();
+  const scr = document.querySelector('#screen').getBoundingClientRect();
+  const scale = scr.width / SCREEN_W || 1;
+  const tx = dr ? (dr.left + dr.width / 2 - (wr.left + wr.width / 2)) / scale : 0;
+  const ty = dr ? (dr.top + dr.height / 2 - (wr.top + wr.height / 2)) / scale : 300;
+  win.classList.add('minimizing');
+  win.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px) scale(.06)`;
+  win.style.opacity = '0';
+  setTimeout(() => closeWindow(w), 320);
 }
 function focusWindow(w) {
   state.active = w;

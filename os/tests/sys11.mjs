@@ -47,6 +47,24 @@ t('prefs drill-in + back', await page.evaluate(() => {
   return pane && document.querySelectorAll('.prefs-item').length >= 25;
 }));
 
+t('green button animates to full screen', await page.evaluate(async () => {
+  const win = document.querySelector('.win');
+  const before = win.offsetWidth;
+  win.querySelector('.light.zoom').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 450));
+  const grew = win.offsetWidth >= before + 200;
+  win.querySelector('.light.zoom').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 450));
+  return grew && Math.abs(win.offsetWidth - before) < 8;
+}));
+t('yellow button minimizes', await page.evaluate(async () => {
+  const wins = document.querySelectorAll('.win');
+  const win = wins[wins.length - 1];
+  win.querySelector('.light.min').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 800));
+  return !win.isConnected;
+}));
+
 const restart = await page.evaluate(() => { window.mac.restart(); return true; });
 t('restart returns to boot screen', restart && await page.waitForFunction(() => !!document.querySelector('.boot-apple'), { timeout: 4000 }).then(() => true).catch(() => false));
 t('boot logo renders after restart', await page.waitForFunction(() => { const b = document.querySelector('.boot-apple svg'); return !!b && b.getBoundingClientRect().width > 20; }, { timeout: 4000 }).then(() => true).catch(() => false));
