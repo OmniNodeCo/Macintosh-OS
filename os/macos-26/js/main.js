@@ -541,7 +541,7 @@ function finderMake(at = 'recents') {
 /* ============================================================ Safari (tab groups) */
 function safariMake() {
   const tabs = [
-    ['Apple', 'apple.com', 'Apple \u2014 macOS Monterey. Focus, Shortcuts, Universal Control, SharePlay, Live Text, AirPlay to Mac.'],
+    ['Apple', 'apple.com', 'Apple \u2014 macOS Tahoe 26. Liquid Glass, the Phone app, the Games app and Live Activities.'],
     ['MacRumors', 'macrumors.com', 'macOS 26 review: the museum keeps booting \u2014 glass everywhere, and not a crack in sight.'],
     ['Museum Wall', 'localhost', 'Welcome back to the Macintosh-OS museum. Fourteen systems boot today.'],
   ];

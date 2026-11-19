@@ -541,7 +541,7 @@ function finderMake(at = 'recents') {
 /* ============================================================ Safari (tab groups) */
 function safariMake() {
   const tabs = [
-    ['Apple', 'apple.com', 'Apple \u2014 macOS Monterey. Focus, Shortcuts, Universal Control, SharePlay, Live Text, AirPlay to Mac.'],
+    ['Apple', 'apple.com', 'Apple \u2014 macOS Sequoia 15. iPhone Mirroring, window tiling and the Passwords app.'],
     ['MacRumors', 'macrumors.com', 'macOS Sequoia 15 review: the museum keeps booting, and this release keeps changing the rules.'],
     ['Museum Wall', 'localhost', 'Welcome back to the Macintosh-OS museum. Thirteen systems boot today.'],
   ];
