@@ -67,6 +67,7 @@ server or GitHub Pages.
 | [macOS Ventura](os/macos-13/) | 2022 | MacBook Air (13.6-inch, M2) | **bootable** |
 | [macOS Sonoma](os/macos-14/) | 2023 | MacBook Pro (14-inch, M2 Pro) | **bootable** |
 | [macOS Sequoia](os/macos-15/) | 2024 | MacBook Pro (14-inch, M3 Pro) | **bootable** |
+| [macOS Tahoe](os/macos-26/) | 2025 | MacBook Pro (14-inch, M4 Pro) | **bootable** |
 
 The list lives in one place — [`systems.js`](systems.js). Add an entry with a `href` and a
 `status: 'ready'` and the system appears on the startup-disk wall; no other file needs to
@@ -351,6 +352,14 @@ Mirroring in Control Center, a **working Calculator**, and 24.0.0 / T6031 in the
 All three: the white Apple-logo startup screen, 24px menu bar, 28px titles, official
 Big Sur-family icon artwork (credited in [CREDITS.md](CREDITS.md) §2.8) and drawn
 System Settings/Weather/Clock/Passwords icons where no official art exists.
+
+## Window buttons and macOS Tahoe 26
+
+The red, yellow and green window buttons animate on every system that has them (Mac OS X
+and macOS 11–26): **green** zooms smoothly to full screen and back, **yellow** minimizes
+with a swoosh toward the Dock, **red** closes with a scale-fade. **macOS Tahoe 26.0**
+(25A354, 15 September 2025) is the newest disk — the first Liquid Glass redesign since
+Big Sur, with a translucent menu bar, glass Dock, and the Phone and Games apps.
 
 ## Settings across macOS 11–15
 

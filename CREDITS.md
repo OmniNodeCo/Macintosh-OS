@@ -134,9 +134,11 @@ Sequoia refreshed a handful, but the set remains recognisably the Big Sur family
 three systems reuse the official Big Sur-family artwork extracted from macOS system
 software (.icns containers, PNG representations) via
 **[github.com/KevinGutowski/Big-Sur-Icons](https://github.com/KevinGutowski/Big-Sur-Icons)** —
-Apple's icon artwork, extracted by Kevin Gutowski. Icons unique to these releases that the
-extraction does not cover — **System Settings, Weather, Clock and Passwords** — are the
-museum's own drawings in the same idiom (see §2.9). The desktop-widget glass, the System
+Apple's icon artwork, extracted by Kevin Gutowski. Icons unique to these releases: the **System Settings** icon is extracted
+from the macOS icon cache (System Settings_\u2026lowResPng) via **macosicons.com**, and the
+**Passwords** app icon is Apple's own Newsroom artwork (apple.com, \u201cmacOS Sequoia is
+available today\u201d) \u2014 both Apple's designs. **Weather and Clock** remain the museum's
+drawings in the same idiom (see §2.9). macOS Tahoe 26 reuses this set. The desktop-widget glass, the System
 Settings sidebar, window tiling and the Calculator UI are drawn in CSS/JS; the wallpaper
 gradients are the museum's own. Apple's icon artwork remains the property of Apple Inc.;
 used here for study and nostalgia.

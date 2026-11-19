@@ -35,14 +35,51 @@ const SVG = {
   lock: '<svg width="11" height="13" viewBox="0 0 11 13"><rect x="1" y="5.5" width="9" height="6.5" rx="1.6" fill="#111"/><path fill="none" stroke="#111" stroke-width="1.3" d="M3.2 5.5V4a2.3 2.3 0 0 1 4.6 0v1.5"/></svg>',
 };
 
+function animWindow(w, styles, done) {
+  const win = w.el;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    Object.assign(win.style, styles); done && done(); return;
+  }
+  win.classList.add('anim');
+  void win.offsetWidth;
+  Object.assign(win.style, styles);
+  setTimeout(() => { win.classList.remove('anim'); done && done(); }, 360);
+}
+function zoomWindow(w) {
+  const win = w.el;
+  if (win.dataset.zoomed) {
+    const p = JSON.parse(win.dataset.zoomed);
+    delete win.dataset.zoomed;
+    animWindow(w, { left: p.left + 'px', top: p.top + 'px', width: p.width + 'px', height: p.height + 'px' });
+  } else {
+    win.dataset.zoomed = JSON.stringify({ left: win.offsetLeft, top: win.offsetTop, width: win.offsetWidth, height: win.offsetHeight });
+    animWindow(w, { left: '0px', top: '24px', width: SCREEN_W + 'px', height: (SCREEN_H - 24) + 'px' });
+  }
+}
+function minimizeWindow(w) {
+  const win = w.el;
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { closeWindow(w); return; }
+  const dock = document.querySelector('#dock');
+  const dr = dock ? dock.getBoundingClientRect() : null;
+  const wr = win.getBoundingClientRect();
+  const scr = document.querySelector('#screen').getBoundingClientRect();
+  const scale = scr.width / SCREEN_W || 1;
+  const tx = dr ? (dr.left + dr.width / 2 - (wr.left + wr.width / 2)) / scale : 0;
+  const ty = dr ? (dr.top + dr.height / 2 - (wr.top + wr.height / 2)) / scale : 300;
+  win.classList.add('minimizing');
+  win.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px) scale(.06)`;
+  win.style.opacity = '0';
+  setTimeout(() => closeWindow(w), 320);
+}
+
 /* ============================================================ window mgr */
 function makeWindow({ title, glyph, app, width, height, x, y, body, leftTitle, titleLeft, titleRight, hideTitle }) {
   const win = el('div', { class: 'win' },
     el('div', { class: 'title' },
       el('div', { class: 'traffic' },
         el('div', { class: 'light close', onpointerdown: (e) => { e.stopPropagation(); closeWindow(w); } }),
-        el('div', { class: 'light min', onpointerdown: (e) => { e.stopPropagation(); closeWindow(w); } }),
-        el('div', { class: 'light zoom', onpointerdown: (e) => { e.stopPropagation(); w.el.style.width = '1400px'; w.el.style.height = '820px'; w.el.style.left = '20px'; w.el.style.top = '36px'; } }),
+        el('div', { class: 'light min', onpointerdown: (e) => { e.stopPropagation(); minimizeWindow(w); } }),
+        el('div', { class: 'light zoom', onpointerdown: (e) => { e.stopPropagation(); zoomWindow(w); } }),
       ),
       glyph ? el('span', { class: 'glyph' }) : null,
       titleLeft || null,

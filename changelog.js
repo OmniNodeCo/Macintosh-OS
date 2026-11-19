@@ -4,6 +4,18 @@
 
 window.CHANGELOG = [
   {
+    version: '1.5.0',
+    date: '2026-11-17',
+    title: 'Animated window buttons \u00b7 macOS Tahoe 26 \u00b7 real icons',
+    summary: 'Red, yellow and green come alive \u2014 the green button really animates to full screen \u2014 and macOS Tahoe 26 joins the museum with Liquid Glass.',
+    items: [
+      'The three window buttons animate everywhere they exist (Mac OS X and macOS 11\u201326): green zooms the window smoothly to full screen and back, yellow minimizes with a swoosh toward the Dock, red keeps its scale-fade close \u2014 all honouring prefers-reduced-motion',
+      'macOS Tahoe 26.0 (25A354) on a MacBook Pro (14-inch, M4 Pro, 2024) \u2014 Liquid Glass: translucent menu bar, glass Dock, glassy window titles and settings sidebar, Phone and Games apps, 24 GB, Darwin 25',
+      'Real icons replace the drawn ones: the System Settings icon (extracted from the macOS icon cache, via macosicons.com) and the official Passwords app icon (Apple Newsroom artwork) now serve macOS 13 through 26',
+      'Tests: Big Sur 21, Monterey 22, Ventura 25, Sonoma 17, Sequoia 17, Tahoe 14 \u2014 116 checks, all green'
+    ]
+  },
+  {
     version: '1.4.0',
     date: '2026-11-16',
     title: 'System Preferences, rebuilt \u2014 and settings made real',
