@@ -138,7 +138,7 @@ Apple's icon artwork, extracted by Kevin Gutowski. Icons unique to these release
 from the macOS icon cache (System Settings_\u2026lowResPng) via **macosicons.com**, and the
 **Passwords** app icon is Apple's own Newsroom artwork (apple.com, \u201cmacOS Sequoia is
 available today\u201d) \u2014 both Apple's designs. **Weather and Clock** remain the museum's
-drawings in the same idiom (see §2.9). macOS Tahoe 26 reuses this set. The desktop-widget glass, the System
+drawings in the same idiom (see §2.9). macOS Tahoe 26 and Golden Gate 27 reuse this set. The desktop-widget glass, the System
 Settings sidebar, window tiling and the Calculator UI are drawn in CSS/JS; the wallpaper
 gradients are the museum's own. Apple's icon artwork remains the property of Apple Inc.;
 used here for study and nostalgia.

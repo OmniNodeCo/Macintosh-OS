@@ -68,6 +68,7 @@ server or GitHub Pages.
 | [macOS Sonoma](os/macos-14/) | 2023 | MacBook Pro (14-inch, M2 Pro) | **bootable** |
 | [macOS Sequoia](os/macos-15/) | 2024 | MacBook Pro (14-inch, M3 Pro) | **bootable** |
 | [macOS Tahoe](os/macos-26/) | 2025 | MacBook Pro (14-inch, M4 Pro) | **bootable** |
+| [macOS Golden Gate](os/macos-27/) | 2026 | MacBook Pro (14-inch, M5 Pro) | **bootable** |
 
 The list lives in one place — [`systems.js`](systems.js). Add an entry with a `href` and a
 `status: 'ready'` and the system appears on the startup-disk wall; no other file needs to

@@ -239,4 +239,21 @@ window.SYSTEMS = [
       'menu bar, glass Dock and glassy windows \u2014 plus the Phone and Games apps.',
     highlights: ['Liquid Glass', 'Phone + Games apps', 'Window tiling'],
   },
+  {
+    id: 'macos-27',
+    name: 'macOS Golden Gate',
+    short: '27',
+    finder: 'Finder 20',
+    year: 2026,
+    date: '14 September 2026',
+    model: 'MacBook Pro (14-inch, M5 Pro, 2025)',
+    bits: 'Golden Gate, Liquid Glass 1512 \u00d7 982',
+    status: 'ready',
+    href: 'os/macos-27/',
+    blurb:
+      'Siri AI arrives \u2014 a conversational Siri with its own app \u2014 with Visual ' +
+      'Intelligence on the Mac, Safari tab topics and a Liquid Glass slider that really ' +
+      'slides. The first Apple-Silicon-only macOS.',
+    highlights: ['Siri AI app', 'Visual Intelligence', 'Liquid Glass slider'],
+  },
 ];

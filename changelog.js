@@ -4,6 +4,18 @@
 
 window.CHANGELOG = [
   {
+    version: '1.6.0',
+    date: '2026-11-18',
+    title: 'macOS 27 Golden Gate \u2014 Siri AI and a glass that slides',
+    summary: 'The newest macOS boots in the museum: conversational Siri with its own app, Visual Intelligence, and a working Liquid Glass transparency slider.',
+    items: [
+      'macOS Golden Gate 27.0 (26A428) on a MacBook Pro (14-inch, M5 Pro, 2025) \u2014 15 September-bay golden light: Siri AI with a real conversation window, Visual Intelligence in the Apple menu (Shift\u2013Command\u2013Space in the real release), Safari tab content, Darwin 26, and Apple Silicon only',
+      'The Liquid Glass transparency slider in System Settings > Appearance really works \u2014 drag from ultra-clear to fully tinted and the menu bar, Dock, window titles and sidebar glass follow live',
+      'macOS Tahoe 26 keeps its place with updated museum counts and Safari tab content',
+      'Tests: Big Sur 21, Monterey 22, Ventura 25, Sonoma 17, Sequoia 17, Tahoe 14, Golden Gate 13 \u2014 129 checks, all green'
+    ]
+  },
+  {
     version: '1.5.0',
     date: '2026-11-17',
     title: 'Animated window buttons \u00b7 macOS Tahoe 26 \u00b7 real icons',
